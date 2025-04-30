@@ -1,0 +1,11 @@
+.boundaryContent {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  flex-direction: column;
+}
+
+.link {
+  font-size: 26px;
+}

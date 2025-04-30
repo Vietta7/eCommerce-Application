@@ -1,11 +1,8 @@
 import './App.css';
+import HeadingStore from './components/HeadingStore/HeadingStore';
 
 function App() {
-  return (
-    <div>
-      <h1>Dino Land Store!!!</h1>
-    </div>
-  );
+  return <HeadingStore />;
 }
 
 export default App;
