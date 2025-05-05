@@ -31,7 +31,7 @@
   [TypeScript](https://www.typescriptlang.org/)  
 
 #### Code Quality 
-  [ESLint — Air-bnb base](https://eslint.org/)  
+  [ESLint](https://eslint.org/)  
   [Prettier](https://prettier.io/)  
   [Husky](https://typicode.github.io/husky/#/)  
 
