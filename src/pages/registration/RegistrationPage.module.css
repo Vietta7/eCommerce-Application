@@ -1,4 +1,28 @@
 .title {
-  font-size: 20px;
-  color: red;
+  color: rgb(0, 82, 59);
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: 36px;
+  font-weight: 600;
+  line-height: 44px;
+  letter-spacing: 0px;
+  text-align: left;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.content {
+  max-width: 1160px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 60px;
+  margin: 0 auto;
+}
+
+@media (max-width: 440px) {
+  .content {
+    padding: 25px;
+  }
 }
