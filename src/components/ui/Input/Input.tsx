@@ -27,7 +27,7 @@ interface InputProps {
   touchedFields: Partial<Record<ValidFieldNames, boolean>>;
 }
 
-export function Input({
+export const Input: React.FC<InputProps> = ({
   label,
   type,
   placeholder,
@@ -37,7 +37,7 @@ export function Input({
   register,
   valueAsNumber,
   touchedFields,
-}: InputProps) {
+}: InputProps) => {
   const isTouched = touchedFields[name];
 
   return (
@@ -55,4 +55,4 @@ export function Input({
       <span className={styles.errorMessage}>{error && error.message}</span>
     </div>
   );
-}
+};

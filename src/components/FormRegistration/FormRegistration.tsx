@@ -69,6 +69,7 @@ export function FormRegistration() {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors, touchedFields, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -78,6 +79,7 @@ export function FormRegistration() {
 
   const onSumbit = async (data: FormData) => {
     console.log('Success', data);
+    reset();
   };
 
   return (
