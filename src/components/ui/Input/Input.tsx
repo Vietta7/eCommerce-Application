@@ -20,11 +20,12 @@ interface InputProps {
   type: string;
   placeholder: string;
   name: ValidFieldNames;
-  className: string;
+  className?: string;
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
   valueAsNumber?: boolean;
   touchedFields: Partial<Record<ValidFieldNames, boolean>>;
+  inputValue: string;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -37,6 +38,7 @@ export const Input: React.FC<InputProps> = ({
   register,
   valueAsNumber,
   touchedFields,
+  inputValue,
 }: InputProps) => {
   const isTouched = touchedFields[name];
 
@@ -46,7 +48,7 @@ export const Input: React.FC<InputProps> = ({
         {label}
       </label>
       <input
-        className={`${styles.input} ${error ? styles.errorInput : ''}  ${!error && isTouched ? styles.successInput : ''}`}
+        className={`${styles.input} ${error ? styles.errorInput : ''}  ${!error && isTouched && inputValue ? styles.successInput : ''}`}
         type={type}
         placeholder={placeholder}
         id={name}

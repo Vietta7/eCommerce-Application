@@ -46,6 +46,7 @@ input:focus {
 
 .errorInput {
   outline-color: #ff5449;
+  border-color: #ff5449;
 }
 
 .successInput {
