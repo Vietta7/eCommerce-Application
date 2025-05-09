@@ -1,11 +1,11 @@
 import React from 'react';
-import styles from './ExitButton.module.css';
+import styles from './BackButton.module.css';
 
 interface ExitButtonProps {
   className?: string;
 }
 
-export const ExitButton: React.FC<ExitButtonProps> = ({ className = '' }) => {
+export const BackButton: React.FC<ExitButtonProps> = ({ className = '' }) => {
   return (
     <button className={`${className} ${styles.exit}`}>
       <svg

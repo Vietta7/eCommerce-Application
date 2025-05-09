@@ -1,7 +1,7 @@
 .form {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(9, 1fr);
+  grid-template-rows: repeat(9, 90px);
   grid-column-gap: 10px;
   grid-row-gap: 5px;
   grid-template-areas:
@@ -24,6 +24,8 @@
   line-height: 24px;
   letter-spacing: 0px;
   text-transform: capitalize;
+  margin-bottom: 0px;
+  margin-top: 50px;
 }
 
 .personal {
@@ -105,7 +107,7 @@
   max-width: 478px;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(1, 1fr);
+  grid-template-rows: repeat(1, 90px);
   grid-column-gap: 10px;
   grid-row-gap: 5px;
 
@@ -131,6 +133,7 @@
   letter-spacing: 0%;
   transition: all 0.7s;
   margin: 0;
+  margin-left: 10px;
 }
 
 .link:hover {
@@ -142,7 +145,7 @@
   .form {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 90px);
     grid-template-areas:
       'personal personal personal personal'
       'email email firstname firstname'
@@ -183,7 +186,7 @@
   .form {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(13, 1fr);
+    grid-template-rows: repeat(13, 90px);
     grid-template-areas:
       'personal'
       'email'
