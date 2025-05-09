@@ -3,8 +3,9 @@ import { FormData, Input } from '../ui/Input/Input';
 import styles from './FormRegistration.module.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z, ZodType } from 'zod';
-
-const countryList = ['United States', 'Russia'];
+import { useContext, useState } from 'react';
+import { AccessTokenContext } from '../../context/AccessTokenContext';
+import { Loader } from '../../ui-kit/Loader/Loader';
 
 const postalCodeRegex = {
   US: /^\d{5}$/,
@@ -45,22 +46,19 @@ const formSchema: ZodType<FormData> = z.object({
       message: 'You must be at least 14 years old',
     },
   ),
-  addresses: z.object({
+  address: z.object({
     streetName: z.string().min(1, 'Street is required'),
     city: z
       .string()
       .min(1, 'City is required')
       .regex(/^[A-Za-z\s'-]+$/, 'City must not contain numbers or special characters'),
-
     postalCode: z
       .string()
       .refine((val) => postalCodeRegex.US.test(val) || postalCodeRegex.RU.test(val), {
         message: 'Invalid postal code format for US or Russia',
       }),
 
-    country: z.string().refine((val) => countryList.includes(val), {
-      message: 'Please select a valid country',
-    }),
+    country: z.string(),
   }),
 });
 
@@ -70,16 +68,65 @@ export function FormRegistration() {
     handleSubmit,
     reset,
     watch,
-    formState: { errors, touchedFields, isValid },
+    formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
     mode: 'all',
     reValidateMode: 'onChange',
   });
 
+  const [errorAPI, setErrorApi] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  async function createUser(data: FormData, token: string) {
+    try {
+      const response = await fetch(
+        'https://api.europe-west1.gcp.commercetools.com/dino-land/me/signup',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        },
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        if (errorData.message) {
+          setErrorApi(errorData.message);
+
+          throw new Error(errorData.message);
+        }
+        throw new Error('Error create user');
+      }
+      const user = await response.json();
+      reset();
+      console.log(user);
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  }
+
+  const token = useContext(AccessTokenContext);
+
   const onSumbit = async (data: FormData) => {
-    console.log('Success', data);
-    reset();
+    setErrorApi(null);
+    const userData = {
+      ...data,
+      addresses: [data.address],
+    };
+
+    try {
+      setIsLoading(true);
+      await createUser(userData, token);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -140,60 +187,62 @@ export function FormRegistration() {
       <Input
         className={styles.street}
         label="Street"
-        name="addresses.streetName"
+        name="address.streetName"
         placeholder="Street"
         type="text"
         register={register}
-        error={errors.addresses?.streetName}
-        touchedFields={touchedFields}
-        inputValue={watch('addresses.streetName')}
+        error={errors.address?.streetName}
+        inputValue={watch('address.streetName')}
       />
 
       <div className={styles.townPostcode}>
         <Input
           className={styles.town}
           label="City"
-          name="addresses.city"
+          name="address.city"
           placeholder="City"
           type="text"
           register={register}
-          error={errors.addresses?.city}
-          touchedFields={touchedFields}
-          inputValue={watch('addresses.city')}
+          error={errors.address?.city}
+          inputValue={watch('address.city')}
         />
         <Input
           className={styles.postcode}
           label="Postcode"
-          name="addresses.postalCode"
+          name="address.postalCode"
           placeholder="Postcode"
           type="text"
           register={register}
-          error={errors.addresses?.postalCode}
-          touchedFields={touchedFields}
-          inputValue={watch('addresses.postalCode')}
+          error={errors.address?.postalCode}
+          inputValue={watch('address.postalCode')}
         />
       </div>
-      <Input
-        className={styles.country}
-        label="Country"
-        name="addresses.country"
-        placeholder="Country"
-        type="text"
-        register={register}
-        error={errors.addresses?.country}
-        touchedFields={touchedFields}
-        inputValue={watch('addresses.country')}
-      />
+
+      <div className={`${styles.country} ${styles.selectCountry}`}>
+        <label className={styles.selectLabel} htmlFor="country">
+          Country
+        </label>
+        <select id="country" {...register('address.country')} name="address.country">
+          <option value="RU">Russia</option>
+          <option value="US">United States</option>
+        </select>
+        {errors.address?.country && (
+          <span className={styles.selectErrorMessage}>{errors.address.country.message}</span>
+        )}
+      </div>
 
       <button type="submit" className={styles.submitBtn} disabled={!isValid}>
-        Sign up
+        {isLoading ? <Loader /> : 'Sign up '}
       </button>
-      <p className={styles.linkToLogin}>
-        Already have an account?
-        <a className={styles.link} href="/login">
-          Log In
-        </a>
-      </p>
+      <div className={styles.linkToLogin}>
+        {errorAPI && <span className={styles.selectErrorMessage}>{errorAPI}</span>}
+        <p>
+          Already have an account?
+          <a className={styles.link} href="/login">
+            Log In
+          </a>
+        </p>
+      </div>
     </form>
   );
 }

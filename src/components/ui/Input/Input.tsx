@@ -1,4 +1,4 @@
-import { FieldError, UseFormRegister } from 'react-hook-form';
+import { FieldError, UseFormRegister, Path } from 'react-hook-form';
 import styles from './Input.module.css';
 
 export type FormData = {
@@ -7,7 +7,7 @@ export type FormData = {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  addresses: {
+  address: {
     streetName: string;
     city: string;
     postalCode: string;
@@ -21,7 +21,7 @@ interface InputProps {
   label: string;
   type: string;
   placeholder: string;
-  name: ValidFieldNames;
+  name: Path<FormData>;
   className?: string;
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
