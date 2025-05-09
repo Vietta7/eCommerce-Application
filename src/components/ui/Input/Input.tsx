@@ -6,11 +6,13 @@ export type FormData = {
   password: string;
   firstName: string;
   lastName: string;
-  dateBirthday: string;
-  street: string;
-  town: string;
-  postCode: string;
-  country: string;
+  dateOfBirth: string;
+  addresses: {
+    streetName: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
 };
 
 export type ValidFieldNames = keyof FormData;
@@ -24,7 +26,6 @@ interface InputProps {
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
   valueAsNumber?: boolean;
-  touchedFields: Partial<Record<ValidFieldNames, boolean>>;
   inputValue: string;
 }
 
@@ -37,18 +38,15 @@ export const Input: React.FC<InputProps> = ({
   error,
   register,
   valueAsNumber,
-  touchedFields,
   inputValue,
 }) => {
-  const isTouched = touchedFields[name];
-
   return (
     <div className={className}>
       <label className={styles.label} htmlFor={name}>
         {label}
       </label>
       <input
-        className={`${styles.input} ${error ? styles.errorInput : ''}  ${!error && isTouched && inputValue ? styles.successInput : ''}`}
+        className={`${styles.input} ${error ? styles.errorInput : ''}  ${!error && inputValue ? styles.successInput : ''}`}
         type={type}
         placeholder={placeholder}
         id={name}

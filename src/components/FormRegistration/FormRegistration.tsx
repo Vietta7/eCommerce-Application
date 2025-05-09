@@ -11,50 +11,48 @@ const postalCodeRegex = {
   RU: /^\d{6}$/,
 };
 
-const formSchema: ZodType<FormData> = z
-  .object({
-    email: z.string().email({ message: 'Invalid email address' }),
-    password: z
-      .string()
-      .min(8, 'Password must be at least 8 characters')
-      .regex(/[a-z]/, 'Must include a lowercase letter')
-      .regex(/[A-Z]/, 'Must include an uppercase letter')
-      .regex(/\d/, 'Must include a number'),
+const formSchema: ZodType<FormData> = z.object({
+  email: z.string().email({ message: 'Invalid email address' }),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[a-z]/, 'Must include a lowercase letter')
+    .regex(/[A-Z]/, 'Must include an uppercase letter')
+    .regex(/\d/, 'Must include a number'),
+  firstName: z
+    .string()
+    .min(1, 'First name is required')
+    .regex(/^[A-Za-z\s'-]+$/, 'First name must not contain numbers or special characters'),
 
-    firstName: z
-      .string()
-      .min(1, 'First name is required')
-      .regex(/^[A-Za-z\s'-]+$/, 'First name must not contain numbers or special characters'),
+  lastName: z
+    .string()
+    .min(1, 'Last name is required')
+    .regex(/^[A-Za-z\s'-]+$/, 'Last name must not contain numbers or special characters'),
 
-    lastName: z
-      .string()
-      .min(1, 'Last name is required')
-      .regex(/^[A-Za-z\s'-]+$/, 'Last name must not contain numbers or special characters'),
-
-    dateBirthday: z.string().refine(
-      (val) => {
-        const dob = new Date(val);
-        if (isNaN(dob.getTime())) return false;
-        const now = new Date();
-        const age = now.getFullYear() - dob.getFullYear();
-        const hasBirthdayPassedThisYear =
-          now.getMonth() > dob.getMonth() ||
-          (now.getMonth() === dob.getMonth() && now.getDate() >= dob.getDate());
-        const adjustedAge = hasBirthdayPassedThisYear ? age : age - 1;
-        return adjustedAge >= 14;
-      },
-      {
-        message: 'You must be at least 14 years old',
-      },
-    ),
-
-    street: z.string().min(1, 'Street is required'),
-    town: z
+  dateOfBirth: z.string().refine(
+    (val) => {
+      const dob = new Date(val);
+      if (isNaN(dob.getTime())) return false;
+      const now = new Date();
+      const age = now.getFullYear() - dob.getFullYear();
+      const hasBirthdayPassedThisYear =
+        now.getMonth() > dob.getMonth() ||
+        (now.getMonth() === dob.getMonth() && now.getDate() >= dob.getDate());
+      const adjustedAge = hasBirthdayPassedThisYear ? age : age - 1;
+      return adjustedAge >= 14;
+    },
+    {
+      message: 'You must be at least 14 years old',
+    },
+  ),
+  addresses: z.object({
+    streetName: z.string().min(1, 'Street is required'),
+    city: z
       .string()
       .min(1, 'City is required')
       .regex(/^[A-Za-z\s'-]+$/, 'City must not contain numbers or special characters'),
 
-    postCode: z
+    postalCode: z
       .string()
       .refine((val) => postalCodeRegex.US.test(val) || postalCodeRegex.RU.test(val), {
         message: 'Invalid postal code format for US or Russia',
@@ -63,8 +61,8 @@ const formSchema: ZodType<FormData> = z
     country: z.string().refine((val) => countryList.includes(val), {
       message: 'Please select a valid country',
     }),
-  })
-  .required();
+  }),
+});
 
 export function FormRegistration() {
   const {
@@ -95,7 +93,6 @@ export function FormRegistration() {
         type="email"
         register={register}
         error={errors.email}
-        touchedFields={touchedFields}
         inputValue={watch('email')}
       />
       <Input
@@ -106,7 +103,6 @@ export function FormRegistration() {
         type="password"
         register={register}
         error={errors.password}
-        touchedFields={touchedFields}
         inputValue={watch('password')}
       />
       <Input
@@ -117,7 +113,6 @@ export function FormRegistration() {
         type="text"
         register={register}
         error={errors.firstName}
-        touchedFields={touchedFields}
         inputValue={watch('firstName')}
       />
       <Input
@@ -128,68 +123,66 @@ export function FormRegistration() {
         type="text"
         register={register}
         error={errors.lastName}
-        touchedFields={touchedFields}
         inputValue={watch('lastName')}
       />
       <Input
         className={styles.datebirthday}
         label="Datebirthday"
-        name="dateBirthday"
+        name="dateOfBirth"
         placeholder="Datebirthday"
         type="date"
         register={register}
-        error={errors.dateBirthday}
-        touchedFields={touchedFields}
-        inputValue={watch('dateBirthday')}
+        error={errors.dateOfBirth}
+        inputValue={watch('dateOfBirth')}
       />
 
       <h4 className={`${styles.header} ${styles.address}`}>Address</h4>
       <Input
         className={styles.street}
         label="Street"
-        name="street"
+        name="addresses.streetName"
         placeholder="Street"
         type="text"
         register={register}
-        error={errors.street}
+        error={errors.addresses?.streetName}
         touchedFields={touchedFields}
-        inputValue={watch('street')}
+        inputValue={watch('addresses.streetName')}
       />
 
       <div className={styles.townPostcode}>
         <Input
           className={styles.town}
-          label="Town"
-          name="town"
-          placeholder="Town"
+          label="City"
+          name="addresses.city"
+          placeholder="City"
           type="text"
           register={register}
-          error={errors.town}
+          error={errors.addresses?.city}
           touchedFields={touchedFields}
-          inputValue={watch('town')}
+          inputValue={watch('addresses.city')}
         />
         <Input
           className={styles.postcode}
           label="Postcode"
-          name="postCode"
+          name="addresses.postalCode"
           placeholder="Postcode"
           type="text"
           register={register}
-          error={errors.postCode}
+          error={errors.addresses?.postalCode}
           touchedFields={touchedFields}
-          inputValue={watch('postCode')}
+          inputValue={watch('addresses.postalCode')}
         />
       </div>
       <Input
         className={styles.country}
         label="Country"
-        name="country"
+        name="addresses.country"
         placeholder="Country"
         type="text"
         register={register}
-        error={errors.country}
+        error={errors.addresses?.country}
         touchedFields={touchedFields}
-        inputValue={watch('country')}
+        inputValue={watch('addresses.country')}
       />
 
       <button type="submit" className={styles.submitBtn} disabled={!isValid}>
