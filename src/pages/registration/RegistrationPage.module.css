@@ -11,6 +11,7 @@
 .container {
   max-width: 1440px;
   margin: 0 auto;
+  position: relative;
 }
 
 .content {
@@ -19,6 +20,12 @@
   border-radius: 12px;
   padding: 60px;
   margin: 0 auto;
+}
+
+.exitBtn {
+  position: absolute;
+  left: 60px;
+  top: 0;
 }
 
 @media (max-width: 440px) {

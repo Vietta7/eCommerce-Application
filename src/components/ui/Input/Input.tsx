@@ -39,7 +39,7 @@ export const Input: React.FC<InputProps> = ({
   valueAsNumber,
   touchedFields,
   inputValue,
-}: InputProps) => {
+}) => {
   const isTouched = touchedFields[name];
 
   return (
