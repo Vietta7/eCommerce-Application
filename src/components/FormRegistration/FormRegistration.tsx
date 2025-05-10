@@ -1,11 +1,12 @@
 import { useForm } from 'react-hook-form';
-import { FormData, Input } from '../ui/Input/Input';
+import { Input } from '../ui/Input/Input';
 import styles from './FormRegistration.module.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z, ZodType } from 'zod';
 import { useContext, useState } from 'react';
 import { AccessTokenContext } from '../../context/AccessTokenContext';
 import { Loader } from '../../ui-kit/Loader/Loader';
+import { FormData } from '../../types/user/formData';
 
 const postalCodeRegex = {
   US: /^\d{5}$/,
@@ -47,7 +48,10 @@ const formSchema: ZodType<FormData> = z.object({
     },
   ),
   address: z.object({
-    streetName: z.string().min(1, 'Street is required'),
+    streetName: z
+      .string()
+      .min(1, 'Street is required')
+      .regex(/^[A-Za-z0-9]+$/, 'Use only english letters'),
     city: z
       .string()
       .min(1, 'City is required')
@@ -75,8 +79,9 @@ export function FormRegistration() {
     reValidateMode: 'onChange',
   });
 
-  const [errorAPI, setErrorApi] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [errorAPI, setErrorApi] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [successMessage, setSuccessMessage] = useState<string>('');
 
   async function createUser(data: FormData, token: string) {
     try {
@@ -96,14 +101,25 @@ export function FormRegistration() {
         const errorData = await response.json();
         if (errorData.message) {
           setErrorApi(errorData.message);
-
           throw new Error(errorData.message);
         }
         throw new Error('Error create user');
       }
-      const user = await response.json();
+      await response.json();
+
+      const resToken = await fetch('https://dino-land.netlify.app/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: data.email,
+          password: data.password,
+        }),
+      });
+
+      const { access_token: accessToken } = await resToken.json();
+      document.cookie = `access_token=${accessToken}; path=/`;
+
       reset();
-      console.log(user);
     } catch (error) {
       console.error(error);
       throw error;
@@ -113,7 +129,7 @@ export function FormRegistration() {
   const token = useContext(AccessTokenContext);
 
   const onSumbit = async (data: FormData) => {
-    setErrorApi(null);
+    setErrorApi('');
     const userData = {
       ...data,
       addresses: [data.address],
@@ -123,9 +139,16 @@ export function FormRegistration() {
       setIsLoading(true);
       await createUser(userData, token);
       setIsLoading(false);
+      setSuccessMessage('User created successfully!');
+
+      //   setTimeout(() => {
+      //     setSuccessMessage('');
+      //     navigate('/');
+      //   }, 2000);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
+      console.error(error);
+      throw error;
     }
   };
 
@@ -236,6 +259,7 @@ export function FormRegistration() {
       </button>
       <div className={styles.linkToLogin}>
         {errorAPI && <span className={styles.selectErrorMessage}>{errorAPI}</span>}
+        {successMessage && <span className={styles.successMessage}>{successMessage}</span>}
         <p>
           Already have an account?
           <a className={styles.link} href="/login">

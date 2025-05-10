@@ -17,7 +17,8 @@ function App() {
         const { access_token: accessToken } = data;
         setToken(accessToken);
       } catch (error) {
-        console.log(error);
+        console.error(error);
+        throw error;
       }
     }
     fetchAccessToken();

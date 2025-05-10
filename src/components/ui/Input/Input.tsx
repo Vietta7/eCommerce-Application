@@ -1,21 +1,6 @@
 import { FieldError, UseFormRegister, Path } from 'react-hook-form';
+import { FormData } from '../../../types/user/formData';
 import styles from './Input.module.css';
-
-export type FormData = {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-  dateOfBirth: string;
-  address: {
-    streetName: string;
-    city: string;
-    postalCode: string;
-    country: string;
-  };
-};
-
-export type ValidFieldNames = keyof FormData;
 
 interface InputProps {
   label: string;
@@ -25,8 +10,8 @@ interface InputProps {
   className?: string;
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
-  valueAsNumber?: boolean;
   inputValue: string;
+  valueAsNumber?: boolean;
 }
 
 export const Input: React.FC<InputProps> = ({
@@ -46,7 +31,7 @@ export const Input: React.FC<InputProps> = ({
         {label}
       </label>
       <input
-        className={`${styles.input} ${error ? styles.errorInput : ''}  ${!error && inputValue ? styles.successInput : ''}`}
+        className={`${styles.input} ${error && styles.errorInput}  ${!error && inputValue && styles.successInput}`}
         type={type}
         placeholder={placeholder}
         id={name}
