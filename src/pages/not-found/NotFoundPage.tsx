@@ -1,9 +1,19 @@
+import { Link } from 'react-router-dom';
+import styles from './NotFoundPage.module.css';
+
 const NotFoundPage = () => {
   return (
-    <div style={{ textAlign: 'center', padding: '50px' }}>
-      <h1>404 - Страница не найдена</h1>
-      <p>К сожалению, запрашиваемая страница отсутствует.</p>
-      <a href="/">Вернуться на главную</a>
+    <div className={styles.container}>
+      <div className={styles.content}>
+        <h1 className={styles.title}>404 Error</h1>
+        <p className={styles.text}>Page not found. Let&apos;s get you back on track!</p>
+        <Link to="/" className={styles.button}>
+          Back to main
+        </Link>
+      </div>
+      <div className={styles.imageContainer}>
+        <img src="src/assets/img/dino-404.png" alt="Error icon" className={styles.image} />
+      </div>
     </div>
   );
 };
