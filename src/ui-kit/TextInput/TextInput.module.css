@@ -1,0 +1,19 @@
+.input {
+  border: 1px solid rgba(152, 153, 152, 50);
+  border-radius: 12px;
+  padding: 8px 12px;
+  max-width: 478px;
+  width: 100%;
+}
+
+.label {
+  font-family: var(--font-family-input);
+  color: rgb(36, 36, 36);
+}
+
+.input__container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}

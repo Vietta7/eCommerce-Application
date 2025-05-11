@@ -5,6 +5,8 @@
     "lib": ["ES2023"],
     "module": "ESNext",
     "skipLibCheck": true,
+    "incremental": true, // need to avoid error with Option 'tsBuildInfoFile'
+    // `cannot be specified without specifying option 'incremental' or option 'composite'.ts`
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -17,8 +19,7 @@
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noFallthroughCasesInSwitch": true
   },
   "include": ["vite.config.ts"]
 }
