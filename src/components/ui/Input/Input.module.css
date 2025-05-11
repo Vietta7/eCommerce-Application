@@ -1,0 +1,55 @@
+.input {
+  border: 1px solid rgba(152, 153, 152, 0.5);
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 8px 12px 8px 12px;
+  height: 40px;
+  width: 100%;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #242424;
+}
+
+input:focus {
+  outline: 1px solid #626c57;
+  border: none;
+  border-radius: 12px;
+}
+
+.label {
+  color: #242424;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0%;
+  text-align: left;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.errorMessage {
+  color: #ff5449;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0px;
+  display: flex;
+  height: 20px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.errorInput {
+  outline-color: #ff5449;
+  border-color: #ff5449;
+}
+
+.successInput {
+  border-color: #00523b;
+  outline-color: #00523b;
+}

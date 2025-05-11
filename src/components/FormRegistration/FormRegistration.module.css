@@ -1,0 +1,317 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(9, 90px);
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+  grid-template-areas:
+    'personal personal personal personal'
+    'email email firstname lastname'
+    'password password datebirthday .'
+    'address address address address'
+    'street street . .'
+    'townPostcode  townPostcode . .'
+    'country country . .'
+    'submitbtn submitbtn . .'
+    'linkToLogin linkToLogin . .';
+}
+
+.header {
+  color: #00523b;
+  font-family: Montserrat, AriaL, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-transform: capitalize;
+  margin-bottom: 0px;
+  margin-top: 50px;
+}
+
+.personal {
+  grid-area: personal;
+}
+
+.email {
+  grid-area: email;
+  max-width: 478px;
+}
+
+.password {
+  grid-area: password;
+  max-width: 478px;
+}
+
+.firstname {
+  grid-area: firstname;
+  max-width: 228px;
+}
+
+.lastname {
+  grid-area: lastname;
+  max-width: 228px;
+}
+
+.datebirthday {
+  grid-area: datebirthday;
+  max-width: 228px;
+}
+
+.address {
+  grid-area: address;
+  max-width: 478px;
+}
+
+.street {
+  grid-area: street;
+  max-width: 478px;
+}
+
+.town {
+  grid-area: town;
+  max-width: 272px;
+}
+
+.postcode {
+  grid-area: postcode;
+  max-width: 181px;
+}
+
+.country {
+  grid-area: country;
+  max-width: 478px;
+}
+
+.submitBtn {
+  grid-area: submitbtn;
+  max-width: 478px;
+  height: 45px;
+  border-radius: 12px;
+  background: #000000;
+  color: #ffffff;
+  transition: all 0.7s;
+  margin-top: 30px;
+}
+
+.submitBtn:hover {
+  background: #00523b;
+}
+
+.submitBtn:disabled {
+  border-radius: 12px;
+  background: #989998;
+}
+
+.townPostcode {
+  grid-area: townPostcode;
+  max-width: 478px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(1, 90px);
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+
+  grid-template-areas: 'town town postcode';
+}
+
+.linkToLogin {
+  grid-area: linkToLogin;
+  color: rgb(128, 128, 128, 0.7);
+  font-family: Poppins, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0%;
+}
+
+.link {
+  color: #497f65;
+  font-family: Poppins, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0%;
+  transition: all 0.7s;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.link:hover {
+  color: #497f65;
+  text-decoration: underline;
+}
+
+.selectLabel {
+  color: #242424;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0%;
+  text-align: left;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.selectErrorMessage {
+  color: #ff5449;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0px;
+  display: flex;
+  height: 20px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.successMessage {
+  color: #00523b;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 16px;
+  letter-spacing: 0px;
+  display: flex;
+  height: 20px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.selectCountry {
+  width: 100%;
+  position: relative;
+}
+
+.selectCountry select {
+  appearance: none;
+  border: 1px solid rgba(152, 153, 152, 0.5);
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 8px 12px 8px 12px;
+  height: 40px;
+  width: 100%;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #242424;
+  cursor: pointer;
+}
+
+.selectCountry select:focus {
+  outline: 1px solid #626c57;
+  border: none;
+  border-radius: 12px;
+}
+
+.selectCountry::before,
+.selectCountry::after {
+  --size: 0.3rem;
+  position: absolute;
+  content: '';
+  right: 1rem;
+  pointer-events: none;
+}
+
+.selectCountry::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid #242424;
+  top: 45%;
+  opacity: 0.5;
+}
+
+.selectCountry::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid #242424;
+  top: 55%;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(10, 90px);
+    grid-template-areas:
+      'personal personal personal personal'
+      'email email firstname firstname'
+      'password password  lastname  lastname'
+      'datebirthday datebirthday  . . '
+      'address address address address'
+      'street street street  street'
+      'townPostcode  townPostcode  townPostcode  townPostcode'
+      'country country country country'
+      'submitbtn submitbtn . .'
+      'linkToLogin linkToLogin . .';
+  }
+
+  .firstname,
+  .lastname,
+  .street,
+  .datebirthday,
+  .country {
+    max-width: unset;
+    width: 100%;
+  }
+
+  .townPostcode {
+    grid-area: townPostcode;
+    max-width: unset;
+    width: 100%;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+
+    grid-template-areas: 'town town postcode';
+  }
+}
+
+@media (max-width: 440px) {
+  .form {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(13, 90px);
+    grid-template-areas:
+      'personal'
+      'email'
+      'password'
+      'firstname'
+      'lastname'
+      'datebirthday'
+      'address'
+      'street'
+      'townPostcode'
+      'townPostcode'
+      'country'
+      'submitbtn'
+      'linkToLogin';
+  }
+
+  .townPostcode {
+    grid-area: townPostcode;
+    max-width: unset;
+    width: 100%;
+
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+
+    grid-template-areas:
+      'town'
+      'postcode';
+  }
+
+  .town,
+  .postcode {
+    max-width: unset;
+    width: 100%;
+  }
+}
