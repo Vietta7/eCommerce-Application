@@ -7,6 +7,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';
 import MainPage from './pages/main/MainPage';
 import NotFoundPage from './pages/not-found/NotFoundPage';
+import AboutPage from './pages/about/AboutPage';
+import CatalogPage from './pages/catalog/CatalogPage';
 import Header from './components/Header/Header';
 // import { getAuthToken } from './services/authService'; // согласовать с Димой использование getAuthToken в component\FormRegistration
 
@@ -40,6 +42,8 @@ function App() {
           <Route path="/" element={<MainPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/registration" element={<RegistrationPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
