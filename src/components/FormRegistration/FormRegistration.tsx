@@ -213,7 +213,7 @@ export function FormRegistration() {
         inputValue={watch('address.streetName')}
       />
 
-      <div className={styles.townPostcode}>
+      <div className={styles.town_postcode}>
         <Input
           className={styles.town}
           label="City"
@@ -236,8 +236,8 @@ export function FormRegistration() {
         />
       </div>
 
-      <div className={`${styles.country} ${styles.selectCountry}`}>
-        <label className={styles.selectLabel} htmlFor="country">
+      <div className={`${styles.country} ${styles.select_country}`}>
+        <label className={styles.select_label} htmlFor="country">
           Country
         </label>
         <select id="country" {...register('address.country')} name="address.country">
@@ -245,14 +245,14 @@ export function FormRegistration() {
           <option value="US">United States</option>
         </select>
         {errors.address?.country && (
-          <span className={styles.selectErrorMessage}>{errors.address.country.message}</span>
+          <span className={styles.select_error_message}>{errors.address.country.message}</span>
         )}
       </div>
 
-      <button type="submit" className={styles.submitBtn} disabled={!isValid}>
+      <button type="submit" className={styles.submit_btn} disabled={!isValid}>
         {isLoading ? <Loader /> : 'Sign up '}
       </button>
-      <div className={styles.linkToLogin}>
+      <div className={styles.link_to_login}>
         <p>
           Already have an account?
           <Link className={styles.link} to="/login">
