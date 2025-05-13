@@ -1,34 +1,48 @@
 import { Link } from 'react-router-dom';
-import './Header.module.css';
+import styles from './Header.module.css';
+import logo from '../../assets/img/logo.png';
+import cartIcon from '../../assets/img/cart.svg';
 
 const Header = () => {
   return (
-    <header className="header">
-      <div className="logo">
-        <img src="src/assets/img/logo.png" alt="Dino-Land Logo" />
+    <header className={styles.header}>
+      <div className={styles.logo}>
+        <Link to="/">
+          <img src={logo} alt="Dino-Land Logo" />
+        </Link>
         <span>DINO-LAND</span>
       </div>
 
-      <nav className="menu">
+      <nav className={styles.menu}>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to="/" className={styles.menuItem}>
+              Home
+            </Link>
           </li>
           <li>
-            <Link to="/catalog">Catalog</Link>
+            <Link to="/catalog" className={styles.menuItem}>
+              Catalog
+            </Link>
           </li>
           <li>
-            <Link to="/about">About</Link>
+            <Link to="/about" className={styles.menuItem}>
+              About
+            </Link>
           </li>
         </ul>
       </nav>
 
-      <div className="actions">
-        <button className="login-button">Log In</button>
-        <button className="login-button">Sign In</button>
-        <div className="cart-icon">
-          <img src="src/assets/img/cart.png" alt="Cart" />
-          <span className="badge">16</span>
+      <div className={styles.actions}>
+        <Link to="/login" className={styles.button}>
+          Login
+        </Link>
+        <Link to="/registration" className={styles.button}>
+          Sign Up
+        </Link>
+        <div className={styles.cartIcon}>
+          <img src={cartIcon} alt="Cart" />
+          <span className={styles.badge}>16</span>
         </div>
       </div>
     </header>
