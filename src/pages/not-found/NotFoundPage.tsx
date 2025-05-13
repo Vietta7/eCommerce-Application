@@ -11,7 +11,7 @@ const NotFoundPage = () => {
           Back to main
         </Link>
       </div>
-      <div className={styles.imageContainer}>
+      <div className={styles.image_container}>
         <img src="src/assets/img/dino-404.png" alt="Error icon" className={styles.image} />
       </div>
     </div>
