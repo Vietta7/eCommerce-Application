@@ -3,11 +3,12 @@ import styles from './BackButton.module.css';
 
 interface ExitButtonProps {
   className?: string;
+  onClick?: () => void;
 }
 
-export const BackButton: React.FC<ExitButtonProps> = ({ className = '' }) => {
+export const BackButton: React.FC<ExitButtonProps> = ({ className = '', onClick }) => {
   return (
-    <button className={`${className} ${styles.exit}`}>
+    <button className={`${className} ${styles.exit}`} onClick={onClick}>
       <svg
         width="45.000000"
         height="45.000000"

@@ -7,6 +7,8 @@ import { useContext, useState } from 'react';
 import { AccessTokenContext } from '../../context/AccessTokenContext';
 import { Loader } from '../../ui-kit/Loader/Loader';
 import { FormData } from '../../types/user/formData';
+import toast from 'react-hot-toast';
+import { Link, useNavigate } from 'react-router-dom';
 
 const postalCodeRegex = {
   US: /^\d{5}$/,
@@ -79,10 +81,8 @@ export function FormRegistration() {
     reValidateMode: 'onChange',
   });
 
-  const [errorAPI, setErrorApi] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
-
+  const navigate = useNavigate();
   async function createUser(data: FormData, token: string) {
     try {
       const response = await fetch(
@@ -100,7 +100,7 @@ export function FormRegistration() {
       if (!response.ok) {
         const errorData = await response.json();
         if (errorData.message) {
-          setErrorApi(errorData.message);
+          toast.error(errorData.message);
           throw new Error(errorData.message);
         }
         throw new Error('Error create user');
@@ -120,6 +120,8 @@ export function FormRegistration() {
       document.cookie = `access_token=${accessToken}; path=/`;
 
       reset();
+      toast.success('User created successfully!');
+      navigate('/');
     } catch (error) {
       console.error(error);
       throw error;
@@ -129,7 +131,6 @@ export function FormRegistration() {
   const token = useContext(AccessTokenContext);
 
   const onSumbit = async (data: FormData) => {
-    setErrorApi('');
     const userData = {
       ...data,
       addresses: [data.address],
@@ -139,12 +140,6 @@ export function FormRegistration() {
       setIsLoading(true);
       await createUser(userData, token);
       setIsLoading(false);
-      setSuccessMessage('User created successfully!');
-
-      //   setTimeout(() => {
-      //     setSuccessMessage('');
-      //     navigate('/');
-      //   }, 2000);
     } catch (error) {
       setIsLoading(false);
       console.error(error);
@@ -258,13 +253,11 @@ export function FormRegistration() {
         {isLoading ? <Loader /> : 'Sign up '}
       </button>
       <div className={styles.linkToLogin}>
-        {errorAPI && <span className={styles.selectErrorMessage}>{errorAPI}</span>}
-        {successMessage && <span className={styles.successMessage}>{successMessage}</span>}
         <p>
           Already have an account?
-          <a className={styles.link} href="/login">
+          <Link className={styles.link} to="/login">
             Log In
-          </a>
+          </Link>
         </p>
       </div>
     </form>

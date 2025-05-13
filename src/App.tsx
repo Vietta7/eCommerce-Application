@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';
 import MainPage from './pages/main/MainPage';
 import NotFoundPage from './pages/not-found/NotFoundPage';
+import { Toaster } from 'react-hot-toast';
 // import { getAuthToken } from './services/authService'; // согласовать с Димой использование getAuthToken в component\FormRegistration
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
+      <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
     </AccessTokenContext.Provider>
   );
 }
