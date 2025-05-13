@@ -1,0 +1,138 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: transparent;
+    padding: 15px 30px;
+    width: 100%;
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+  
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .logo img {
+    height: 46px;
+  }
+  
+  .logo span {
+    font-size: 28px;
+    color: #000000;
+    font-size: 25px;
+    line-height: 24px;
+  }
+  
+  .menu ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 30px;
+  }
+  
+  .menu a {
+    text-decoration: none;
+    color: #000000;
+    font-size: 18px;
+    line-height: 24px;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .menu a:hover {
+    color: #00523b;
+  }
+  
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .actions .button {
+    background-color: black;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 18px;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+  }
+  
+  .actions .button:hover {
+    background-color: #00523b; 
+  }
+  
+  .cart-icon {
+    position: relative;
+  }
+  
+  .cart-icon img {
+    height: 32px;
+    width: 32px;
+  }
+  
+  .badge {
+    position: absolute;
+    top: 4px;
+    background-color: black;
+    color: white;
+    border-radius: 50%;
+    padding: 5px 5px;
+    font-size: 12px;
+  }
+
+  @media (max-width: 768px) {
+    .header {
+      padding: 10px 15px;
+      max-width: 100%;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .logo {
+      gap: 8px;
+    }
+  
+    .logo img {
+      height: 36px;
+    }
+  
+    .logo span {
+      font-size: 20px;
+    }
+  
+    .menu ul {
+      gap: 12px;
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .menu a {
+      font-size: 16px;
+    }
+  
+    .actions {
+      gap: 10px;
+      flex-direction: column;
+    }
+  
+    .actions .button {
+      padding: 8px 16px;
+      font-size: 16px;
+      width: 100%;
+      text-align: center;
+    }
+  
+    .cart-icon img {
+      height: 26px;
+      width: 26px;
+    }
+  
+    .badge {
+      display: none;
+    }
+  }
