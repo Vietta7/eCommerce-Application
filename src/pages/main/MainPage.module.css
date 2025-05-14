@@ -1,6 +1,5 @@
 .main {
   position: relative;
-  z-index: 0;
 }
 
 .banner_section {
@@ -14,6 +13,7 @@
   background-size: cover;
   background-position: center;
   margin-top: -80px;
+  height: 80vh;
 }
 
 .banner_section_title {
@@ -41,9 +41,88 @@
   margin-left: 206px;
   border: none;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .banner_button:hover {
   background-color: #00523b;
   transform: translateY(-1px);
+  color: white;
+  text-decoration: none;
+}
+
+.cards_wrapper {
+  position: relative;
+  margin-top: -100px;
+  z-index: 2;
+}
+
+.cards_container {
+  display: flex;
+  gap: 27px;
+  max-width: 1296px;
+  margin: 0 auto;
+  padding: 0 20px;
+  justify-content: center;
+}
+
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  min-height: 368px;
+  display: flex;
+  justify-content: space-between;
+  transition: transform 0.3s ease;
+  width: 650px;
+  flex-shrink: 0;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card_image {
+  border-radius: 12px;
+  width: 100%;
+  height: 370px;
+  object-fit: cover;
+}
+
+.card_content {
+  padding: 20px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex-grow: 1;
+}
+
+.card h3 {
+  font-size: 28px;
+  font-weight: 400;
+  line-height: 36px;
+  color: black;
+  text-align: left;
+  padding-bottom: 16px;
+}
+
+.card_button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: black;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 500;
+  transition: transform 0.3s ease;
+  align-self: flex-start;
+  align-items: center; 
+}
+
+.card_button:hover {
+  background-color: #00523b;
+  transform: translateY(-1px);
+  color: white;
+  text-decoration: none;
 }

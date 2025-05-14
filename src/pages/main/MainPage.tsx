@@ -15,6 +15,44 @@ const MainPage = () => {
             Explore Now
           </Link>
         </section>
+        <div className={styles.cards_wrapper}>
+          <div className={styles.cards_container}>
+            <div className={styles.card}>
+              <div className={styles.card_image_container}>
+                <img
+                  src="./src/assets/img/dino-cards/tyrannosaurus.png"
+                  alt="Tyrannosaurus Rex"
+                  className={styles.card_image}
+                />
+              </div>
+              <div className={styles.card_content}>
+                <h3>
+                  Tyrannosaurus <br />
+                  Rex
+                </h3>
+                <Link to="/tyrannosaurus" className={styles.card_button}>
+                  View Details
+                </Link>
+              </div>
+            </div>
+
+            <div className={styles.card}>
+              <div className={styles.card_image_container}>
+                <img
+                  src="./src/assets/img/dino-cards/triceratops.png"
+                  alt="Triceratops"
+                  className={styles.card_image}
+                />
+              </div>
+              <div className={styles.card_content}>
+                <h3>Triceratops</h3>
+                <Link to="/triceratops" className={styles.card_button}>
+                  View Details
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
       </main>
     </>
   );
