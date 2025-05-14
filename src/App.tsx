@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-import RegistrationPage from './pages/registration/RegistrationPage';
+// import RegistrationPage from './pages/registration/RegistrationPage';
 import { AccessTokenContext } from './context/AccessTokenContext';
+import AutorisationPage from './pages/AutorisationPage/AutorisationPage';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';

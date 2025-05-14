@@ -1,20 +1,19 @@
-import { FieldError, UseFormRegister, Path } from 'react-hook-form';
-import { FormData } from '../../../types/user/formData';
+import { FieldError, UseFormRegister, Path, FieldValues } from 'react-hook-form';
 import styles from './Input.module.css';
 
-interface InputProps {
+interface InputProps<T extends FieldValues> {
   label: string;
   type: string;
   placeholder: string;
-  name: Path<FormData>;
-  register: UseFormRegister<FormData>;
+  name: Path<T>;
+  register: UseFormRegister<T>;
   error: FieldError | undefined;
   inputValue: string;
   className?: string;
   valueAsNumber?: boolean;
 }
 
-export const Input: React.FC<InputProps> = ({
+export const Input = <T extends FieldValues>({
   label,
   type,
   placeholder,
@@ -24,7 +23,7 @@ export const Input: React.FC<InputProps> = ({
   register,
   valueAsNumber,
   inputValue,
-}) => {
+}: InputProps<T>) => {
   return (
     <div className={className}>
       <label className={styles.label} htmlFor={name}>
