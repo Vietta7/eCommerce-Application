@@ -7,6 +7,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LoginPage from './pages/login/LoginPage';
 import MainPage from './pages/main/MainPage';
 import NotFoundPage from './pages/not-found/NotFoundPage';
+
+import { Toaster } from 'react-hot-toast';
 import AboutPage from './pages/about/AboutPage';
 import CatalogPage from './pages/catalog/CatalogPage';
 import Header from './components/Header/Header';
@@ -47,6 +49,7 @@ function App() {
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Router>
+      <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
     </AccessTokenContext.Provider>
   );
 }

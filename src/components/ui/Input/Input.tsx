@@ -7,10 +7,10 @@ interface InputProps {
   type: string;
   placeholder: string;
   name: Path<FormData>;
-  className?: string;
   register: UseFormRegister<FormData>;
   error: FieldError | undefined;
   inputValue: string;
+  className?: string;
   valueAsNumber?: boolean;
 }
 
@@ -31,13 +31,13 @@ export const Input: React.FC<InputProps> = ({
         {label}
       </label>
       <input
-        className={`${styles.input} ${error && styles.errorInput}  ${!error && inputValue && styles.successInput}`}
+        className={`${styles.input} ${error && styles.error_input}  ${!error && inputValue && styles.success_input}`}
         type={type}
         placeholder={placeholder}
         id={name}
         {...register(name, { valueAsNumber })}
       />
-      <span className={styles.errorMessage}>{error && error.message}</span>
+      <span className={styles.error_message}>{error && error.message}</span>
     </div>
   );
 };

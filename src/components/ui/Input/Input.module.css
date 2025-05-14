@@ -31,7 +31,7 @@ input:focus {
   display: block;
 }
 
-.errorMessage {
+.error_message {
   color: #ff5449;
   font-family: Montserrat, Arial, sans-serif;
   font-size: 12px;
@@ -44,12 +44,12 @@ input:focus {
   margin-top: 5px;
 }
 
-.errorInput {
+.error_input {
   outline-color: #ff5449;
   border-color: #ff5449;
 }
 
-.successInput {
+.success_input {
   border-color: #00523b;
   outline-color: #00523b;
 }
