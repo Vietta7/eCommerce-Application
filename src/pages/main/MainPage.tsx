@@ -8,12 +8,14 @@ const MainPage = () => {
       <Header isMainPage={true} />
       <main className={styles.main}>
         <section className={styles.banner_section}>
-          <h1 className={styles.banner_section_title}>
-            Jurassic period in your terrarium. Adopt a dinosaur. Seriously.
-          </h1>
-          <Link to="/catalog" className={styles.banner_button}>
-            Explore Now
-          </Link>
+          <div className={styles.banner_content}>
+            <h1 className={styles.banner_section_title}>
+              Jurassic period in your terrarium. Adopt a dinosaur. Seriously.
+            </h1>
+            <Link to="/catalog" className={styles.banner_button}>
+              Explore Now
+            </Link>
+          </div>
         </section>
         <div className={styles.cards_wrapper}>
           <div className={styles.cards_container}>
