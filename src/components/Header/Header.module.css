@@ -63,28 +63,28 @@
   }
   
   .actions .button:hover {
-    background-color: #00523b; 
+    background-color: #00523b;
   }
   
-  .cart-icon {
+  .cart_icon {
     position: relative;
   }
   
-  .cart-icon img {
+  .cart_icon img {
     height: 32px;
     width: 32px;
   }
   
   .badge {
     position: absolute;
-    top: 4px;
+    top: -3px;
     background-color: black;
     color: white;
     border-radius: 50%;
-    padding: 5px 5px;
+    padding: 5px 10px;
     font-size: 12px;
   }
-
+  
   @media (max-width: 768px) {
     .header {
       padding: 10px 15px;
@@ -127,7 +127,7 @@
       text-align: center;
     }
   
-    .cart-icon img {
+    .cart_icon img {
       height: 26px;
       width: 26px;
     }

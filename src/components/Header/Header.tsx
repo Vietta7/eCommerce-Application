@@ -16,17 +16,17 @@ const Header = () => {
       <nav className={styles.menu}>
         <ul>
           <li>
-            <Link to="/" className={styles.menuItem}>
+            <Link to="/" className={styles.menu_item}>
               Home
             </Link>
           </li>
           <li>
-            <Link to="/catalog" className={styles.menuItem}>
+            <Link to="/catalog" className={styles.menu_item}>
               Catalog
             </Link>
           </li>
           <li>
-            <Link to="/about" className={styles.menuItem}>
+            <Link to="/about" className={styles.menu_item}>
               About
             </Link>
           </li>
@@ -35,14 +35,14 @@ const Header = () => {
 
       <div className={styles.actions}>
         <Link to="/login" className={styles.button}>
-          Login
+          Log In
         </Link>
         <Link to="/registration" className={styles.button}>
           Sign Up
         </Link>
-        <div className={styles.cartIcon}>
+        <div className={styles.cart_icon}>
           <img src={cartIcon} alt="Cart" />
-          <span className={styles.badge}>16</span>
+          <span className={styles.badge}>0</span>
         </div>
       </div>
     </header>
