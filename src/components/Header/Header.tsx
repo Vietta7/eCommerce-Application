@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
-import logo from '../../assets/img/logo.png';
+import logo from '../../assets/img/logo.svg';
 import cartIcon from '../../assets/img/cart.svg';
 
 interface HeaderProps {
