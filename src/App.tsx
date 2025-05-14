@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
 import './App.css';
-// import RegistrationPage from './pages/registration/RegistrationPage';
 import { AccessTokenContext } from './context/AccessTokenContext';
 import AutorisationPage from './pages/AutorisationPage/AutorisationPage';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import LoginPage from './pages/login/LoginPage';
 import MainPage from './pages/main/MainPage';
 import NotFoundPage from './pages/not-found/NotFoundPage';
 
@@ -13,7 +11,8 @@ import { Toaster } from 'react-hot-toast';
 import AboutPage from './pages/about/AboutPage';
 import CatalogPage from './pages/catalog/CatalogPage';
 import Header from './components/Header/Header';
-// import { getAuthToken } from './services/authService'; // согласовать с Димой использование getAuthToken в component\FormRegistration
+import RegistrationPage from './pages/registration/RegistrationPage';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
   const [token, setToken] = useState('');
@@ -38,19 +37,21 @@ function App() {
 
   return (
     <AccessTokenContext.Provider value={token}>
-      <Router>
-        <Header />
+      <AuthProvider>
+        <Router>
+          <Header />
 
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registration" element={<RegistrationPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/catalog" element={<CatalogPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </Router>
-      <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
+          <Routes>
+            <Route path="/" element={<MainPage />} />
+            <Route path="/login" element={<AutorisationPage />} />
+            <Route path="/registration" element={<RegistrationPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/catalog" element={<CatalogPage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Router>
+        <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
+      </AuthProvider>
     </AccessTokenContext.Provider>
   );
 }

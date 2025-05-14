@@ -5,16 +5,18 @@ import { logIn } from '../../api/api';
 import { Input } from '../../components/ui/Input/Input';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Loader } from '../../ui-kit/Loader/Loader';
 import { FormDataLogin } from '../../types/user/formData';
 import { autorisationFormSchema, inputsData } from '../model/data';
 import { InputArray } from '../../types/common';
+import { AuthContext } from '../../context/AuthContext';
+import { useNavigate } from 'react-router';
+import toast from 'react-hot-toast';
 
 export default function AutorisationPage() {
-  const [errorAPI, setErrorApi] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const setAuthenticated = useContext(AuthContext).setAuthenticated;
 
   const {
     register,
@@ -25,20 +27,26 @@ export default function AutorisationPage() {
     resolver: zodResolver(autorisationFormSchema),
     mode: 'all',
     reValidateMode: 'onChange',
+    defaultValues: {
+      email: 'Damalsd@asd.rt',
+      password: 'Q1w2e3r4t5ZXc',
+    },
   });
 
-  const onSumbit = async (data: FormDataLogin) => {
-    setErrorApi('');
+  const navigate = useNavigate();
 
+  const onSumbit = async (data: FormDataLogin) => {
     try {
       setIsLoading(true);
       await logIn(data);
       setIsLoading(false);
-      setSuccessMessage('Autorisetaion successfully!');
+      toast.success('Successfully autorisation!');
+      setAuthenticated(true);
+      navigate('/');
     } catch (error) {
       setIsLoading(false);
       if (error instanceof Error) {
-        setErrorApi(error?.message);
+        toast.error(error?.message);
       }
     }
   };
@@ -60,7 +68,7 @@ export default function AutorisationPage() {
 
   return (
     <div className={styles.container}>
-      <BackButton className={styles.backButton}></BackButton>
+      <BackButton className={styles.backButton} onClick={() => navigate(-1)}></BackButton>
       <div className={styles.content}>
         <div className={styles.title_wrapper}>
           <img className={styles.icon} src={logo} alt="logo" />
@@ -75,9 +83,6 @@ export default function AutorisationPage() {
               {isLoading ? <Loader /> : 'Log In'}
             </button>
             <div className={styles.navigation}>
-              {/* TODO: update into modal or popup */}
-              {errorAPI && <span className={styles.selectErrorMessage}>{errorAPI}</span>}
-              {successMessage && <span className={styles.successMessage}>{successMessage}</span>}
               <p className={styles.p}>Don`t have an account?</p>
               <a href="/registration">Sign up</a>
             </div>

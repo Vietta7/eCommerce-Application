@@ -1,9 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 import logo from '../../assets/img/logo.png';
 import cartIcon from '../../assets/img/cart.svg';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 const Header = () => {
+  const { isAuthenticated, setAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
+
   return (
     <header className={styles.header}>
       <div className={styles.logo}>
@@ -34,12 +39,26 @@ const Header = () => {
       </nav>
 
       <div className={styles.actions}>
-        <Link to="/login" className={styles.button}>
-          Log In
-        </Link>
-        <Link to="/registration" className={styles.button}>
-          Sign Up
-        </Link>
+        {!isAuthenticated ? (
+          <>
+            <Link to="/login" className={styles.button}>
+              Log In
+            </Link>
+            <Link to="/registration" className={styles.button}>
+              Sign Up
+            </Link>
+          </>
+        ) : (
+          <button
+            onClick={() => {
+              document.cookie = 'access_token=; ';
+              setAuthenticated(false);
+              navigate('/login');
+            }}
+          >
+            Log out
+          </button>
+        )}
         <div className={styles.cart_icon}>
           <img src={cartIcon} alt="Cart" />
           <span className={styles.badge}>0</span>
