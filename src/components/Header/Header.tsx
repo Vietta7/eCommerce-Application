@@ -3,14 +3,18 @@ import styles from './Header.module.css';
 import logo from '../../assets/img/logo.png';
 import cartIcon from '../../assets/img/cart.svg';
 
-const Header = () => {
+interface HeaderProps {
+  isMainPage?: boolean;
+}
+
+const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
   return (
-    <header className={styles.header}>
+    <header className={`${styles.header} ${isMainPage ? styles.main_header : ''}`}>
       <div className={styles.logo}>
         <Link to="/">
           <img src={logo} alt="Dino-Land Logo" />
         </Link>
-        <span>DINO-LAND</span>
+        <span className={isMainPage ? styles.white_text : ''}>DINO-LAND</span>
       </div>
 
       <nav className={styles.menu}>
