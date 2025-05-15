@@ -108,7 +108,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between;
   flex-grow: 1;
 }
 
@@ -118,7 +118,6 @@
   line-height: 36px;
   color: black;
   text-align: left;
-  padding-bottom: 16px;
 }
 
 .card_button {
@@ -131,7 +130,6 @@
   font-weight: 500;
   transition: transform 0.3s ease;
   align-self: flex-start;
-  align-items: center;
 }
 
 .card_button:hover {
@@ -141,7 +139,7 @@
   text-decoration: none;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 814px) {
   .banner_section {
     padding: 80px 15px 30px;
     text-align: center;
@@ -156,7 +154,6 @@
   }
 
   .banner_button {
-    display: block;
     margin: 20px auto;
     text-align: center;
   }
@@ -165,15 +162,6 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
-  }
-
-  .card {
-    width: 90%;
-    max-width: 400px;
-  }
-
-  .card_image {
-    height: auto;
   }
 }
 
