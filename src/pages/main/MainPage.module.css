@@ -198,7 +198,6 @@
   }
 }
 
-
 .dino_grid_section {
   padding: 2rem 0;
 }
@@ -234,7 +233,7 @@
   width: 644px;
 }
 
-.grid_card:nth-child(n+4) {
+.grid_card:nth-child(n + 4) {
   grid-column: span 1;
 }
 
@@ -300,7 +299,7 @@
   right: 14px;
   width: 45px;
   height: 45px;
-  border: 1px solid #00523B;
+  border: 1px solid #00523b;
   border-radius: 12px;
   transition: 0.3s ease;
 }
@@ -309,7 +308,7 @@
 .plus_button::after {
   content: '';
   position: absolute;
-  background-color: #00523B;
+  background-color: #00523b;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -326,9 +325,8 @@
   height: 20px;
 }
 
-
 .plus_button:hover {
-  background-color: #00523B;
+  background-color: #00523b;
 }
 
 .plus_button:hover::before,
@@ -337,11 +335,11 @@
 }
 
 .grid_button:hover {
-  background-color: #00523B;
+  background-color: #00523b;
 }
 
 .special_card {
-  background: #00523B;
+  background: #00523b;
   color: white;
   display: flex;
   align-items: center;
@@ -371,7 +369,6 @@
   padding-bottom: 20px;
 }
 
-
 .special_card .grid_button {
   background-color: transparent;
   color: white;
@@ -386,13 +383,13 @@
 
 .special_card .grid_button:hover {
   background-color: white;
-  color: #00523B;
+  color: #00523b;
 }
 @media (min-width: 1357px) {
   .grid_container {
     grid-template-columns: repeat(4, minmax(300px, 1fr));
   }
-  
+
   .grid_card:nth-child(1) {
     grid-column: span 2;
     max-width: 644px;
@@ -403,7 +400,7 @@
   .grid_container {
     justify-content: center;
   }
-  
+
   .grid_card:nth-child(1) {
     grid-column: 1 / -1;
     max-width: 644px;
@@ -491,4 +488,95 @@
     padding: 12px 24px;
     font-size: 14px;
   }
+}
+
+.cta_banner {
+  position: relative;
+  text-align: left;
+  color: white;
+  background:
+    linear-gradient(rgba(46, 45, 45, 0.5), rgba(46, 45, 45, 0.5)),
+    url('../../assets/img/dino-cards/cta-dino.png');
+  background-size: cover;
+  background-position: center;
+}
+
+.cta_banner {
+  position: relative;
+  text-align: left;
+  color: white;
+  padding: 140px 20px 90px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+
+.cta_image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.cta_container {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-bottom: 100px;
+  text-align: center;
+}
+
+.cta_title {
+  max-width: 770px;
+  width: 100%;
+  font-size: clamp(32px, 4.5vw, 57px);
+  line-height: 64px;
+  letter-spacing: -0.25px;
+  font-weight: 600;
+  margin: 0 11%;
+  align-items: left;
+  text-align: left;
+  box-sizing: border-box;
+  height: auto;
+  position: relative;
+}
+
+.cta_text {
+  max-width: 770px;
+  width: 100%;
+  font-size: 16px;
+  line-height: 64px;
+  letter-spacing: -0.25px;
+  font-weight: 600;
+  margin: 0 11%;
+  align-items: left;
+  text-align: left;
+  box-sizing: border-box;
+  height: auto;
+  position: relative;
+}
+
+.cta_button {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta_button_primary {
+  background: transparent;
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 12px;
+  border: 1px solid white;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.cta_button_primary:hover {
+  color: black;
+  background: white;
 }

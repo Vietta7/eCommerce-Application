@@ -174,6 +174,19 @@ const MainPage = () => {
             </div>
           </div>
         </section>
+        <section className={styles.cta_banner}>
+          <div className={styles.cta_container}>
+            <h2 className={styles.cta_title}>Create your own prehistoric world right now!</h2>
+            <p className={styles.cta_text}>
+              Join the community of paleontology enthusiasts and get exclusive access to new species
+            </p>
+            <div className={styles.cta_button}>
+              <Link to="/catalog" className={styles.cta_button_primary}>
+                View Detail
+              </Link>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
