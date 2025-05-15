@@ -580,3 +580,44 @@
   color: black;
   background: white;
 }
+
+@media (max-width: 876px) {
+  .cta_banner {
+    padding: 100px 20px 60px;
+    flex-direction: column;
+    text-align: center;
+    gap: 30px;
+    overflow: hidden;
+  }
+
+  .cta_image {
+    width: 240px;
+    height: auto;
+  }
+
+  .cta_title {
+    font-size: clamp(24px, 5vw, 36px);
+    line-height: 1.3;
+    margin: 0 auto;
+    text-align: center;
+    padding-bottom: 20px;
+  }
+
+  .cta_text {
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0 auto;
+    max-width: 90%;
+    text-align: center;
+    padding-bottom: 20px;
+  }
+
+  .cta_container {
+    padding-bottom: 60px;
+  }
+
+  .cta_button_primary {
+    padding: 0.8rem 2rem;
+    font-size: 14px;
+  }
+}
