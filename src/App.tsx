@@ -12,7 +12,7 @@ import { Toaster } from 'react-hot-toast';
 import AboutPage from './pages/about/AboutPage';
 import CatalogPage from './pages/catalog/CatalogPage';
 import Header from './components/Header/Header';
-// import { getAuthToken } from './services/authService'; // согласовать с Димой использование getAuthToken в component\FormRegistration
+import Footer from './components/Footer/Footer';
 
 function App() {
   const [token, setToken] = useState('');
@@ -48,6 +48,7 @@ function App() {
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
+        <Footer />
       </Router>
       <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
     </AccessTokenContext.Provider>
