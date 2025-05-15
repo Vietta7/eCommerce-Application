@@ -13,4 +13,5 @@ export type FormData = {
   dateOfBirth: string;
   shippingAddress: address;
   billingAddress: address;
+  billingSameAsShipping: boolean;
 };

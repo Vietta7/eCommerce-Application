@@ -3,13 +3,14 @@ import { Input } from '../ui/Input/Input';
 import styles from './FormRegistration.module.css';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z, ZodType } from 'zod';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AccessTokenContext } from '../../context/AccessTokenContext';
 import { Loader } from '../../ui-kit/Loader/Loader';
 import { FormData } from '../../types/user/formData';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormAddress } from '../FormAddress/FormAddress';
+import { CheckBox } from '../ui/CheckBox/CheckBox';
 
 const postalCodeRegex = {
   US: /^\d{5}$/,
@@ -70,6 +71,7 @@ const formSchema: ZodType<FormData> = z.object({
   ),
   shippingAddress: z.object(addressSchema),
   billingAddress: z.object(addressSchema),
+  billingSameAsShipping: z.boolean(),
 });
 
 export function FormRegistration() {
@@ -78,6 +80,7 @@ export function FormRegistration() {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors, isValid },
   } = useForm<FormData>({
     resolver: zodResolver(formSchema),
@@ -87,6 +90,34 @@ export function FormRegistration() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+
+  const copyShippingToBilling = () => {
+    const shipping = watch('shippingAddress');
+    if (shipping) {
+      setValue('billingAddress.streetName', shipping.streetName, { shouldValidate: true });
+      setValue('billingAddress.city', shipping.city, { shouldValidate: true });
+      setValue('billingAddress.postalCode', shipping.postalCode, { shouldValidate: true });
+      setValue('billingAddress.country', shipping.country, { shouldValidate: true });
+    }
+  };
+
+  const clearBillingAddress = () => {
+    setValue('billingAddress.streetName', '');
+    setValue('billingAddress.city', '');
+    setValue('billingAddress.postalCode', '');
+    setValue('billingAddress.country', '');
+  };
+
+  const billingSameAsShipping = watch('billingSameAsShipping');
+
+  useEffect(() => {
+    if (billingSameAsShipping) {
+      copyShippingToBilling();
+    } else {
+      clearBillingAddress();
+    }
+  }, [billingSameAsShipping]);
+
   async function createUser(data: FormData, token: string) {
     try {
       const response = await fetch(
@@ -109,7 +140,10 @@ export function FormRegistration() {
         }
         throw new Error('Error create user');
       }
-      await response.json();
+
+      const customer = await response.json();
+      const { id } = customer.customer;
+      console.log(id);
 
       const resToken = await fetch('https://dino-land.netlify.app/api/login', {
         method: 'POST',
@@ -135,11 +169,14 @@ export function FormRegistration() {
   const token = useContext(AccessTokenContext);
 
   const onSumbit = async (data: FormData) => {
-    console.log(data);
     const userData = {
       ...data,
-      addresses: [data.shippingAddress],
+      addresses: [data.shippingAddress, data.billingAddress],
+      // defaultShippingAddress: 0,
+      // defaultBillingAddress: 1,
     };
+
+    console.log(userData);
 
     try {
       setIsLoading(true);
@@ -222,6 +259,13 @@ export function FormRegistration() {
           register={register}
           errors={errors}
           watch={watch}
+        />
+      </div>
+
+      <div className={styles.same_checkbox}>
+        <CheckBox
+          label="Are the billing and shipping addresses the same?"
+          {...register('billingSameAsShipping')}
         />
       </div>
 
