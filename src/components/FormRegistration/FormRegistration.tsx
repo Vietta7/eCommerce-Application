@@ -9,10 +9,29 @@ import { Loader } from '../../ui-kit/Loader/Loader';
 import { FormData } from '../../types/user/formData';
 import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
+import { FormAddress } from '../FormAddress/FormAddress';
 
 const postalCodeRegex = {
   US: /^\d{5}$/,
   RU: /^\d{6}$/,
+};
+
+const addressSchema = {
+  streetName: z
+    .string()
+    .min(1, 'Street is required')
+    .regex(/^[A-Za-z0-9]+$/, 'Use only english letters'),
+  city: z
+    .string()
+    .min(1, 'City is required')
+    .regex(/^[A-Za-z\s'-]+$/, 'City must not contain numbers or special characters'),
+  postalCode: z
+    .string()
+    .refine((val) => postalCodeRegex.US.test(val) || postalCodeRegex.RU.test(val), {
+      message: 'Invalid postal code format for US or Russia',
+    }),
+
+  country: z.string(),
 };
 
 const formSchema: ZodType<FormData> = z.object({
@@ -49,23 +68,8 @@ const formSchema: ZodType<FormData> = z.object({
       message: 'You must be at least 14 years old',
     },
   ),
-  address: z.object({
-    streetName: z
-      .string()
-      .min(1, 'Street is required')
-      .regex(/^[A-Za-z0-9]+$/, 'Use only english letters'),
-    city: z
-      .string()
-      .min(1, 'City is required')
-      .regex(/^[A-Za-z\s'-]+$/, 'City must not contain numbers or special characters'),
-    postalCode: z
-      .string()
-      .refine((val) => postalCodeRegex.US.test(val) || postalCodeRegex.RU.test(val), {
-        message: 'Invalid postal code format for US or Russia',
-      }),
-
-    country: z.string(),
-  }),
+  shippingAddress: z.object(addressSchema),
+  billingAddress: z.object(addressSchema),
 });
 
 export function FormRegistration() {
@@ -131,9 +135,10 @@ export function FormRegistration() {
   const token = useContext(AccessTokenContext);
 
   const onSumbit = async (data: FormData) => {
+    console.log(data);
     const userData = {
       ...data,
-      addresses: [data.address],
+      addresses: [data.shippingAddress],
     };
 
     try {
@@ -192,7 +197,7 @@ export function FormRegistration() {
       />
       <Input
         className={styles.datebirthday}
-        label="Datebirthday"
+        label="Date Вirthday"
         name="dateOfBirth"
         placeholder="Datebirthday"
         type="date"
@@ -201,52 +206,23 @@ export function FormRegistration() {
         inputValue={watch('dateOfBirth')}
       />
 
-      <h4 className={`${styles.header} ${styles.address}`}>Address</h4>
-      <Input
-        className={styles.street}
-        label="Street"
-        name="address.streetName"
-        placeholder="Street"
-        type="text"
-        register={register}
-        error={errors.address?.streetName}
-        inputValue={watch('address.streetName')}
-      />
-
-      <div className={styles.town_postcode}>
-        <Input
-          className={styles.town}
-          label="City"
-          name="address.city"
-          placeholder="City"
-          type="text"
+      <div className={styles.shipping_address}>
+        <FormAddress
+          title="Shipping Address"
+          type="shippingAddress"
           register={register}
-          error={errors.address?.city}
-          inputValue={watch('address.city')}
-        />
-        <Input
-          className={styles.postcode}
-          label="Postcode"
-          name="address.postalCode"
-          placeholder="Postcode"
-          type="text"
-          register={register}
-          error={errors.address?.postalCode}
-          inputValue={watch('address.postalCode')}
+          errors={errors}
+          watch={watch}
         />
       </div>
-
-      <div className={`${styles.country} ${styles.select_country}`}>
-        <label className={styles.select_label} htmlFor="country">
-          Country
-        </label>
-        <select id="country" {...register('address.country')} name="address.country">
-          <option value="RU">Russia</option>
-          <option value="US">United States</option>
-        </select>
-        {errors.address?.country && (
-          <span className={styles.select_error_message}>{errors.address.country.message}</span>
-        )}
+      <div className={styles.billing_address}>
+        <FormAddress
+          title="Billing Address"
+          type="billingAddress"
+          register={register}
+          errors={errors}
+          watch={watch}
+        />
       </div>
 
       <button type="submit" className={styles.submit_btn} disabled={!isValid}>
