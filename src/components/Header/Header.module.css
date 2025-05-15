@@ -116,7 +116,7 @@
 }
 
 .cart_black {
-  filter: none; 
+  filter: none;
 }
 
 .badge {
@@ -209,7 +209,7 @@
   text-decoration: none;
 }
 
-.mobile_actions .button{
+.mobile_actions .button {
   background: #000;
   color: white;
   padding: 14px 20px;
@@ -220,7 +220,9 @@
   text-align: center;
   align-items: center;
   width: 100%;
-  transition: background 0.3s ease, transform 0.2s ease;
+  transition:
+    background 0.3s ease,
+    transform 0.2s ease;
   display: inline-block;
   margin-bottom: 20px;
 }
@@ -242,28 +244,28 @@ body.menu-open {
   .header {
     padding: 10px 15px;
   }
-  
+
   .desktop_nav,
   .desktop_actions {
     display: none;
   }
-  
+
   .burger_menu {
     display: flex;
   }
-  
+
   .logo img {
     height: 36px;
   }
-  
+
   .logo span {
     font-size: 20px;
   }
-  
+
   .mobile_menu {
     display: none;
   }
-  
+
   .mobile_menu_open {
     display: flex;
   }

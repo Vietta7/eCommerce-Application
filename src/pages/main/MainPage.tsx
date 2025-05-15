@@ -55,6 +55,125 @@ const MainPage = () => {
             </div>
           </div>
         </div>
+
+        <section className={styles.dino_grid_section}>
+          <div className={styles.grid_container}>
+            <div className={`${styles.grid_card} ${styles.special_card}`}>
+              <div className={styles.special_content}>
+                <h3>Special offer</h3>
+                <p>Get 20% off your first order</p>
+                <Link to="/catalog" className={styles.grid_button}>
+                  View All
+                </Link>
+              </div>
+            </div>
+
+            <div className={styles.grid_card}>
+              <div className={styles.grid_image_container}>
+                <img
+                  src="./src/assets/img/dino-cards/Pachycephalosaurus.png"
+                  alt="Pachycephalosaurus"
+                  className={styles.grid_image}
+                />
+              </div>
+              <div className={styles.grid_content}>
+                <h3>Pachycephalosaurus</h3>
+                <div className={styles.price_container}>
+                  <div className={styles.price_wrapper}>
+                    <p>216,27 $</p>
+                    <span>500,27 $</span>
+                  </div>
+                  <Link to="/pachycephalosaurus" className={styles.plus_button} />
+                </div>
+              </div>
+            </div>
+            <div className={styles.grid_card}>
+              <div className={styles.grid_image_container}>
+                <img
+                  src="./src/assets/img/dino-cards/Microraptor.png"
+                  alt="Microraptor"
+                  className={styles.grid_image}
+                />
+              </div>
+              <div className={styles.grid_content}>
+                <h3>Microraptor</h3>
+                <div className={styles.price_container}>
+                  <div className={styles.price_wrapper}>
+                    <p>216,27 $</p>
+                    <span>500,27 $</span>
+                  </div>
+                  <Link to="/Microraptor" className={styles.plus_button} />
+                </div>
+              </div>
+            </div>
+            <div className={styles.grid_card}>
+              <div className={styles.grid_image_container}>
+                <img
+                  src="./src/assets/img/dino-cards/Compsognathus.png"
+                  alt="Compsognathus"
+                  className={styles.grid_image}
+                />
+              </div>
+              <div className={styles.grid_content}>
+                <h3>Compsognathus</h3>
+                <div className={styles.price_container}>
+                  <div className={styles.price_wrapper}>
+                    <p>216,27 $</p>
+                    <span>500,27 $</span>
+                  </div>
+                  <Link to="/Microraptor" className={styles.plus_button} />
+                </div>
+              </div>
+            </div>
+            <div className={styles.grid_card}>
+              <div className={styles.grid_image_container}>
+                <img
+                  src="./src/assets/img/dino-cards/Archaeopteryx.png"
+                  alt="Archaeopteryx"
+                  className={styles.grid_image}
+                />
+              </div>
+              <div className={styles.grid_content}>
+                <h3>Archaeopteryx</h3>
+                <div className={styles.price_container}>
+                  <div className={styles.price_wrapper}>
+                    <p>216,27 $</p>
+                    <span>500,27 $</span>
+                  </div>
+                  <Link to="/Microraptor" className={styles.plus_button} />
+                </div>
+              </div>
+            </div>
+            <div className={styles.grid_card}>
+              <div className={styles.grid_image_container}>
+                <img
+                  src="./src/assets/img/dino-cards/Brachiosaurus.png"
+                  alt="Brachiosaurus"
+                  className={styles.grid_image}
+                />
+              </div>
+              <div className={styles.grid_content}>
+                <h3>Brachiosaurus</h3>
+                <div className={styles.price_container}>
+                  <div className={styles.price_wrapper}>
+                    <p>216,27 $</p>
+                    <span>500,27 $</span>
+                  </div>
+                  <Link to="/Microraptor" className={styles.plus_button} />
+                </div>
+              </div>
+            </div>
+            <div className={`${styles.grid_card} ${styles.special_card}`}>
+              <div className={styles.special_content}>
+                <h3>Exlusive dinosaurs</h3>
+                <p>Make a little friend</p>
+                <Link to="/catalog" className={styles.grid_button}>
+                  Открыть
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </>
   );
