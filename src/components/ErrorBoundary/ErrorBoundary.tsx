@@ -25,7 +25,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className={styles.boundaryContent}>
+        <div className={styles.boundary_content}>
           <h1>Sorry... Something went wrong.</h1>
           <a className={styles.link} href="/">
             Try again

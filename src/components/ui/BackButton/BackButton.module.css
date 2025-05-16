@@ -1,0 +1,8 @@
+.exit {
+  background: transparent;
+  color: #00523b;
+}
+
+.exit:hover {
+  color: #000000;
+}
