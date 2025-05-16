@@ -7,10 +7,12 @@ import { useContext, useEffect, useState } from 'react';
 import { AccessTokenContext } from '../../context/AccessTokenContext';
 import { Loader } from '../../ui-kit/Loader/Loader';
 import { FormData } from '../../types/user/formData';
-import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import { FormAddress } from '../FormAddress/FormAddress';
 import { CheckBox } from '../ui/CheckBox/CheckBox';
+import { createCustomer } from '../../services/createCustomer';
+import { loginCustomer } from '../../services/loginCustomer';
+import { addAddresses } from '../../services/addAddresses';
 
 const postalCodeRegex = {
   US: /^\d{5}$/,
@@ -129,93 +131,6 @@ export function FormRegistration() {
     }
   }, [isBillingSameAsShipping]);
 
-  async function createUser(data: FormData, token: string) {
-    try {
-      const response = await fetch(
-        'https://api.europe-west1.gcp.commercetools.com/dino-land/me/signup',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        },
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.message) {
-          toast.error(errorData.message);
-          throw new Error(errorData.message);
-        }
-        throw new Error('Error create user');
-      }
-
-      const currentCustomer = await response.json();
-      const { customer } = currentCustomer;
-
-      const resToken = await fetch('https://dino-land.netlify.app/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: data.email,
-          password: data.password,
-        }),
-      });
-
-      const { access_token: accessToken } = await resToken.json();
-      document.cookie = `access_token=${accessToken}; path=/`;
-
-      const isShippingDefaultAddress = data.isShippingDefaultAddress;
-      const isBillingDefaultAddress = data.isBillingDefaultAddress;
-
-      const shippingId = customer.addresses[0].id;
-      const billingId = data.isBillingSameAsShipping ? 1 : customer.addresses[1].id;
-
-      const actions = [
-        { action: 'addShippingAddressId', addressId: shippingId },
-        { action: 'addBillingAddressId', addressId: billingId },
-      ];
-
-      if (isBillingSameAsShipping) {
-        actions.forEach((item) =>
-          item.action === 'addBillingAddressId' ? (item.addressId = shippingId) : null,
-        );
-      }
-
-      if (isShippingDefaultAddress) {
-        actions.push({ action: 'setDefaultShippingAddress', addressId: shippingId });
-      }
-      if (isBillingDefaultAddress) {
-        if (isBillingSameAsShipping) {
-          actions.push({ action: 'setDefaultBillingAddress', addressId: shippingId });
-        } else {
-          actions.push({ action: 'setDefaultBillingAddress', addressId: billingId });
-        }
-      }
-
-      await fetch(`https://api.europe-west1.gcp.commercetools.com/dino-land/me`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          version: customer.version,
-          actions,
-        }),
-      });
-
-      reset();
-      toast.success('User created successfully!');
-      navigate('/');
-    } catch (error) {
-      console.error(error);
-      throw error;
-    }
-  }
-
   const token = useContext(AccessTokenContext);
 
   const onSumbit = async (data: FormData) => {
@@ -231,8 +146,12 @@ export function FormRegistration() {
 
     try {
       setIsLoading(true);
-      await createUser(userData, token);
+      const newCustomer = await createCustomer(userData, token);
+      const tokenCustomer = await loginCustomer(userData);
+      await addAddresses(userData, newCustomer, tokenCustomer);
       setIsLoading(false);
+      reset();
+      navigate('/');
     } catch (error) {
       setIsLoading(false);
       console.error(error);
