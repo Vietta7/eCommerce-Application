@@ -1,5 +1,7 @@
 import styles from './AutorisationPage.module.css';
 import logo from '../../../public/logo.svg';
+import eye from '../../../public/eye.svg';
+import eyeOff from '../../../public/eyeOff.svg';
 import { BackButton } from '../../components/ui/BackButton/BackButton';
 import { logIn } from '../../api/api';
 import { Input } from '../../components/ui/Input/Input';
@@ -11,12 +13,13 @@ import { FormDataLogin } from '../../types/user/formData';
 import { autorisationFormSchema, inputsData } from '../model/data';
 import { InputArray } from '../../types/common';
 import { AuthContext } from '../../context/AuthContext';
-import { useNavigate } from 'react-router';
+import { Link, useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
 
 export default function AutorisationPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const setAuthenticated = useContext(AuthContext).setAuthenticated;
+  const [showPassword, setShowPassword] = useState(false);
 
   const {
     register,
@@ -52,17 +55,44 @@ export default function AutorisationPage() {
   };
 
   const createInput = ({ label, type }: InputArray) => {
+    if (type !== 'password') {
+      return (
+        <Input
+          className={styles[type]}
+          label={label}
+          name={type}
+          placeholder={label}
+          type={type}
+          register={register}
+          error={errors[type]}
+          inputValue={watch(type)}
+        />
+      );
+    }
     return (
-      <Input
-        className={styles[type]}
-        label={label}
-        name={type}
-        placeholder={label}
-        type={type}
-        register={register}
-        error={errors[type]}
-        inputValue={watch(type)}
-      />
+      <div key={type} className={styles.password_wrapper}>
+        <Input
+          className={styles[type]}
+          label={label}
+          name={type}
+          placeholder={label}
+          type={showPassword ? 'text' : 'password'}
+          register={register}
+          error={errors[type]}
+          inputValue={watch(type)}
+        />
+        <button
+          type="button"
+          className={styles.toggle_button}
+          onClick={() => setShowPassword((v) => !v)}
+        >
+          <img
+            className={styles.toggle_icon}
+            src={showPassword ? eye : eyeOff}
+            alt={showPassword ? 'Hide password' : 'Show password'}
+          />
+        </button>
+      </div>
     );
   };
 
@@ -84,7 +114,7 @@ export default function AutorisationPage() {
             </button>
             <div className={styles.navigation}>
               <p className={styles.p}>Don`t have an account?</p>
-              <a href="/registration">Sign up</a>
+              <Link to="/registration">Sign up </Link>
             </div>
           </div>
         </form>

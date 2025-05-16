@@ -17,7 +17,7 @@ const TextInput: React.FC<Props> = (props) => {
     onChange(e.target.value);
   };
   return (
-    <div className={styles.input__container}>
+    <div className={styles.input_container}>
       <label className={styles.label}>{label}</label>
       <input
         className={styles.input}

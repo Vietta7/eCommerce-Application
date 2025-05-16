@@ -50,6 +50,7 @@ const Header = () => {
           </>
         ) : (
           <button
+            className={styles.button}
             onClick={() => {
               document.cookie = 'access_token=; ';
               setAuthenticated(false);

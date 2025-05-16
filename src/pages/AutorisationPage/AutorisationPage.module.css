@@ -99,3 +99,29 @@
   left: 20px;
   top: 70px;
 }
+
+.password_wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.password_wrapper input {
+  width: 100%;
+  padding-right: 2.5rem;
+}
+
+.toggle_button {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.toggle_icon {
+  width: 20px;
+  height: 14px;
+}
