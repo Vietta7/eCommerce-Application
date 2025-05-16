@@ -74,7 +74,7 @@ const Footer = () => {
         </div>
 
         <div className={styles.copyright}>
-          ©{' '}
+          ©
           <a
             href="https://rs.school/"
             target="_blank"
@@ -82,8 +82,8 @@ const Footer = () => {
             className={styles.schoolLink}
           >
             RS-School
-          </a>{' '}
-          2024
+          </a>
+          {new Date().getFullYear()}
         </div>
       </div>
     </footer>

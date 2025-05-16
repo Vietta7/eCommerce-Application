@@ -65,6 +65,10 @@
     font-weight: 600;
     line-height: 36px;
     text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
   }
 
   .copyright a {
