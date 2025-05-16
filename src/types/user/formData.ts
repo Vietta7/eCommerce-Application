@@ -11,3 +11,8 @@ export type FormData = {
     country: string;
   };
 };
+
+export type FormDataLogin = {
+  email: string;
+  password: string;
+};
