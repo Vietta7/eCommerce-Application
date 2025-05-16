@@ -1,4 +1,4 @@
-export type address = {
+export type Address = {
   streetName: string;
   city: string;
   postalCode: string;
@@ -11,7 +11,11 @@ export type FormData = {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
-  shippingAddress: address;
-  billingAddress: address;
-  billingSameAsShipping: boolean;
+  shippingAddress: Address;
+  billingAddress: Address;
+  isBillingSameAsShipping?: boolean;
+  defaultBillingAddress?: number;
+  defaultShippingAddress?: number;
+  isBillingDefaultAddress?: boolean;
+  isShippingDefaultAddress?: boolean;
 };

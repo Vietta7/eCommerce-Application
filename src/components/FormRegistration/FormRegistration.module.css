@@ -12,13 +12,19 @@
     'shipping_address shipping_address billing_address billing_address'
     'shipping_address shipping_address billing_address billing_address'
     'shipping_address shipping_address billing_address billing_address'
-    'same_checkbox same_checkbox . .'
+    'same_checkbox same_checkbox default_billing_checkbox default_billing_checkbox'
     'submitbtn submitbtn . .'
     'link_to_login link_to_login . .';
 }
 
 .same_checkbox {
   grid-area: same_checkbox;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.default_billing_checkbox {
+  grid-area: default_billing_checkbox;
 }
 
 .header {

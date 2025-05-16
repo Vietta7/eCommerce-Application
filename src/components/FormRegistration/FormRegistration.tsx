@@ -21,7 +21,7 @@ const addressSchema = {
   streetName: z
     .string()
     .min(1, 'Street is required')
-    .regex(/^[A-Za-z0-9]+$/, 'Use only english letters'),
+    .regex(/^[A-Za-z0-9 ]+$/, 'Use only english letters'),
   city: z
     .string()
     .min(1, 'City is required')
@@ -71,7 +71,11 @@ const formSchema: ZodType<FormData> = z.object({
   ),
   shippingAddress: z.object(addressSchema),
   billingAddress: z.object(addressSchema),
-  billingSameAsShipping: z.boolean(),
+  isBillingSameAsShipping: z.boolean().optional(),
+  isBillingDefaultAddress: z.boolean().optional(),
+  isShippingDefaultAddress: z.boolean().optional(),
+  defaultShippingAddress: z.number().optional(),
+  defaultBillingAddress: z.number().optional(),
 });
 
 export function FormRegistration() {
@@ -86,6 +90,14 @@ export function FormRegistration() {
     resolver: zodResolver(formSchema),
     mode: 'all',
     reValidateMode: 'onChange',
+    defaultValues: {
+      shippingAddress: {
+        country: 'RU',
+      },
+      billingAddress: {
+        country: 'RU',
+      },
+    },
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -105,18 +117,17 @@ export function FormRegistration() {
     setValue('billingAddress.streetName', '');
     setValue('billingAddress.city', '');
     setValue('billingAddress.postalCode', '');
-    setValue('billingAddress.country', '');
   };
 
-  const billingSameAsShipping = watch('billingSameAsShipping');
+  const isBillingSameAsShipping = watch('isBillingSameAsShipping');
 
   useEffect(() => {
-    if (billingSameAsShipping) {
+    if (isBillingSameAsShipping) {
       copyShippingToBilling();
     } else {
       clearBillingAddress();
     }
-  }, [billingSameAsShipping]);
+  }, [isBillingSameAsShipping]);
 
   async function createUser(data: FormData, token: string) {
     try {
@@ -141,9 +152,8 @@ export function FormRegistration() {
         throw new Error('Error create user');
       }
 
-      const customer = await response.json();
-      const { id } = customer.customer;
-      console.log(id);
+      const currentCustomer = await response.json();
+      const { customer } = currentCustomer;
 
       const resToken = await fetch('https://dino-land.netlify.app/api/login', {
         method: 'POST',
@@ -157,6 +167,46 @@ export function FormRegistration() {
       const { access_token: accessToken } = await resToken.json();
       document.cookie = `access_token=${accessToken}; path=/`;
 
+      const isShippingDefaultAddress = data.isShippingDefaultAddress;
+      const isBillingDefaultAddress = data.isBillingDefaultAddress;
+
+      const shippingId = customer.addresses[0].id;
+      const billingId = data.isBillingSameAsShipping ? 1 : customer.addresses[1].id;
+
+      const actions = [
+        { action: 'addShippingAddressId', addressId: shippingId },
+        { action: 'addBillingAddressId', addressId: billingId },
+      ];
+
+      if (isBillingSameAsShipping) {
+        actions.forEach((item) =>
+          item.action === 'addBillingAddressId' ? (item.addressId = shippingId) : null,
+        );
+      }
+
+      if (isShippingDefaultAddress) {
+        actions.push({ action: 'setDefaultShippingAddress', addressId: shippingId });
+      }
+      if (isBillingDefaultAddress) {
+        if (isBillingSameAsShipping) {
+          actions.push({ action: 'setDefaultBillingAddress', addressId: shippingId });
+        } else {
+          actions.push({ action: 'setDefaultBillingAddress', addressId: billingId });
+        }
+      }
+
+      await fetch(`https://api.europe-west1.gcp.commercetools.com/dino-land/me`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          version: customer.version,
+          actions,
+        }),
+      });
+
       reset();
       toast.success('User created successfully!');
       navigate('/');
@@ -169,14 +219,15 @@ export function FormRegistration() {
   const token = useContext(AccessTokenContext);
 
   const onSumbit = async (data: FormData) => {
-    const userData = {
-      ...data,
-      addresses: [data.shippingAddress, data.billingAddress],
-      // defaultShippingAddress: 0,
-      // defaultBillingAddress: 1,
-    };
-
-    console.log(userData);
+    const userData = isBillingSameAsShipping
+      ? {
+          ...data,
+          addresses: [data.shippingAddress],
+        }
+      : {
+          ...data,
+          addresses: [data.shippingAddress, data.billingAddress],
+        };
 
     try {
       setIsLoading(true);
@@ -265,8 +316,12 @@ export function FormRegistration() {
       <div className={styles.same_checkbox}>
         <CheckBox
           label="Are the billing and shipping addresses the same?"
-          {...register('billingSameAsShipping')}
+          {...register('isBillingSameAsShipping')}
         />
+        <CheckBox label="Use as default address" {...register('isShippingDefaultAddress')} />
+      </div>
+      <div className={styles.default_billing_checkbox}>
+        <CheckBox label="Use as default address" {...register('isBillingDefaultAddress')} />
       </div>
 
       <button type="submit" className={styles.submit_btn} disabled={!isValid}>

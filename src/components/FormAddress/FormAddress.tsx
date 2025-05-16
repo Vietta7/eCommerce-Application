@@ -1,11 +1,11 @@
 import React from 'react';
 import { UseFormRegister, FieldErrors } from 'react-hook-form';
 import styles from './FormAddress.module.css';
-import { address, FormData } from '../../types/user/formData';
+import { Address, FormData } from '../../types/user/formData';
 import { Input } from '../ui/Input/Input';
 
 type AddressType = 'shippingAddress' | 'billingAddress';
-type FromAddress = { shippingAddress: address; billingAddress: address };
+type FromAddress = { shippingAddress: Address; billingAddress: Address };
 
 interface FormAddressProps {
   title: string;
