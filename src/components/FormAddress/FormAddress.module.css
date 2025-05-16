@@ -1,0 +1,205 @@
+.address_grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 90px);
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+  grid-template-areas:
+    'header header header header'
+    'street street street street'
+    'town_postcode town_postcode town_postcode town_postcode'
+    'country country country country';
+}
+
+.header {
+  grid-area: header;
+}
+
+.street {
+  grid-area: street;
+  max-width: 478px;
+}
+
+.town {
+  grid-area: town;
+  max-width: 272px;
+}
+
+.header {
+  color: #00523b;
+  font-family: Montserrat, AriaL, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-transform: capitalize;
+  margin-bottom: 0px;
+  margin-top: 50px;
+}
+
+.town_postcode {
+  grid-area: town_postcode;
+  max-width: 478px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(1, 90px);
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+
+  grid-template-areas: 'town town postcode';
+}
+
+.postcode {
+  grid-area: postcode;
+  max-width: 181px;
+}
+
+.country {
+  grid-area: country;
+  max-width: 478px;
+}
+
+.select_label {
+  color: #242424;
+  font-family: Poppins;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0%;
+  text-align: left;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.select_error_message {
+  color: #ff5449;
+  font-family: Montserrat, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0px;
+  display: flex;
+  height: 20px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+.select_country {
+  width: 100%;
+  position: relative;
+}
+
+.select_country select {
+  appearance: none;
+  border: 1px solid rgba(152, 153, 152, 0.5);
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 8px 12px 8px 12px;
+  height: 40px;
+  width: 100%;
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  color: #242424;
+  cursor: pointer;
+}
+
+.select_country select:focus {
+  outline: 1px solid #626c57;
+  border: none;
+  border-radius: 12px;
+}
+
+.select_country::before,
+.select_country::after {
+  --size: 0.3rem;
+  position: absolute;
+  content: '';
+  right: 1rem;
+  pointer-events: none;
+}
+
+.select_country::before {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-bottom: var(--size) solid #242424;
+  top: 45%;
+  opacity: 0.5;
+}
+
+.select_country::after {
+  border-left: var(--size) solid transparent;
+  border-right: var(--size) solid transparent;
+  border-top: var(--size) solid #242424;
+  top: 55%;
+  opacity: 0.5;
+}
+
+@media (max-width: 768px) {
+  .address_grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 90px);
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+    grid-template-areas:
+      'header header header header'
+      'street street street street'
+      'town_postcode town_postcode town_postcode town_postcode'
+      'country country country country';
+  }
+  .town_postcode {
+    grid-area: town_postcode;
+    max-width: unset;
+    width: 100%;
+
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(1, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+
+    grid-template-areas: 'town town town postcode';
+  }
+
+  .street,
+  .country,
+  .town {
+    max-width: unset;
+    width: 100%;
+  }
+}
+
+@media (max-width: 440px) {
+  .address_grid {
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(6, 90px);
+    grid-template-areas:
+      'header'
+      'street'
+      'town_postcode'
+      'town_postcode'
+      'country';
+  }
+  .town_postcode {
+    grid-area: town_postcode;
+    max-width: unset;
+    width: 100%;
+
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+
+    grid-template-areas:
+      'town'
+      'postcode';
+  }
+
+  .town,
+  .postcode {
+    max-width: unset;
+    width: 100%;
+  }
+}

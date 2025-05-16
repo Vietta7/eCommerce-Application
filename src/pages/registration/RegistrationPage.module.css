@@ -32,5 +32,12 @@
 @media (max-width: 440px) {
   .content {
     padding: 25px;
+    padding-top: 60px;
+  }
+
+  .exitBtn {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
 }
