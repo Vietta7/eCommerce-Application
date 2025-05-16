@@ -131,7 +131,7 @@
   .form {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(14, 90px);
+    grid-template-rows: repeat(16, 90px);
     grid-template-areas:
       'personal personal personal personal'
       'email email firstname firstname'
@@ -141,10 +141,12 @@
       'shipping_address shipping_address shipping_address shipping_address'
       'shipping_address shipping_address shipping_address shipping_address'
       'shipping_address shipping_address shipping_address shipping_address'
+      'same_checkbox same_checkbox same_checkbox same_checkbox'
       'billing_address billing_address billing_address billing_address'
       'billing_address billing_address billing_address billing_address'
       'billing_address billing_address billing_address billing_address'
       'billing_address billing_address billing_address billing_address'
+      'default_billing_checkbox default_billing_checkbox default_billing_checkbox default_billing_checkbox'
       'submitbtn submitbtn . .'
       'link_to_login link_to_login . .';
   }
@@ -163,7 +165,7 @@
   .form {
     display: grid;
     grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(18, 90px);
+    grid-template-rows: repeat(20, 90px);
     grid-template-areas:
       'personal'
       'email'
@@ -176,11 +178,13 @@
       'shipping_address'
       'shipping_address'
       'shipping_address'
+      'same_checkbox'
       'billing_address'
       'billing_address'
       'billing_address'
       'billing_address'
       'billing_address'
+      'default_billing_checkbox'
       'submitbtn'
       'link_to_login';
   }

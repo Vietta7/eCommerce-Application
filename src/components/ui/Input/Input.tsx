@@ -35,6 +35,7 @@ export const Input: React.FC<InputProps> = ({
         type={type}
         placeholder={placeholder}
         id={name}
+        autoComplete="on"
         {...register(name, { valueAsNumber })}
       />
       <span className={styles.error_message}>{error && error.message}</span>
