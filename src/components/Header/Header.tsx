@@ -1,10 +1,13 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 import logo from '../../assets/img/logo.svg';
 import menuIcon from '../../assets/img/burger-menu.svg';
 import closeIcon from '../../assets/img/close.svg';
 import cartIcon from '../../assets/img/cart.svg';
+import { useContext } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 
 interface HeaderProps {
   isMainPage?: boolean;
@@ -32,6 +35,9 @@ const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
       document.body.style.overflow = 'auto';
     }
   }, [menuOpen]);
+const Header = () => {
+  const { isAuthenticated, setAuthenticated } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <header className={`${styles.header} ${isMainPage ? styles.main_header : ''}`}>
@@ -63,6 +69,28 @@ const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
         <Link to="/registration" className={styles.button}>
           Sign Up
         </Link>
+      <div className={styles.actions}>
+        {!isAuthenticated ? (
+          <>
+            <Link to="/login" className={styles.button}>
+              Log In
+            </Link>
+            <Link to="/registration" className={styles.button}>
+              Sign Up
+            </Link>
+          </>
+        ) : (
+          <button
+            className={styles.button}
+            onClick={() => {
+              document.cookie = 'access_token=; ';
+              setAuthenticated(false);
+              navigate('/login');
+            }}
+          >
+            Log out
+          </button>
+        )}
         <div className={styles.cart_icon}>
           <Link to="/cart">
             <img src={cartIcon} alt="Cart" className={isMainPage ? styles.cart_white : ''} />
