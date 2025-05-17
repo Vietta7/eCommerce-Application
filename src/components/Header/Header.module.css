@@ -69,7 +69,7 @@
 
 .desktop_actions .button {
   background: #000;
-  color: white;
+  color: #fff;
   padding: 10px 20px;
   border-radius: 12px;
   text-decoration: none;
@@ -81,11 +81,11 @@
 }
 
 .main_header .logo span {
-  color: white;
+  color: #fff;
 }
 
 .main_header .desktop_nav a {
-  color: white;
+  color: #fff;
 }
 
 .main_header .desktop_nav a:hover {
@@ -93,7 +93,7 @@
 }
 
 .main_header .desktop_actions .button {
-  background: white;
+  background: #fff;
   color: #000;
 }
 
@@ -124,11 +124,11 @@
   top: -5px;
   right: -8px;
   background: #0b0b0b;
-  color: white;
+  color: #fff;
   border-radius: 50%;
   padding: 3px 8px;
   font-size: 12px;
-  box-shadow: 1px 1px 5px white;
+  box-shadow: 1px 1px 5px #fff;
 }
 
 .main_header .logo img {
@@ -136,7 +136,7 @@
 }
 
 .main_header .logo span {
-  color: white !important;
+  color: #fff;
 }
 
 .mobile_cart {
@@ -173,7 +173,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: white;
+  background: #fff;
   z-index: 999;
   padding: 20px;
   display: none;
@@ -204,14 +204,14 @@
 }
 
 .mobile_nav a {
-  color: #000 !important;
+  color: #000;
   font-size: 24px;
   text-decoration: none;
 }
 
 .mobile_actions .button {
   background: #000;
-  color: white;
+  color: #fff;
   padding: 14px 20px;
   border-radius: 12px;
   font-size: 18px;
@@ -237,7 +237,7 @@
 
 html.menu-open,
 body.menu-open {
-  overflow: hidden !important;
+  overflow: hidden;
 }
 
 @media (max-width: 814px) {
