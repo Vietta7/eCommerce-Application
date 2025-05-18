@@ -1,7 +1,7 @@
 import toast from 'react-hot-toast';
-import { FormData } from '../types/user/formData';
+import { RegisterFormData } from '../schemas/register.schema';
 
-export async function createCustomer(data: FormData, token: string) {
+export async function createCustomer(data: RegisterFormData, token: string) {
   try {
     const response = await fetch(
       'https://api.europe-west1.gcp.commercetools.com/dino-land/me/signup',
