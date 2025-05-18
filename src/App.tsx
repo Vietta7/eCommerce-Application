@@ -11,6 +11,7 @@ import { Toaster } from 'react-hot-toast';
 import AboutPage from './pages/about/AboutPage';
 import CatalogPage from './pages/catalog/CatalogPage';
 import Header from './components/Header/Header';
+import Footer from './components/Footer/Footer';
 import RegistrationPage from './pages/registration/RegistrationPage';
 import { AuthProvider } from './context/AuthContext';
 
@@ -41,6 +42,18 @@ function App() {
         <Router>
           <Header />
 
+
+        <Routes>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/registration" element={<RegistrationPage />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/catalog" element={<CatalogPage />} />
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+        <Footer />
+      </Router>
+      <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/login" element={<AutorisationPage />} />
