@@ -46,3 +46,12 @@
 ### API
 
 [Commercetools](https://docs.commercetools.com/) - The API
+
+https://dino-land.netlify.app/path... - get token for access  
+For example:
+
+```js
+const { access_token } = await fetch('https://dino-land.netlify.app/path...').then((res) =>
+  res.json(),
+);
+```

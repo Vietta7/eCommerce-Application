@@ -1,0 +1,191 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(10, 90px);
+  grid-column-gap: 10px;
+  grid-row-gap: 5px;
+  grid-template-areas:
+    'personal personal personal personal'
+    'email email firstname lastname'
+    'password password datebirthday .'
+    'shipping_address shipping_address billing_address billing_address'
+    'shipping_address shipping_address billing_address billing_address'
+    'shipping_address shipping_address billing_address billing_address'
+    'shipping_address shipping_address billing_address billing_address'
+    'same_checkbox same_checkbox default_billing_checkbox default_billing_checkbox'
+    'submitbtn submitbtn . .'
+    'link_to_login link_to_login . .';
+}
+
+.same_checkbox {
+  grid-area: same_checkbox;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.default_billing_checkbox {
+  grid-area: default_billing_checkbox;
+}
+
+.header {
+  color: #00523b;
+  font-family: Montserrat, AriaL, sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-transform: capitalize;
+  margin-bottom: 0px;
+  margin-top: 50px;
+}
+
+.shipping_address {
+  grid-area: shipping_address;
+}
+.billing_address {
+  grid-area: billing_address;
+}
+
+.personal {
+  grid-area: personal;
+}
+
+.email {
+  grid-area: email;
+  max-width: 478px;
+}
+
+.password {
+  grid-area: password;
+  max-width: 478px;
+}
+
+.firstname {
+  grid-area: firstname;
+  max-width: 228px;
+}
+
+.lastname {
+  grid-area: lastname;
+  max-width: 228px;
+}
+
+.datebirthday {
+  grid-area: datebirthday;
+  max-width: 228px;
+}
+
+.address {
+  grid-area: address;
+  max-width: 478px;
+}
+
+.submit_btn {
+  grid-area: submitbtn;
+  max-width: 478px;
+  height: 45px;
+  border-radius: 12px;
+  background: #000000;
+  color: #ffffff;
+  transition: all 0.7s;
+  margin-top: 30px;
+}
+
+.submit_btn:hover {
+  background: #00523b;
+}
+
+.submit_btn:disabled {
+  border-radius: 12px;
+  background: #989998;
+}
+
+.link_to_login {
+  grid-area: link_to_login;
+  color: rgb(128, 128, 128, 0.7);
+  font-family: Poppins, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0%;
+}
+
+.link {
+  color: #497f65;
+  font-family: Poppins, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 21px;
+  letter-spacing: 0%;
+  transition: all 0.7s;
+  margin: 0;
+  margin-left: 10px;
+}
+
+.link:hover {
+  color: #497f65;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .form {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(16, 90px);
+    grid-template-areas:
+      'personal personal personal personal'
+      'email email firstname firstname'
+      'password password  lastname  lastname'
+      'datebirthday datebirthday  . . '
+      'shipping_address shipping_address shipping_address shipping_address'
+      'shipping_address shipping_address shipping_address shipping_address'
+      'shipping_address shipping_address shipping_address shipping_address'
+      'shipping_address shipping_address shipping_address shipping_address'
+      'same_checkbox same_checkbox same_checkbox same_checkbox'
+      'billing_address billing_address billing_address billing_address'
+      'billing_address billing_address billing_address billing_address'
+      'billing_address billing_address billing_address billing_address'
+      'billing_address billing_address billing_address billing_address'
+      'default_billing_checkbox default_billing_checkbox default_billing_checkbox default_billing_checkbox'
+      'submitbtn submitbtn . .'
+      'link_to_login link_to_login . .';
+  }
+
+  .firstname,
+  .lastname,
+  .street,
+  .datebirthday,
+  .country {
+    max-width: unset;
+    width: 100%;
+  }
+}
+
+@media (max-width: 440px) {
+  .form {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    grid-template-rows: repeat(20, 90px);
+    grid-template-areas:
+      'personal'
+      'email'
+      'password'
+      'firstname'
+      'lastname'
+      'datebirthday'
+      'shipping_address'
+      'shipping_address'
+      'shipping_address'
+      'shipping_address'
+      'shipping_address'
+      'same_checkbox'
+      'billing_address'
+      'billing_address'
+      'billing_address'
+      'billing_address'
+      'billing_address'
+      'default_billing_checkbox'
+      'submitbtn'
+      'link_to_login';
+  }
+}
