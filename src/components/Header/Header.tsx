@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import styles from './Header.module.css';
 import logo from '../../assets/img/logo.svg';
 import menuIcon from '../../assets/img/burger-menu.svg';
@@ -8,11 +8,7 @@ import cartIcon from '../../assets/img/cart.svg';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 
-interface HeaderProps {
-  isMainPage?: boolean;
-}
-
-const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
+const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -37,7 +33,8 @@ const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
 
   const { isAuthenticated, setAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const isMainPage = location.pathname === '/';
   return (
     <header className={`${styles.header} ${isMainPage ? styles.main_header : ''}`}>
       <div className={styles.logo}>
@@ -61,15 +58,15 @@ const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
         </ul>
       </nav>
 
-      <div className={`${styles.desktop_actions} ${menuOpen ? styles.hidden : ''}`}>
+      {/* <div className={`${styles.desktop_actions} ${menuOpen ? styles.hidden : ''}`}>
         <Link to="/login" className={styles.button}>
           Log In
         </Link>
         <Link to="/registration" className={styles.button}>
           Sign Up
         </Link>
-      </div>
-      <div className={styles.actions}>
+      </div> */}
+      <div className={`${styles.desktop_actions} ${menuOpen ? styles.hidden : ''}`}>
         {!isAuthenticated ? (
           <>
             <Link to="/login" className={styles.button}>
@@ -128,7 +125,7 @@ const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
           </ul>
         </nav>
 
-        <div className={styles.mobile_actions}>
+        {/* <div className={styles.mobile_actions}>
           <Link to="/login" onClick={() => setMenuOpen(false)} className={styles.button}>
             Log In
           </Link>
@@ -138,6 +135,37 @@ const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
           <div className={styles.mobile_cart}>
             <Link to="/cart" onClick={() => setMenuOpen(false)}>
               <img src={cartIcon} alt="Cart" className={styles.cart_black} />
+              <span className={styles.badge}>0</span>
+            </Link>
+          </div>
+        </div> */}
+        <div className={`${styles.mobile_actions} ${menuOpen ? styles.hidden : ''}`}>
+          {!isAuthenticated ? (
+            <>
+              <Link to="/login" onClick={() => setMenuOpen(false)} className={styles.button}>
+                Log In
+              </Link>
+              <Link to="/registration" onClick={() => setMenuOpen(false)} className={styles.button}>
+                Sign Up
+              </Link>
+            </>
+          ) : (
+            <button
+              className={styles.button}
+              onClick={() => {
+                document.cookie = 'access_token=; ';
+                setAuthenticated(false);
+                <Link to="/login" onClick={() => setMenuOpen(false)} className={styles.button}>
+                  Log In
+                </Link>;
+              }}
+            >
+              Log out
+            </button>
+          )}
+          <div className={styles.mobile_cart}>
+            <Link to="/cart">
+              <img src={cartIcon} alt="Cart" className={isMainPage ? styles.cart_white : ''} />
               <span className={styles.badge}>0</span>
             </Link>
           </div>

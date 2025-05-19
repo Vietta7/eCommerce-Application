@@ -166,7 +166,7 @@ const MainPage = () => {
                 <h3>Exlusive dinosaurs</h3>
                 <p>Make a little friend</p>
                 <Link to="/catalog" className={styles.grid_button}>
-                  Открыть
+                  View Detail
                 </Link>
               </div>
             </div>
