@@ -1,11 +1,9 @@
 import { Link } from 'react-router-dom';
 import styles from './MainPage.module.css';
-import Header from '../../components/Header/Header';
 
 const MainPage = () => {
   return (
     <>
-      <Header isMainPage={true} />
       <main className={styles.main}>
         <section className={styles.banner_section}>
           <div className={styles.banner_content}>

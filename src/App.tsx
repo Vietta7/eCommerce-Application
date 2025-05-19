@@ -41,19 +41,6 @@ function App() {
       <AuthProvider>
         <Router>
           <Header />
-
-
-        <Routes>
-          <Route path="/" element={<MainPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registration" element={<RegistrationPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/catalog" element={<CatalogPage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-        <Footer />
-      </Router>
-      <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
           <Routes>
             <Route path="/" element={<MainPage />} />
             <Route path="/login" element={<AutorisationPage />} />
@@ -62,6 +49,7 @@ function App() {
             <Route path="/catalog" element={<CatalogPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
+          <Footer />
         </Router>
         <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
       </AuthProvider>

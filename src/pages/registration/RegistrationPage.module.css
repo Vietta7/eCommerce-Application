@@ -12,6 +12,7 @@
 .container {
   max-width: 1440px;
   margin: 0 auto;
+  padding: 90px 0;
   position: relative;
 }
 
@@ -26,7 +27,7 @@
 .exitBtn {
   position: absolute;
   left: 60px;
-  top: 0;
+  top: 90px;
 }
 
 @media (max-width: 440px) {
@@ -38,6 +39,6 @@
   .exitBtn {
     position: absolute;
     left: 0;
-    top: 0;
+    top: 90px;
   }
 }

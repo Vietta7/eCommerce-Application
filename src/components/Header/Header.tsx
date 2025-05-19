@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
 import logo from '../../assets/img/logo.svg';
@@ -35,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ isMainPage = false }) => {
       document.body.style.overflow = 'auto';
     }
   }, [menuOpen]);
-const Header = () => {
+
   const { isAuthenticated, setAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -69,6 +68,7 @@ const Header = () => {
         <Link to="/registration" className={styles.button}>
           Sign Up
         </Link>
+      </div>
       <div className={styles.actions}>
         {!isAuthenticated ? (
           <>
