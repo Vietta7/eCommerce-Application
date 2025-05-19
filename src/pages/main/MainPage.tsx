@@ -20,7 +20,7 @@ const MainPage = () => {
             <div className={styles.card}>
               <div className={styles.card_image_container}>
                 <img
-                  src="./src/assets/img/dino-cards/tyrannosaurus.png"
+                  src="/src/assets/img/dino-cards/tyrannosaurus.png"
                   alt="Tyrannosaurus Rex"
                   className={styles.card_image}
                 />
@@ -39,7 +39,7 @@ const MainPage = () => {
             <div className={styles.card}>
               <div className={styles.card_image_container}>
                 <img
-                  src="./src/assets/img/dino-cards/triceratops.png"
+                  src="/src/assets/img/dino-cards/triceratops.png"
                   alt="Triceratops"
                   className={styles.card_image}
                 />
@@ -69,7 +69,7 @@ const MainPage = () => {
             <div className={styles.grid_card}>
               <div className={styles.grid_image_container}>
                 <img
-                  src="./src/assets/img/dino-cards/Pachycephalosaurus.png"
+                  src="/src/assets/img/dino-cards/Pachycephalosaurus.png"
                   alt="Pachycephalosaurus"
                   className={styles.grid_image}
                 />
@@ -88,7 +88,7 @@ const MainPage = () => {
             <div className={styles.grid_card}>
               <div className={styles.grid_image_container}>
                 <img
-                  src="./src/assets/img/dino-cards/Microraptor.png"
+                  src="/src/assets/img/dino-cards/Microraptor.png"
                   alt="Microraptor"
                   className={styles.grid_image}
                 />
@@ -107,7 +107,7 @@ const MainPage = () => {
             <div className={styles.grid_card}>
               <div className={styles.grid_image_container}>
                 <img
-                  src="./src/assets/img/dino-cards/Compsognathus.png"
+                  src="/src/assets/img/dino-cards/Compsognathus.png"
                   alt="Compsognathus"
                   className={styles.grid_image}
                 />
@@ -126,7 +126,7 @@ const MainPage = () => {
             <div className={styles.grid_card}>
               <div className={styles.grid_image_container}>
                 <img
-                  src="./src/assets/img/dino-cards/Archaeopteryx.png"
+                  src="/src/assets/img/dino-cards/Archaeopteryx.png"
                   alt="Archaeopteryx"
                   className={styles.grid_image}
                 />
@@ -145,7 +145,7 @@ const MainPage = () => {
             <div className={styles.grid_card}>
               <div className={styles.grid_image_container}>
                 <img
-                  src="./src/assets/img/dino-cards/Brachiosaurus.png"
+                  src="/src/assets/img/dino-cards/Brachiosaurus.png"
                   alt="Brachiosaurus"
                   className={styles.grid_image}
                 />
