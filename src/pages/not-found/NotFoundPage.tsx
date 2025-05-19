@@ -12,7 +12,7 @@ const NotFoundPage = () => {
         </Link>
       </div>
       <div className={styles.image_container}>
-        <img src="src/assets/img/dino-404.png" alt="Error icon" className={styles.image} />
+        <img src="/img/dino-404.png" alt="Error icon" className={styles.image} />
       </div>
     </div>
   );
