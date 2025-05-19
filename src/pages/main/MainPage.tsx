@@ -20,7 +20,7 @@ const MainPage = () => {
             <div className={styles.card}>
               <div className={styles.card_image_container}>
                 <img
-                  src="/src/assets/img/dino-cards/tyrannosaurus.png"
+                  src="/tyrannosaurus.png"
                   alt="Tyrannosaurus Rex"
                   className={styles.card_image}
                 />
