@@ -2,71 +2,16 @@ import { useForm } from 'react-hook-form';
 import { Input } from '../ui/Input/Input';
 import styles from './FormRegistration.module.css';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { z, ZodType } from 'zod';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { AccessTokenContext } from '../../context/AccessTokenContext';
 import { Loader } from '../../ui-kit/Loader/Loader';
-import { FormData } from '../../types/user/formData';
-import toast from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-
-const postalCodeRegex = {
-  US: /^\d{5}$/,
-  RU: /^\d{6}$/,
-};
-
-const formSchema: ZodType<FormData> = z.object({
-  email: z.string().email({ message: 'Invalid email address' }),
-  password: z
-    .string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[a-z]/, 'Must include a lowercase letter')
-    .regex(/[A-Z]/, 'Must include an uppercase letter')
-    .regex(/\d/, 'Must include a number'),
-  firstName: z
-    .string()
-    .min(1, 'First name is required')
-    .regex(/^[A-Za-z\s'-]+$/, 'First name must not contain numbers or special characters'),
-
-  lastName: z
-    .string()
-    .min(1, 'Last name is required')
-    .regex(/^[A-Za-z\s'-]+$/, 'Last name must not contain numbers or special characters'),
-
-  dateOfBirth: z.string().refine(
-    (val) => {
-      const dob = new Date(val);
-      if (isNaN(dob.getTime())) return false;
-      const now = new Date();
-      const age = now.getFullYear() - dob.getFullYear();
-      const hasBirthdayPassedThisYear =
-        now.getMonth() > dob.getMonth() ||
-        (now.getMonth() === dob.getMonth() && now.getDate() >= dob.getDate());
-      const adjustedAge = hasBirthdayPassedThisYear ? age : age - 1;
-      return adjustedAge >= 14;
-    },
-    {
-      message: 'You must be at least 14 years old',
-    },
-  ),
-  address: z.object({
-    streetName: z
-      .string()
-      .min(1, 'Street is required')
-      .regex(/^[A-Za-z0-9]+$/, 'Use only english letters'),
-    city: z
-      .string()
-      .min(1, 'City is required')
-      .regex(/^[A-Za-z\s'-]+$/, 'City must not contain numbers or special characters'),
-    postalCode: z
-      .string()
-      .refine((val) => postalCodeRegex.US.test(val) || postalCodeRegex.RU.test(val), {
-        message: 'Invalid postal code format for US or Russia',
-      }),
-
-    country: z.string(),
-  }),
-});
+import { FormAddress } from '../FormAddress/FormAddress';
+import { CheckBox } from '../ui/CheckBox/CheckBox';
+import { createCustomer } from '../../api/createCustomer';
+import { loginCustomer } from '../../api/loginCustomer';
+import { addAddresses } from '../../api/addAddresses';
+import { RegisterFormData, registerSchema } from '../../schemas/register.schema';
 
 export function FormRegistration() {
   const {
@@ -74,72 +19,72 @@ export function FormRegistration() {
     handleSubmit,
     reset,
     watch,
+    setValue,
     formState: { errors, isValid },
-  } = useForm<FormData>({
-    resolver: zodResolver(formSchema),
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     mode: 'all',
     reValidateMode: 'onChange',
+    defaultValues: {
+      shippingAddress: {
+        country: 'RU',
+      },
+      billingAddress: {
+        country: 'RU',
+      },
+    },
   });
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  async function createUser(data: FormData, token: string) {
-    try {
-      const response = await fetch(
-        'https://api.europe-west1.gcp.commercetools.com/dino-land/me/signup',
-        {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        },
-      );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.message) {
-          toast.error(errorData.message);
-          throw new Error(errorData.message);
-        }
-        throw new Error('Error create user');
-      }
-      await response.json();
-
-      const resToken = await fetch('https://dino-land.netlify.app/api/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          username: data.email,
-          password: data.password,
-        }),
-      });
-
-      const { access_token: accessToken } = await resToken.json();
-      document.cookie = `access_token=${accessToken}; path=/`;
-
-      reset();
-      toast.success('User created successfully!');
-      navigate('/');
-    } catch (error) {
-      console.error(error);
-      throw error;
+  const copyShippingToBilling = () => {
+    const shipping = watch('shippingAddress');
+    if (shipping) {
+      setValue('billingAddress.streetName', shipping.streetName, { shouldValidate: true });
+      setValue('billingAddress.city', shipping.city, { shouldValidate: true });
+      setValue('billingAddress.postalCode', shipping.postalCode, { shouldValidate: true });
+      setValue('billingAddress.country', shipping.country, { shouldValidate: true });
     }
-  }
+  };
+
+  const clearBillingAddress = () => {
+    setValue('billingAddress.streetName', '');
+    setValue('billingAddress.city', '');
+    setValue('billingAddress.postalCode', '');
+  };
+
+  const isBillingSameAsShipping = watch('isBillingSameAsShipping');
+
+  useEffect(() => {
+    if (isBillingSameAsShipping) {
+      copyShippingToBilling();
+    } else {
+      clearBillingAddress();
+    }
+  }, [isBillingSameAsShipping]);
 
   const token = useContext(AccessTokenContext);
 
-  const onSumbit = async (data: FormData) => {
-    const userData = {
-      ...data,
-      addresses: [data.address],
-    };
+  const onSumbit = async (data: RegisterFormData) => {
+    const userData = isBillingSameAsShipping
+      ? {
+          ...data,
+          addresses: [data.shippingAddress],
+        }
+      : {
+          ...data,
+          addresses: [data.shippingAddress, data.billingAddress],
+        };
 
     try {
       setIsLoading(true);
-      await createUser(userData, token);
+      const newCustomer = await createCustomer(userData, token);
+      const tokenCustomer = await loginCustomer(userData);
+      await addAddresses({ data: userData, customer: newCustomer, userToken: tokenCustomer });
       setIsLoading(false);
+      reset();
+      navigate('/');
     } catch (error) {
       setIsLoading(false);
       console.error(error);
@@ -192,7 +137,7 @@ export function FormRegistration() {
       />
       <Input
         className={styles.datebirthday}
-        label="Datebirthday"
+        label="Date Вirthday"
         name="dateOfBirth"
         placeholder="Datebirthday"
         type="date"
@@ -201,52 +146,34 @@ export function FormRegistration() {
         inputValue={watch('dateOfBirth')}
       />
 
-      <h4 className={`${styles.header} ${styles.address}`}>Address</h4>
-      <Input
-        className={styles.street}
-        label="Street"
-        name="address.streetName"
-        placeholder="Street"
-        type="text"
-        register={register}
-        error={errors.address?.streetName}
-        inputValue={watch('address.streetName')}
-      />
-
-      <div className={styles.town_postcode}>
-        <Input
-          className={styles.town}
-          label="City"
-          name="address.city"
-          placeholder="City"
-          type="text"
+      <div className={styles.shipping_address}>
+        <FormAddress
+          title="Shipping Address"
+          type="shippingAddress"
           register={register}
-          error={errors.address?.city}
-          inputValue={watch('address.city')}
+          errors={errors}
+          watch={watch}
         />
-        <Input
-          className={styles.postcode}
-          label="Postcode"
-          name="address.postalCode"
-          placeholder="Postcode"
-          type="text"
+      </div>
+      <div className={styles.billing_address}>
+        <FormAddress
+          title="Billing Address"
+          type="billingAddress"
           register={register}
-          error={errors.address?.postalCode}
-          inputValue={watch('address.postalCode')}
+          errors={errors}
+          watch={watch}
         />
       </div>
 
-      <div className={`${styles.country} ${styles.select_country}`}>
-        <label className={styles.select_label} htmlFor="country">
-          Country
-        </label>
-        <select id="country" {...register('address.country')} name="address.country">
-          <option value="RU">Russia</option>
-          <option value="US">United States</option>
-        </select>
-        {errors.address?.country && (
-          <span className={styles.select_error_message}>{errors.address.country.message}</span>
-        )}
+      <div className={styles.same_checkbox}>
+        <CheckBox
+          label="Are the billing and shipping addresses the same?"
+          {...register('isBillingSameAsShipping')}
+        />
+        <CheckBox label="Use as default address" {...register('isShippingDefaultAddress')} />
+      </div>
+      <div className={styles.default_billing_checkbox}>
+        <CheckBox label="Use as default address" {...register('isBillingDefaultAddress')} />
       </div>
 
       <button type="submit" className={styles.submit_btn} disabled={!isValid}>
