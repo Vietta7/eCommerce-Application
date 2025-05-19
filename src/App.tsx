@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 import { AccessTokenContext } from './context/AccessTokenContext';
 import AutorisationPage from './pages/AutorisationPage/AutorisationPage';
 
