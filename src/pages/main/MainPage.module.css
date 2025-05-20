@@ -14,9 +14,7 @@
   text-align: left;
   color: white;
   padding: 140px 20px 60px;
-  background:
-    linear-gradient(rgba(46, 45, 45, 0.5), rgba(46, 45, 45, 0.5)),
-    url('/public/img/banner.jpg');
+  background: linear-gradient(rgba(46, 45, 45, 0.5), rgba(46, 45, 45, 0.5)), url('/img/banner.jpg');
   background-size: cover;
   background-position: center;
   margin-top: -80px;
@@ -495,8 +493,7 @@
   text-align: left;
   color: white;
   background:
-    linear-gradient(rgba(46, 45, 45, 0.5), rgba(46, 45, 45, 0.5)),
-    url('/public/img/cta-dino.png');
+    linear-gradient(rgba(46, 45, 45, 0.5), rgba(46, 45, 45, 0.5)), url('/img/cta-dino.png');
   background-size: cover;
   background-position: center;
 }
