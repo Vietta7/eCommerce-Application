@@ -1,7 +1,7 @@
 import styles from './AutorisationPage.module.css';
-import logo from '../../../public/logo.svg';
-import eye from '../../../public/eye.svg';
-import eyeOff from '../../../public/eyeOff.svg';
+import logo from '../../assets/img/logo.svg';
+import eye from '../../assets/img/eye.svg';
+import eyeOff from '../../assets/img/eyeOff.svg';
 import { BackButton } from '../../components/ui/BackButton/BackButton';
 import { logIn } from '../../api/api';
 import { Input } from '../../components/ui/Input/Input';
