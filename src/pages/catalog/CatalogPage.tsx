@@ -1,7 +1,10 @@
+import ProductList from '../../components/ProductList/ProductList';
+
 const CatalogPage = () => {
   return (
     <div>
-      <h1>Catalog</h1>
+      <h1>Каталог продуктов</h1>
+      <ProductList />
     </div>
   );
 };
