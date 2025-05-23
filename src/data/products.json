@@ -1,0 +1,389 @@
+[
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Microraptor",
+      "ru": "Микрораптор"
+    },
+    "slug": {
+      "en": "microraptor",
+      "ru": "mikroraptor"
+    },
+    "description": {
+      "en": "A feathered dinosaur resembling a sparrow. Light, jumpy, agile. Perfect for apartments.",
+      "ru": "Пернатый динозавр, напоминающий воробья. Легкий, прыгучий, юркий. Идеален для квартиры."
+    },
+    "masterVariant": {
+      "sku": "DINO-1",
+      "key": "variant-key-DINO-1",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 14000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/microraptor.png",
+          "label": "Microraptor Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Microraptor" },
+        { "name": "color", "value": "green" },
+        { "name": "size", "value": 6 }
+      ]
+    },
+    "categories": [
+      { "key": "small-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Compsognathus",
+      "ru": "Компсогнат"
+    },
+    "slug": {
+      "en": "compsognathus",
+      "ru": "kompsognat"
+    },
+    "description": {
+      "en": "One of the smallest dinosaurs. Fast, friendly, loves to run. Great for kids and compact terrariums.",
+      "ru": "Один из самых маленьких динозавров. Быстрый, дружелюбный, любит бегать. Хорош для детей и компактных террариумов."
+    },
+    "masterVariant": {
+      "sku": "DINO-2",
+      "key": "variant-key-DINO-2",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 12000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/compsognathus.png",
+          "label": "Compsognathus Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Compsognathus" },
+        { "name": "color", "value": "brown" },
+        { "name": "size", "value": 8 }
+      ]
+    },
+    "categories": [
+      { "key": "small-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Archaeopteryx",
+      "ru": "Археоптерикс"
+    },
+    "slug": {
+      "en": "archaeopteryx",
+      "ru": "arheopteriks"
+    },
+    "description": {
+      "en": "A transitional form between birds and dinosaurs. Can sit on your shoulder. Best friend for introverts.",
+      "ru": "Переходная форма между птицей и динозавром. Может сидеть на плече. Лучший друг для интроверта."
+    },
+    "masterVariant": {
+      "sku": "DINO-3",
+      "key": "variant-key-DINO-3",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 15000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/archaeopteryx.png",
+          "label": "Archaeopteryx Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Archaeopteryx" },
+        { "name": "color", "value": "black" },
+        { "name": "size", "value": 7 }
+      ]
+    },
+    "categories": [
+      { "key": "small-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Velociraptor",
+      "ru": "Велоцираптор"
+    },
+    "slug": {
+      "en": "velociraptor",
+      "ru": "velociraptor"
+    },
+    "description": {
+      "en": "Smart, energetic predator. Requires activity and training. For active owners and lawn games.",
+      "ru": "Умный, энергичный хищник. Требует активности и дрессировки. Для активных владельцев и игр на лужайке."
+    },
+    "masterVariant": {
+      "sku": "DINO-4",
+      "key": "variant-key-DINO-4",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 22000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/velociraptor.png",
+          "label": "Velociraptor Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Velociraptor" },
+        { "name": "color", "value": "blue" },
+        { "name": "size", "value": 12 }
+      ]
+    },
+    "categories": [
+      { "key": "medium-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Stegosaurus",
+      "ru": "Стегозавр"
+    },
+    "slug": {
+      "en": "stegosaurus",
+      "ru": "stegozavr"
+    },
+    "description": {
+      "en": "Good-natured herbivore with armor on its back. Slow and peaceful. Suitable for families with children.",
+      "ru": "Добродушный травоядный с бронёй на спине. Медлительный и мирный. Подходит для семей с детьми."
+    },
+    "masterVariant": {
+      "sku": "DINO-5",
+      "key": "variant-key-DINO-5",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 24000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/stegosaurus.png",
+          "label": "Stegosaurus Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Stegosaurus" },
+        { "name": "color", "value": "green" },
+        { "name": "size", "value": 10 }
+      ]
+    },
+    "categories": [
+      { "key": "medium-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Pachycephalosaurus",
+      "ru": "Пахицефалозавр"
+    },
+    "slug": {
+      "en": "pachycephalosaurus",
+      "ru": "pahicefalozavr"
+    },
+    "description": {
+      "en": "Known for its dome-shaped skull. Playful, loves to butt heads. Great for active owners.",
+      "ru": "Известен своим куполообразным черепом. Игрив, любит бодаться. Отличный компаньон для активных хозяев."
+    },
+    "masterVariant": {
+      "sku": "DINO-6",
+      "key": "variant-key-DINO-6",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 20000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/pachycephalosaurus.png",
+          "label": "Pachycephalosaurus Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Pachycephalosaurus" },
+        { "name": "color", "value": "red" },
+        { "name": "size", "value": 11 }
+      ]
+    },
+    "categories": [
+      { "key": "medium-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Tyrannosaurus Rex",
+      "ru": "Тираннозавр Рекс"
+    },
+    "slug": {
+      "en": "tyrannosaurus-rex",
+      "ru": "tirannozavr-reks"
+    },
+    "description": {
+      "en": "The king of predators. Impressive, loud, but with good care can become a great pet.",
+      "ru": "Король хищников. Впечатляющий, громкий, но с хорошим уходом легко может стать отличным питомцем."
+    },
+    "masterVariant": {
+      "sku": "DINO-7",
+      "key": "variant-key-DINO-7",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 41000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/tyrannosaurus-rex.png",
+          "label": "Tyrannosaurus Rex Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Tyrannosaurus Rex" },
+        { "name": "color", "value": "dark-green" },
+        { "name": "size", "value": 18 }
+      ]
+    },
+    "categories": [
+      { "key": "large-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Triceratops",
+      "ru": "Трицератопс"
+    },
+    "slug": {
+      "en": "triceratops",
+      "ru": "triceratops"
+    },
+    "description": {
+      "en": "Peaceful herbivore. Social, loves company. Great for families.",
+      "ru": "Мирный растительноядный. Социальный, любит общество. Хорошо подходит для семей."
+    },
+    "masterVariant": {
+      "sku": "DINO-8",
+      "key": "variant-key-DINO-8",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 39000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/triceratops.png",
+          "label": "Triceratops Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Triceratops" },
+        { "name": "color", "value": "gray" },
+        { "name": "size", "value": 13 }
+      ]
+    },
+    "categories": [
+      { "key": "large-dinos" }
+    ],
+    "publish": true
+  },
+  {
+    "productType": { "key": "dino-product-type" },
+    "name": {
+      "en": "Brachiosaurus",
+      "ru": "Брахиозавр"
+    },
+    "slug": {
+      "en": "brachiosaurus",
+      "ru": "brahiozavr"
+    },
+    "description": {
+      "en": "Peaceful giant, reaches for the lamp like the sun. Suitable for families with large spaces.",
+      "ru": "Мирный гигант, тянется к лампе как к солнцу. Подходит для семей и активных хозяев с большим пространством."
+    },
+    "masterVariant": {
+      "sku": "DINO-9",
+      "key": "variant-key-DINO-9",
+      "prices": [
+        {
+          "value": {
+            "currencyCode": "USD",
+            "centAmount": 43000
+          }
+        }
+      ],
+      "images": [
+        {
+          "url": "/img/brachiosaurus.png",
+          "label": "Brachiosaurus Image",
+          "dimensions": { "w": 100, "h": 100 }
+        }
+      ],
+      "attributes": [
+        { "name": "name", "value": "Brachiosaurus" },
+        { "name": "color", "value": "brown" },
+        { "name": "size", "value": 22 }
+      ]
+    },
+    "categories": [
+      { "key": "large-dinos" }
+    ],
+    "publish": true
+  }
+]
