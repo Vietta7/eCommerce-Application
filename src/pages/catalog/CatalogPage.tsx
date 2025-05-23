@@ -50,7 +50,6 @@ const CatalogPage: React.FC = () => {
 
   return (
     <div>
-      <h1>Каталог динозавров</h1>
       <ProductList products={products} />
     </div>
   );

@@ -118,8 +118,8 @@
 .card_button {
   display: inline-block;
   padding: 12px 24px;
-  background-color: black;
-  color: white;
+  background-color: rgb(0, 0, 0);
+  color: #fff;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 500;
@@ -130,7 +130,7 @@
 .card_button:hover {
   background-color: #00523b;
   transform: translateY(-1px);
-  color: white;
+  color: #fff;
   text-decoration: none;
 }
 

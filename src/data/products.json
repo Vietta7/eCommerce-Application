@@ -37,9 +37,7 @@
         { "name": "size", "value": 6 }
       ]
     },
-    "categories": [
-      { "key": "small-dinos" }
-    ],
+    "categories": [{ "key": "small-dinos" }],
     "publish": true
   },
   {
@@ -80,9 +78,7 @@
         { "name": "size", "value": 8 }
       ]
     },
-    "categories": [
-      { "key": "small-dinos" }
-    ],
+    "categories": [{ "key": "small-dinos" }],
     "publish": true
   },
   {
@@ -123,9 +119,7 @@
         { "name": "size", "value": 7 }
       ]
     },
-    "categories": [
-      { "key": "small-dinos" }
-    ],
+    "categories": [{ "key": "small-dinos" }],
     "publish": true
   },
   {
@@ -166,9 +160,7 @@
         { "name": "size", "value": 12 }
       ]
     },
-    "categories": [
-      { "key": "medium-dinos" }
-    ],
+    "categories": [{ "key": "medium-dinos" }],
     "publish": true
   },
   {
@@ -209,9 +201,7 @@
         { "name": "size", "value": 10 }
       ]
     },
-    "categories": [
-      { "key": "medium-dinos" }
-    ],
+    "categories": [{ "key": "medium-dinos" }],
     "publish": true
   },
   {
@@ -252,9 +242,7 @@
         { "name": "size", "value": 11 }
       ]
     },
-    "categories": [
-      { "key": "medium-dinos" }
-    ],
+    "categories": [{ "key": "medium-dinos" }],
     "publish": true
   },
   {
@@ -295,9 +283,7 @@
         { "name": "size", "value": 18 }
       ]
     },
-    "categories": [
-      { "key": "large-dinos" }
-    ],
+    "categories": [{ "key": "large-dinos" }],
     "publish": true
   },
   {
@@ -338,9 +324,7 @@
         { "name": "size", "value": 13 }
       ]
     },
-    "categories": [
-      { "key": "large-dinos" }
-    ],
+    "categories": [{ "key": "large-dinos" }],
     "publish": true
   },
   {
@@ -381,9 +365,7 @@
         { "name": "size", "value": 22 }
       ]
     },
-    "categories": [
-      { "key": "large-dinos" }
-    ],
+    "categories": [{ "key": "large-dinos" }],
     "publish": true
   }
 ]
