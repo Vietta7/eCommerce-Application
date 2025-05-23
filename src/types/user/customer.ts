@@ -8,3 +8,10 @@ export type Customer = {
     country: string;
   }[];
 };
+
+export type ProfileCustomer = {
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  version: number;
+};

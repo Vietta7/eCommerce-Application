@@ -1,0 +1,33 @@
+.title {
+  color: rgb(98, 108, 87);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+  text-transform: capitalize;
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 45px 0;
+  position: relative;
+}
+
+.content {
+  max-width: 1160px;
+  border-radius: 12px;
+  padding: 30px;
+  margin: 0 auto;
+}
+
+.customer_name {
+  color: rgb(50, 51, 52);
+  font-family: Montserrat;
+  font-size: 36px;
+  font-weight: 400;
+  line-height: 44px;
+  letter-spacing: 0px;
+}
