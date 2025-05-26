@@ -2,6 +2,46 @@ import { Link } from 'react-router-dom';
 import styles from './MainPage.module.css';
 
 const MainPage = () => {
+  const featuredProducts = [
+    {
+      id: '1',
+      name: 'Tyrannosaurus Rex',
+      image: '/img/tyrannosaurus.png',
+      price: 410.0,
+      link: '/tyrannosaurus',
+    },
+    {
+      id: '2',
+      name: 'Triceratops',
+      image: '/img/Triceratops.png',
+      price: 390.0,
+      discountedPrice: 331.5,
+      link: '/triceratops',
+    },
+    {
+      id: '3',
+      name: 'Brachiosaurus',
+      image: '/img/Brachiosaurus.png',
+      price: 430.0,
+      link: '/brachiosaurus',
+    },
+    {
+      id: '4',
+      name: 'Pachycephalosaurus',
+      image: '/img/Pachycephalosaurus.png',
+      price: 200.0,
+      discountedPrice: 170.0,
+      link: '/pachycephalosaurus',
+    },
+    {
+      id: '5',
+      name: 'Compsognathus',
+      image: '/img/Compsognathus.png',
+      price: 120.0,
+      discountedPrice: 102.0,
+      link: '/compsognathus',
+    },
+  ];
   return (
     <>
       <main className={styles.main}>
@@ -62,100 +102,42 @@ const MainPage = () => {
               </div>
             </div>
 
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Pachycephalosaurus.png"
-                  alt="Pachycephalosaurus"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Pachycephalosaurus</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
+            {featuredProducts.slice(2).map((product) => (
+              <div key={product.id} className={styles.grid_card}>
+                <div className={styles.grid_image_container}>
+                  <img src={product.image} alt={product.name} className={styles.grid_image} />
+                  {product.discountedPrice && (
+                    <div className={styles.discount_badge}>
+                      -{Math.round((1 - product.discountedPrice / product.price) * 100)}%
+                    </div>
+                  )}
+                </div>
+                <div className={styles.grid_content}>
+                  <h3>{product.name}</h3>
+                  <div className={styles.price_container}>
+                    <div className={styles.price_wrapper}>
+                      {product.discountedPrice ? (
+                        <>
+                          <span className={styles.original_price}>${product.price.toFixed(2)}</span>
+                          <span className={styles.discounted_price}>
+                            ${product.discountedPrice.toFixed(2)}
+                          </span>
+                        </>
+                      ) : (
+                        <span className={styles.price}>${product.price.toFixed(2)}</span>
+                      )}
+                    </div>
+                    <Link to={product.link} className={styles.plus_button}>
+                      <span className={styles.plus_icon}></span>
+                    </Link>
                   </div>
-                  <Link to="/pachycephalosaurus" className={styles.plus_button} />
                 </div>
               </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img src="/img/Microraptor.png" alt="Microraptor" className={styles.grid_image} />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Microraptor</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Compsognathus.png"
-                  alt="Compsognathus"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Compsognathus</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Archaeopteryx.png"
-                  alt="Archaeopteryx"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Archaeopteryx</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Brachiosaurus.png"
-                  alt="Brachiosaurus"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Brachiosaurus</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
+            ))}
+
             <div className={`${styles.grid_card} ${styles.special_card}`}>
               <div className={styles.special_content}>
-                <h3>Exlusive dinosaurs</h3>
+                <h3>Exclusive dinosaurs</h3>
                 <p>Make a little friend</p>
                 <Link to="/catalog" className={styles.grid_button}>
                   View Detail
