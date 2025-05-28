@@ -1,7 +1,7 @@
 .product_card {
-  width: 100%; 
+  width: 100%;
   min-width: 300px;
-  max-width: 373px; 
+  max-width: 373px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
@@ -71,7 +71,7 @@
   height: 45px;
   border: 1px solid #00523b;
   border-radius: 12px;
-  background: white;
+  background: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
   position: relative;
@@ -137,7 +137,7 @@
   top: 10px;
   right: 10px;
   background-color: #00523b;
-  color: white;
+  color: #fff;
   padding: 4px 8px;
   border-radius: 4px;
   font-weight: bold;
@@ -170,4 +170,3 @@
 .image_container {
   position: relative;
 }
-
