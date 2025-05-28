@@ -297,6 +297,7 @@
   height: 100%;
   object-fit: cover;
   transition: transform 0.3s ease;
+  border-radius: 12px;
 }
 
 .card:hover .card_image, 
@@ -318,85 +319,6 @@
   margin: 0 0 8px 0;
 }
 
-.price_container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  margin-top: auto;
-  padding-top: 16px;
-}
-
-.price_wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.price, .discounted_price {
-  color: #00523B;
-  font-size: 1.1rem;
-  margin: 0;
-}
-
-.original_price {
-  text-decoration: line-through;
-  color: #999;
-  font-size: 0.9rem;
-}
-
-.plus_button {
-  width: 45px;
-  height: 45px;
-  border: 1px solid #00523b;
-  border-radius: 12px;
-  background: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  margin-bottom: 2px;
-}
-
-.plus_button::before,
-.plus_button::after {
-  content: '';
-  position: absolute;
-  background-color: #00523b;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  transition: all 0.3s ease;
-}
-
-.plus_button::before {
-  width: 20px;
-  height: 2px;
-}
-
-.plus_button::after {
-  width: 2px;
-  height: 20px;
-}
-
-.plus_button:hover {
-  background-color: #f0f0f0;
-}
-
-.plus_button:hover::before,
-.plus_button:hover::after {
-  background-color: #003825;
-}
-
-.discount_badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: #00523B;
-  color: white;
-  padding: 4px 8px;
-  border-radius: 4px;
-  font-weight: bold;
-  font-size: 0.8rem;
-}
 
 .special_card {
   background: #00523b;
@@ -447,15 +369,61 @@
   grid-column: span 2;
 }
 
+@media (max-width: 1200px) {
+  .grid_container {
+    max-width: 1000px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .grid_container {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  
+  .grid_card:nth-child(1) {
+    grid-column: span 2;
+  }
+}
+
 @media (max-width: 1024px) {
   .grid_card:nth-child(1) {
     grid-column: span 1;
+  }
+  
+  .special_card {
+    grid-column: 1 / -1;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 950px) {
+  .grid_container {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (max-width: 768px) {
   .grid_container {
     grid-template-columns: 1fr;
+    max-width: 600px;
+    justify-items: center;
+  }
+  
+  .special_card {
+    width: calc(100% - 40px);
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 500px) {
+  .grid_image_container {
+    height: 300px;
+  }
+}
+
+@media (max-width: 400px) {
+  .grid_image_container {
+    height: 250px;
   }
 }
 

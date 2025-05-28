@@ -1,47 +1,50 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MainPage.module.css';
+import ProductCard from '../../components/ProductCard/ProductCard';
+import useAccessToken from '../../hooks/useAccessToken';
+import { Product } from '../../types/product/product';
 
 const MainPage = () => {
-  const featuredProducts = [
-    {
-      id: '1',
-      name: 'Tyrannosaurus Rex',
-      image: '/img/tyrannosaurus.png',
-      price: 410.0,
-      link: '/tyrannosaurus',
-    },
-    {
-      id: '2',
-      name: 'Triceratops',
-      image: '/img/Triceratops.png',
-      price: 390.0,
-      discountedPrice: 331.5,
-      link: '/triceratops',
-    },
-    {
-      id: '3',
-      name: 'Brachiosaurus',
-      image: '/img/Brachiosaurus.png',
-      price: 430.0,
-      link: '/brachiosaurus',
-    },
-    {
-      id: '4',
-      name: 'Pachycephalosaurus',
-      image: '/img/Pachycephalosaurus.png',
-      price: 200.0,
-      discountedPrice: 170.0,
-      link: '/pachycephalosaurus',
-    },
-    {
-      id: '5',
-      name: 'Compsognathus',
-      image: '/img/Compsognathus.png',
-      price: 120.0,
-      discountedPrice: 102.0,
-      link: '/compsognathus',
-    },
-  ];
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { token, loading: tokenLoading, error: tokenError } = useAccessToken();
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      if (!token) return;
+
+      try {
+        const projectKey = 'dino-land';
+        const response = await fetch(
+          `https://api.europe-west1.gcp.commercetools.com/${projectKey}/products`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+
+        if (!response.ok) throw new Error('Не удалось загрузить продукты');
+
+        const data = await response.json();
+        setProducts(data.results);
+      } catch (err) {
+        console.error(err);
+        setError('Ошибка загрузки товаров');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, [token]);
+
+  if (tokenLoading || loading) return <div>Загрузка...</div>;
+  if (tokenError || error) return <div>Ошибка: {tokenError || error}</div>;
+
   return (
     <>
       <main className={styles.main}>
@@ -55,6 +58,7 @@ const MainPage = () => {
             </Link>
           </div>
         </section>
+
         <div className={styles.cards_wrapper}>
           <div className={styles.cards_container}>
             <div className={styles.card}>
@@ -102,37 +106,12 @@ const MainPage = () => {
               </div>
             </div>
 
-            {featuredProducts.slice(2).map((product) => (
-              <div key={product.id} className={styles.grid_card}>
-                <div className={styles.grid_image_container}>
-                  <img src={product.image} alt={product.name} className={styles.grid_image} />
-                  {product.discountedPrice && (
-                    <div className={styles.discount_badge}>
-                      -{Math.round((1 - product.discountedPrice / product.price) * 100)}%
-                    </div>
-                  )}
-                </div>
-                <div className={styles.grid_content}>
-                  <h3>{product.name}</h3>
-                  <div className={styles.price_container}>
-                    <div className={styles.price_wrapper}>
-                      {product.discountedPrice ? (
-                        <>
-                          <span className={styles.original_price}>${product.price.toFixed(2)}</span>
-                          <span className={styles.discounted_price}>
-                            ${product.discountedPrice.toFixed(2)}
-                          </span>
-                        </>
-                      ) : (
-                        <span className={styles.price}>${product.price.toFixed(2)}</span>
-                      )}
-                    </div>
-                    <Link to={product.link} className={styles.plus_button}>
-                      <span className={styles.plus_icon}></span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+            {products.slice(0, 3).map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                className={`${styles.grid_card} ${styles.product_card}`}
+              />
             ))}
 
             <div className={`${styles.grid_card} ${styles.special_card}`}>
@@ -146,6 +125,7 @@ const MainPage = () => {
             </div>
           </div>
         </section>
+
         <section className={styles.cta_banner}>
           <div className={styles.cta_container}>
             <h2 className={styles.cta_title}>Create your own prehistoric world right now!</h2>
