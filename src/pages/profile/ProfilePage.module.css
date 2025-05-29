@@ -31,3 +31,10 @@
   line-height: 44px;
   letter-spacing: 0px;
 }
+
+@media (max-width: 440px) {
+  .content {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}

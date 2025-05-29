@@ -10,6 +10,20 @@ const defaultProfile = {
   lastName: '',
   dateOfBirth: '',
   version: 1,
+  addresses: [
+    {
+      id: '',
+      streetName: '',
+      postalCode: '',
+      city: '',
+      country: '',
+    },
+  ],
+  billingAddressIds: [''],
+  shippingAddressIds: [''],
+  defaultBillingAddressId: '',
+  defaultShippingAddressId: '',
+  email: '',
 };
 
 export const ProfilePage = () => {
