@@ -27,6 +27,12 @@ export const profileSchema = z.object({
       message: 'You must be at least 14 years old',
     },
   ),
+  email: z
+    .string()
+    .email({ message: 'Invalid email address' })
+    .refine((val) => val === val.trim(), {
+      message: 'Email must not have leading or trailing spaces',
+    }),
 });
 
 export type ProfileFormData = z.infer<typeof profileSchema>;
