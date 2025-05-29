@@ -15,7 +15,7 @@ interface ProfileInformationProps {
 }
 
 export const ProfileInformation = ({ customer, refreshCustomer }: ProfileInformationProps) => {
-  const { firstName, lastName, dateOfBirth } = customer;
+  const { firstName, lastName, dateOfBirth, email } = customer;
   const tokenCustomer = getCookie('access_token');
 
   const {
@@ -51,6 +51,7 @@ export const ProfileInformation = ({ customer, refreshCustomer }: ProfileInforma
         firstName,
         lastName,
         dateOfBirth,
+        email,
       });
     }
   }, [customer, reset]);
@@ -86,6 +87,16 @@ export const ProfileInformation = ({ customer, refreshCustomer }: ProfileInforma
         register={register}
         error={errors.dateOfBirth}
         inputValue={watch('dateOfBirth')}
+      />
+      <Input
+        className={styles.email}
+        label="Email"
+        name="email"
+        placeholder="Email"
+        type="email"
+        register={register}
+        error={errors.email}
+        inputValue={watch('email')}
       />
 
       <SubmitButton isDisabled={!isValid} isLoading={isSubmitting} type="submit">
