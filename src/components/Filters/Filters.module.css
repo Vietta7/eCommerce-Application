@@ -36,11 +36,11 @@
   .mobile_filters_toggle {
     display: flex;
   }
-  
+
   .filters {
     display: none;
   }
-  
+
   .filters_visible {
     display: block;
   }
@@ -88,7 +88,7 @@
   color: #00523b;
 }
 
-.filter_group input[type="checkbox"] {
+.filter_group input[type='checkbox'] {
   appearance: none;
   width: 18px;
   height: 18px;
@@ -100,7 +100,7 @@
   transition: all 0.2s;
 }
 
-.filter_group input[type="checkbox"]:checked {
+.filter_group input[type='checkbox']:checked {
   background-color: #00523b;
   border-color: #00523b;
 }
@@ -109,7 +109,7 @@
   .filter_group label {
     font-size: 14px;
   }
-  
+
   .filter_section h4 {
     font-size: 16px;
   }
