@@ -99,7 +99,7 @@ const MainPage = () => {
             <div className={`${styles.grid_card} ${styles.special_card}`}>
               <div className={styles.special_content}>
                 <h3>Special offer</h3>
-                <p>Get 20% off your first order</p>
+                <p>Get 15% on some dinos!</p>
                 <Link to="/catalog" className={styles.grid_button}>
                   View All
                 </Link>
