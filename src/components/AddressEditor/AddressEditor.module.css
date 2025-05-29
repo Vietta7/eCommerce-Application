@@ -151,7 +151,7 @@
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
   border-bottom: var(--size) solid #242424;
-  top: 45%;
+  top: 60%;
   opacity: 0.5;
 }
 
@@ -159,23 +159,11 @@
   border-left: var(--size) solid transparent;
   border-right: var(--size) solid transparent;
   border-top: var(--size) solid #242424;
-  top: 55%;
+  top: 75%;
   opacity: 0.5;
 }
 
 @media (max-width: 768px) {
-  .address_grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-rows: repeat(4, 90px);
-    grid-column-gap: 10px;
-    grid-row-gap: 5px;
-    grid-template-areas:
-      'header header header header'
-      'street street street street'
-      'town_postcode town_postcode town_postcode town_postcode'
-      'country country country country';
-  }
   .town_postcode {
     grid-area: town_postcode;
     max-width: unset;
@@ -199,14 +187,15 @@
 
 @media (max-width: 440px) {
   .address_grid {
-    grid-template-columns: repeat(1, 1fr);
-    grid-template-rows: repeat(6, 90px);
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(6, auto);
     grid-template-areas:
-      'header'
-      'street'
-      'town_postcode'
-      'town_postcode'
-      'country';
+      'street street'
+      'town_postcode town_postcode'
+      'country country'
+      'default_billing_checkbox default_billing_checkbox'
+      'edit_btn delete_btn'
+      'submit_btn .';
   }
   .town_postcode {
     grid-area: town_postcode;

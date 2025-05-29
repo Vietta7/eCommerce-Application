@@ -12,12 +12,13 @@ export const changeProfileInformation = async ({
   userToken,
   version,
 }: changeProfileInforamtionProps) => {
-  const { firstName, lastName, dateOfBirth } = customer;
+  const { firstName, lastName, dateOfBirth, email } = customer;
 
   const actions = [
     { action: 'setFirstName', firstName },
     { action: 'setLastName', lastName },
     { action: 'setDateOfBirth', dateOfBirth },
+    { action: 'changeEmail', email },
   ];
 
   try {

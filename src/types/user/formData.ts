@@ -3,6 +3,10 @@ export type Address = {
   city: string;
   postalCode: string;
   country: string;
+  id?: string;
+  key?: string;
+  isShippingDefaultAddress?: boolean;
+  isBillingDefaultAddress?: boolean;
 };
 
 export type FormData = {
@@ -23,4 +27,9 @@ export type FormData = {
 export type FormDataLogin = {
   email: string;
   password: string;
+};
+
+export type AddressFormData = {
+  shippingAddress: Address;
+  billingAddress: Address;
 };

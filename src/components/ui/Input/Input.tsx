@@ -11,6 +11,7 @@ interface InputProps<T extends FieldValues> {
   inputValue: string;
   className?: string;
   valueAsNumber?: boolean;
+  disabled?: boolean;
 }
 
 export const Input = <T extends FieldValues>({
@@ -23,6 +24,7 @@ export const Input = <T extends FieldValues>({
   register,
   valueAsNumber,
   inputValue,
+  disabled,
 }: InputProps<T>) => {
   return (
     <div className={className}>
@@ -35,6 +37,7 @@ export const Input = <T extends FieldValues>({
         placeholder={placeholder}
         id={name}
         autoComplete="on"
+        disabled={disabled}
         {...register(name, { valueAsNumber })}
       />
       <span className={styles.error_message}>{error && error.message}</span>

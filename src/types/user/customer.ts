@@ -1,17 +1,22 @@
+import { Address } from './formData';
+
 export type Customer = {
   version: number;
-  addresses: {
-    id: string;
-    streetName: string;
-    postalCode: string;
-    city: string;
-    country: string;
-  }[];
+  addresses: Address[];
 };
 
-export type ProfileCustomer = {
+export type ProfileCustomer = AddressCustomer & {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
   version: number;
+  addresses: Address[];
+  email: string;
+};
+
+export type AddressCustomer = {
+  billingAddressIds: string[];
+  shippingAddressIds: string[];
+  defaultBillingAddressId: string;
+  defaultShippingAddressId: string;
 };
