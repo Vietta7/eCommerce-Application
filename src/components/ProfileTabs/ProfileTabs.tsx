@@ -2,13 +2,14 @@ import { useState } from 'react';
 import styles from './ProfileTabs.module.css';
 import { ProfileInformation } from '../Profile/ProfileInformation/ProfileInformation';
 import { AddressCustomer, Customer, ProfileCustomer } from '../../types/user/customer';
-import { ShippingAddressInformation } from '../Profile/AddressInformation/ShippingAddressInformation';
+import { AddressInformation } from '../Profile/AddressInformation/AddressInformation';
+import { ChangePassword } from '../Profile/ChangePassword/ChangePassword';
 
 const tabs = [
   { id: 'profile', label: 'Profile Info' },
   { id: 'shipping', label: 'Shipping Address' },
   { id: 'billing', label: 'Billing Address' },
-  { id: 'personal', label: 'Personal Info' },
+  { id: 'password', label: 'Password' },
 ];
 
 interface ProfileTabsProps {
@@ -37,12 +38,22 @@ export const ProfileTabs = ({ customer, refreshCustomer }: ProfileTabsProps) => 
           <ProfileInformation customer={customer} refreshCustomer={refreshCustomer} />
         )}
         {activeTab === 'shipping' && (
-          <ShippingAddressInformation customer={customer} refreshCustomer={refreshCustomer} />
+          <AddressInformation
+            addressType="shipping"
+            customer={customer}
+            refreshCustomer={refreshCustomer}
+          />
         )}
         {activeTab === 'billing' && (
-          <ShippingAddressInformation customer={customer} refreshCustomer={refreshCustomer} />
+          <AddressInformation
+            addressType="billing"
+            customer={customer}
+            refreshCustomer={refreshCustomer}
+          />
         )}
-        {activeTab === 'personal' && <div>Personal Information content here</div>}
+        {activeTab === 'password' && (
+          <ChangePassword refreshCustomer={refreshCustomer} customer={customer} />
+        )}
       </div>
     </div>
   );
