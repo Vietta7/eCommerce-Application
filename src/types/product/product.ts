@@ -12,6 +12,12 @@ export interface ProductPrice {
     currencyCode: string;
     centAmount: number;
   };
+  discounted?: {
+    value: {
+      currencyCode: string;
+      centAmount: number;
+    };
+  };
 }
 
 export interface ProductAttribute {
