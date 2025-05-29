@@ -15,15 +15,19 @@ interface AddressEditorProps {
   addressId: string;
   onSubmit: (data: Address) => void;
   onRemoveAddress: (addressId: string) => void;
-  isDefault: boolean;
+  isDefaultShipping: boolean;
+  isDefaultBilling: boolean;
+  addressType?: string;
 }
 
 export const AddressEditor = ({
   initialAddress,
   addressId,
-  isDefault,
+  isDefaultShipping,
+  isDefaultBilling,
   onSubmit,
   onRemoveAddress,
+  addressType,
 }: AddressEditorProps) => {
   const {
     register,
@@ -33,16 +37,24 @@ export const AddressEditor = ({
 
     formState: { errors, isSubmitting, isValid, isSubmitSuccessful },
   } = useForm<AddressShippingFormData>({
-    defaultValues: { ...initialAddress, isShippingDefaultAddress: isDefault },
+    defaultValues: {
+      ...initialAddress,
+      isShippingDefaultAddress: isDefaultShipping,
+      isBillingDefaultAddress: isDefaultBilling,
+    },
     resolver: zodResolver(addressesSchema),
     mode: 'onChange',
   });
 
   useEffect(() => {
     if (initialAddress) {
-      reset({ ...initialAddress, isShippingDefaultAddress: isDefault });
+      reset({
+        ...initialAddress,
+        isShippingDefaultAddress: isDefaultShipping,
+        isBillingDefaultAddress: isDefaultBilling,
+      });
     }
-  }, [initialAddress, isDefault, reset]);
+  }, [initialAddress, isDefaultShipping, isDefaultBilling, reset]);
 
   const [isEdit, setIsEdit] = useState<boolean>(!!addressId);
 
@@ -107,7 +119,9 @@ export const AddressEditor = ({
       <div className={styles.default_billing_checkbox}>
         <CheckBox
           label="Use as default address"
-          {...register('isShippingDefaultAddress')}
+          {...register(
+            addressType === 'shipping' ? 'isShippingDefaultAddress' : 'isBillingDefaultAddress',
+          )}
           disabled={isEdit}
         />
       </div>
