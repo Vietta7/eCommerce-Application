@@ -1,0 +1,22 @@
+.delete_button {
+  border: none;
+  border-radius: 12px;
+  height: 40px;
+  width: 40px;
+  background-color: transparent;
+
+  color: rgb(152, 153, 152);
+  font-family: Montserrat;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 15px;
+  letter-spacing: 0%;
+  text-align: left;
+}
+
+.delete_button:hover {
+  color: #00523b;
+  text-decoration: underline;
+  transition: all 0.7s;
+  background-color: transparent;
+}

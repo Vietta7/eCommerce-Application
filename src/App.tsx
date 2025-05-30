@@ -13,6 +13,8 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import RegistrationPage from './pages/registration/RegistrationPage';
 import { AuthProvider } from './context/AuthContext';
+import { ProfilePage } from './pages/profile/ProfilePage';
+import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 
 function App() {
   const [token, setToken] = useState('');
@@ -46,11 +48,19 @@ function App() {
             <Route path="/registration" element={<RegistrationPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/catalog" element={<CatalogPage />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
         </Router>
-        <Toaster position="top-right" toastOptions={{ duration: 5000 }} />
+        <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       </AuthProvider>
     </AccessTokenContext.Provider>
   );

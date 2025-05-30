@@ -1,8 +1,9 @@
 import React from 'react';
 import { UseFormRegister, FieldErrors } from 'react-hook-form';
 import styles from './FormAddress.module.css';
-import { Address, FormData } from '../../types/user/formData';
+import { Address } from '../../types/user/formData';
 import { Input } from '../ui/Input/Input';
+import { RegisterFormData } from '../../schemas/register.schema';
 
 type AddressType = 'shippingAddress' | 'billingAddress';
 type FromAddress = { shippingAddress: Address; billingAddress: Address };
@@ -10,7 +11,7 @@ type FromAddress = { shippingAddress: Address; billingAddress: Address };
 interface FormAddressProps {
   title: string;
   type: AddressType;
-  register: UseFormRegister<FormData>;
+  register: UseFormRegister<RegisterFormData>;
   errors: FieldErrors<FromAddress>;
   watch: (s: string) => string;
 }

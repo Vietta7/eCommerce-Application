@@ -15,6 +15,7 @@ import { InputArray } from '../../types/common';
 import { AuthContext } from '../../context/AuthContext';
 import { Link, useNavigate } from 'react-router';
 import toast from 'react-hot-toast';
+import { ROUTES } from '../../routes/routes';
 
 export default function AutorisationPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -45,7 +46,7 @@ export default function AutorisationPage() {
       setIsLoading(false);
       toast.success('Successfully autorisation!');
       setAuthenticated(true);
-      navigate('/');
+      navigate(ROUTES.HOME);
     } catch (error) {
       setIsLoading(false);
       if (error instanceof Error) {

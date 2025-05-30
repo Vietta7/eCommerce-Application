@@ -1,0 +1,18 @@
+.submit_btn {
+  height: 45px;
+  width: 100px;
+  border-radius: 12px;
+  background: #000000;
+  color: #ffffff;
+  transition: all 0.7s;
+  padding: 0 15px;
+}
+
+.submit_btn:hover {
+  background: #00523b;
+}
+
+.submit_btn:disabled {
+  border-radius: 12px;
+  background: #989998;
+}

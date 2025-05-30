@@ -5,7 +5,7 @@ const postalCodeRegex = {
   RU: /^\d{6}$/,
 };
 
-const addressSchema = {
+export const addressSchema = {
   streetName: z
     .string()
     .min(1, 'Street is required')

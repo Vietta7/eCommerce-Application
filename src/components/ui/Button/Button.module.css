@@ -1,0 +1,16 @@
+.btn {
+  background: #000;
+  border: 1px solid #333;
+  padding: 10px 20px;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.btn:hover {
+  background-color: #00523b;
+}
+
+.btn:disabled {
+  border-radius: 12px;
+  background: #989998;
+}
