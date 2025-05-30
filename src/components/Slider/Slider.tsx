@@ -55,6 +55,8 @@ const Slider: React.FC<SliderProd> = ({ images }) => {
         <Swiper
           className="product__slider"
           modules={[FreeMode, Navigation, Thumbs]}
+          freeMode={true}
+          loop={true}
           thumbs={{
             swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
           }}

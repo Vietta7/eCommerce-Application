@@ -185,6 +185,41 @@
   }
 }
 
+.product__thumb {
+  overflow-x: auto;
+  padding-bottom: 10px;
+
+  @media (max-width: 920px) {
+    padding-bottom: 5px;
+  }
+}
+
+.product__thumb .swiper-slide {
+  flex-shrink: 0;
+  width: auto;
+  height: auto;
+  max-width: 120px;
+  max-height: 90px;
+  border-radius: 10px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  @media (max-width: 920px) {
+    max-width: 90px;
+    max-height: 70px;
+  }
+
+  @media (max-width: 450px) {
+    max-width: 70px;
+    max-height: 50px;
+  }
+}
+
 .fancybox__container {
   --fancybox-bg: rgba(24, 24, 27, 0.85);
   --fancybox-hover-color: #00523b;

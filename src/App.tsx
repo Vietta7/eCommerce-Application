@@ -13,6 +13,7 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import RegistrationPage from './pages/registration/RegistrationPage';
 import { AuthProvider } from './context/AuthContext';
+import ProductPage from './pages/ProductPage/ProductPage';
 
 function App() {
   const [token, setToken] = useState('');
@@ -46,6 +47,7 @@ function App() {
             <Route path="/registration" element={<RegistrationPage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/catalog" element={<CatalogPage />} />
+            <Route path="/product/:productId" element={<ProductPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
           <Footer />
