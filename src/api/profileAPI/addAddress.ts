@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import { Address } from '../types/user/formData';
+import { Address } from '../../types/user/formData';
 
 interface Action {
   action: string;

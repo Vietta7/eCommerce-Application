@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import { getCookie } from '../utils/getCookie';
+import { getCookie } from '../../utils/getCookie';
 
 interface changeUserPasswordProps {
   currentPassword: string;

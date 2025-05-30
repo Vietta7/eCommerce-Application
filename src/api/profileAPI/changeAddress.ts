@@ -1,26 +1,18 @@
 import toast from 'react-hot-toast';
-import { ProfileFormData } from '../schemas/profile.schema';
+import { Address } from '../../types/user/formData';
 
-interface changeProfileInforamtionProps {
-  customer: ProfileFormData;
-  userToken: string;
+export type Action =
+  | { action: 'changeAddress'; address: Address; addressId: string }
+  | { action: 'setDefaultShippingAddress'; addressId?: string }
+  | { action: 'setDefaultBillingAddress'; addressId?: string };
+
+interface changeAddressProps {
+  userToken?: string;
   version: number;
+  actions: Action[];
 }
 
-export const changeProfileInformation = async ({
-  customer,
-  userToken,
-  version,
-}: changeProfileInforamtionProps) => {
-  const { firstName, lastName, dateOfBirth, email } = customer;
-
-  const actions = [
-    { action: 'setFirstName', firstName },
-    { action: 'setLastName', lastName },
-    { action: 'setDateOfBirth', dateOfBirth },
-    { action: 'changeEmail', email },
-  ];
-
+export const changeAddress = async ({ actions, userToken, version }: changeAddressProps) => {
   try {
     const response = await fetch(`https://api.europe-west1.gcp.commercetools.com/dino-land/me`, {
       method: 'POST',
@@ -29,8 +21,8 @@ export const changeProfileInformation = async ({
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        version,
         actions,
+        version,
       }),
     });
 
@@ -40,7 +32,7 @@ export const changeProfileInformation = async ({
         toast.error(errorData.message);
         throw new Error(errorData.message);
       }
-      throw new Error('Error change profile information');
+      throw new Error('Error change address');
     } else {
       toast.success('Change successfull!');
     }
