@@ -6,7 +6,6 @@ import {
 } from '../../../schemas/changePasswordSchema';
 import { Input } from '../../ui/Input/Input';
 import { Button } from '../../ui/Button/Button';
-import { changeUserPassword } from '../../../api/changeUserPassword';
 import { Customer } from '../../../types/user/customer';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../../api/api';
@@ -14,19 +13,21 @@ import { useContext } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 import styles from './ChangePassword.module.css';
 import { SubmitButton } from '../../ui/SubmitButton/SubmitButton';
+import { changeUserPassword } from '../../../api/profileAPI/changeUserPassword';
+import { ROUTES } from '../../../routes/routes';
 
 interface ChangePasswordProps {
   customer: Customer;
-  refreshCustomer: () => Promise<void>;
 }
 
-export const ChangePassword = ({ customer, refreshCustomer }: ChangePasswordProps) => {
+export const ChangePassword = ({ customer }: ChangePasswordProps) => {
   const {
     register,
     handleSubmit,
     formState: { errors, isValid, isSubmitting },
     watch,
     reset,
+    setError,
   } = useForm<ChangePasswordFormData>({
     resolver: zodResolver(changePasswordSchema),
     mode: 'onChange',
@@ -39,16 +40,23 @@ export const ChangePassword = ({ customer, refreshCustomer }: ChangePasswordProp
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {
-      await changeUserPassword({
+      const response = await changeUserPassword({
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
         version,
       });
-      await refreshCustomer();
-      reset();
-      logout();
-      if (isAuthenticated) setAuthenticated(false);
-      navigate('/login');
+
+      if (response !== null) {
+        reset();
+        logout();
+        if (isAuthenticated) setAuthenticated(false);
+        navigate(ROUTES.LOGIN);
+      } else {
+        setError('currentPassword', {
+          type: 'server',
+          message: 'Current password is incorrect',
+        });
+      }
     } catch (error) {
       console.error(error);
       throw error;

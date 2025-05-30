@@ -7,6 +7,7 @@ import closeIcon from '../../assets/img/close.svg';
 import cartIcon from '../../assets/img/cart.svg';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { ROUTES } from '../../routes/routes';
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -34,7 +35,7 @@ const Header: React.FC = () => {
   const { isAuthenticated, setAuthenticated } = useContext(AuthContext);
   const navigate = useNavigate();
   const location = useLocation();
-  const isMainPage = location.pathname === '/';
+  const isMainPage = location.pathname === ROUTES.HOME;
   return (
     <header className={`${styles.header} ${isMainPage ? styles.main_header : ''}`}>
       <div className={styles.logo}>
@@ -47,17 +48,17 @@ const Header: React.FC = () => {
       <nav className={`${styles.desktop_nav} ${menuOpen ? styles.hidden : ''}`}>
         <ul>
           <li>
-            <Link to="/">Home</Link>
+            <Link to={ROUTES.HOME}>Home</Link>
           </li>
           <li>
-            <Link to="/catalog">Catalog</Link>
+            <Link to={ROUTES.CATALOG}>Catalog</Link>
           </li>
           <li>
-            <Link to="/about">About</Link>
+            <Link to={ROUTES.ABOUT}>About</Link>
           </li>
           {isAuthenticated && (
             <li>
-              <Link to="/profile" onClick={() => setMenuOpen(false)}>
+              <Link to={ROUTES.PROFILE} onClick={() => setMenuOpen(false)}>
                 Profile
               </Link>
             </li>
@@ -76,10 +77,10 @@ const Header: React.FC = () => {
       <div className={`${styles.desktop_actions} ${menuOpen ? styles.hidden : ''}`}>
         {!isAuthenticated ? (
           <>
-            <Link to="/login" className={styles.button}>
+            <Link to={ROUTES.LOGIN} className={styles.button}>
               Log In
             </Link>
-            <Link to="/registration" className={styles.button}>
+            <Link to={ROUTES.REGISTRATION} className={styles.button}>
               Sign Up
             </Link>
           </>
@@ -89,7 +90,7 @@ const Header: React.FC = () => {
             onClick={() => {
               document.cookie = 'access_token=; ';
               setAuthenticated(false);
-              navigate('/login');
+              navigate(ROUTES.LOGIN);
             }}
           >
             Log out
@@ -115,23 +116,23 @@ const Header: React.FC = () => {
         <nav className={styles.mobile_nav}>
           <ul>
             <li>
-              <Link to="/" onClick={() => setMenuOpen(false)}>
+              <Link to={ROUTES.HOME} onClick={() => setMenuOpen(false)}>
                 Home
               </Link>
             </li>
             <li>
-              <Link to="/catalog" onClick={() => setMenuOpen(false)}>
+              <Link to={ROUTES.CATALOG} onClick={() => setMenuOpen(false)}>
                 Catalog
               </Link>
             </li>
             <li>
-              <Link to="/about" onClick={() => setMenuOpen(false)}>
+              <Link to={ROUTES.ABOUT} onClick={() => setMenuOpen(false)}>
                 About
               </Link>
             </li>
             {isAuthenticated && (
               <li>
-                <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                <Link to={ROUTES.PROFILE} onClick={() => setMenuOpen(false)}>
                   Profile
                 </Link>
               </li>
@@ -156,10 +157,14 @@ const Header: React.FC = () => {
         <div className={`${styles.mobile_actions} ${menuOpen ? styles.hidden : ''}`}>
           {!isAuthenticated ? (
             <>
-              <Link to="/login" onClick={() => setMenuOpen(false)} className={styles.button}>
+              <Link to={ROUTES.LOGIN} onClick={() => setMenuOpen(false)} className={styles.button}>
                 Log In
               </Link>
-              <Link to="/registration" onClick={() => setMenuOpen(false)} className={styles.button}>
+              <Link
+                to={ROUTES.REGISTRATION}
+                onClick={() => setMenuOpen(false)}
+                className={styles.button}
+              >
                 Sign Up
               </Link>
             </>
@@ -169,7 +174,11 @@ const Header: React.FC = () => {
               onClick={() => {
                 document.cookie = 'access_token=; ';
                 setAuthenticated(false);
-                <Link to="/login" onClick={() => setMenuOpen(false)} className={styles.button}>
+                <Link
+                  to={ROUTES.LOGIN}
+                  onClick={() => setMenuOpen(false)}
+                  className={styles.button}
+                >
                   Log In
                 </Link>;
               }}
@@ -178,7 +187,7 @@ const Header: React.FC = () => {
             </button>
           )}
           <div className={styles.mobile_cart}>
-            <Link to="/cart">
+            <Link to={ROUTES.CART}>
               <img src={cartIcon} alt="Cart" className={isMainPage ? styles.cart_white : ''} />
               <span className={styles.badge}>0</span>
             </Link>

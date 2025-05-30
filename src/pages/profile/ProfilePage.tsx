@@ -38,7 +38,7 @@ export const ProfilePage = () => {
 
   useEffect(() => {
     fetchCustomer();
-  }, []);
+  }, [customer]);
 
   return (
     <div className={styles.container}>

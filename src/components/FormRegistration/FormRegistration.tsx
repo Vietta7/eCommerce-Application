@@ -13,6 +13,7 @@ import { addAddresses } from '../../api/addAddresses';
 import { RegisterFormData, registerSchema } from '../../schemas/register.schema';
 import { logIn } from '../../api/api';
 import { AuthContext } from '../../context/AuthContext';
+import { ROUTES } from '../../routes/routes';
 
 export function FormRegistration() {
   const {
@@ -87,7 +88,7 @@ export function FormRegistration() {
       setAuthenticated(true);
       setIsLoading(false);
       reset();
-      navigate('/');
+      navigate(ROUTES.HOME);
     } catch (error) {
       setIsLoading(false);
       console.error(error);

@@ -6,8 +6,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { SubmitButton } from '../../ui/SubmitButton/SubmitButton';
 import { ProfileFormData, profileSchema } from '../../../schemas/profile.schema';
-import { changeProfileInformation } from '../../../api/changeProfileInformation';
 import { getCookie } from '../../../utils/getCookie';
+import { changeProfileInformation } from '../../../api/profileAPI/changeProfileInformation';
 
 interface ProfileInformationProps {
   customer: ProfileCustomer;

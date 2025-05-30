@@ -51,9 +51,7 @@ export const ProfileTabs = ({ customer, refreshCustomer }: ProfileTabsProps) => 
             refreshCustomer={refreshCustomer}
           />
         )}
-        {activeTab === 'password' && (
-          <ChangePassword refreshCustomer={refreshCustomer} customer={customer} />
-        )}
+        {activeTab === 'password' && <ChangePassword customer={customer} />}
       </div>
     </div>
   );
