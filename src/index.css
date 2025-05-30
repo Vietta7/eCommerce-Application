@@ -5,6 +5,11 @@
   box-sizing: border-box;
 }
 
+body {
+  /* for avoid screen jumping */
+  --fancybox-scrollbar-compensate: 0px;
+}
+
 :root {
   font-weight: 400;
   color-scheme: light dark;
