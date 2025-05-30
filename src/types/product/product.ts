@@ -35,6 +35,7 @@ export interface ProductVariant {
 }
 
 export interface ProductCategory {
+  key: string;
   typeId: string;
   id: string;
 }
@@ -60,3 +61,22 @@ export interface Product {
   };
   published: boolean;
 }
+
+export type FilterValues = {
+  size: string[];
+  color: string[];
+  price: string[];
+};
+
+export type Category = {
+  id: string;
+  key: string;
+  name: { [locale: string]: string };
+  parent?: { id: string };
+};
+
+export type SortOption = {
+  value: string;
+  label: string;
+  sortFn: (a: Product, b: Product) => number;
+};

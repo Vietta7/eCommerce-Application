@@ -13,6 +13,13 @@ type SortOption = {
   sortFn: (a: Product, b: Product) => number;
 };
 
+type Category = {
+  id: string;
+  key: string;
+  name: { [locale: string]: string };
+  parent?: { id: string };
+};
+
 const getProductName = (product: Product): string => {
   const nameObj = product.masterData.current.name as { [key: string]: string } | undefined;
   if (nameObj?.en) {
@@ -87,9 +94,14 @@ const SORT_OPTIONS: SortOption[] = [
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [isProductsLoading, setIsProductsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { token, loading: tokenLoading, error: tokenError } = useAccessToken();
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeSubcategory, setActiveSubcategory] = useState<string>('all');
 
   const [activeFilters, setActiveFilters] = useState<FilterValues>({
     size: [],
@@ -117,6 +129,43 @@ const CatalogPage: React.FC = () => {
   }, [searchQuery]);
 
   useEffect(() => {
+    const fetchCategories = async () => {
+      if (!token) return;
+
+      try {
+        setIsCategoriesLoading(true);
+        const projectKey = 'dino-land';
+        const url = `https://api.europe-west1.gcp.commercetools.com/${projectKey}/categories`;
+
+        const response = await fetch(url, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const allCats = data.results || [];
+        setAllCategories(allCats);
+
+        const mainCategories = data.results.filter((cat: Category) => !cat.parent);
+
+        setCategories([{ id: 'all', key: 'all', name: { en: 'All' } }, ...mainCategories]);
+      } catch (err) {
+        console.error('Failed to fetch categories:', err);
+        setError(err instanceof Error ? err.message : 'Failed to load categories.');
+      } finally {
+        setIsCategoriesLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, [token]);
+
+  useEffect(() => {
     const fetchProducts = async () => {
       if (!token) return;
 
@@ -125,7 +174,7 @@ const CatalogPage: React.FC = () => {
         setError(null);
 
         const projectKey = 'dino-land';
-        const where = buildWhereClause(activeFilters);
+        const where = buildWhereClause(activeCategory, activeSubcategory);
         const params = new URLSearchParams();
         if (debouncedSearchQuery.trim()) {
           params.append('text.en', debouncedSearchQuery.trim());
@@ -159,29 +208,35 @@ const CatalogPage: React.FC = () => {
     };
 
     fetchProducts();
-  }, [token, activeFilters, debouncedSearchQuery]);
+  }, [token, activeFilters, debouncedSearchQuery, activeCategory, activeSubcategory]);
 
-  const buildWhereClause = (filters: FilterValues): string | undefined => {
+  const buildWhereClause = (categoryId: string, subcategoryId: string): string | undefined => {
     const conditions: string[] = [];
 
-    if (filters.size && filters.size.length > 0) {
-      const sizeConditions = filters.size.map(
+    if (subcategoryId && subcategoryId !== 'all') {
+      conditions.push(`masterData(current(categories(id="${subcategoryId}")))`);
+    } else if (categoryId && categoryId !== 'all') {
+      conditions.push(`masterData(current(categories(id="${categoryId}")))`);
+    }
+
+    if (activeFilters.size.length > 0) {
+      const sizeConditions = activeFilters.size.map(
         (size) =>
           `masterData(current(masterVariant(attributes(name="size" and value="${size.toLowerCase()}"))))`,
       );
       conditions.push(`(${sizeConditions.join(' or ')})`);
     }
 
-    if (filters.color && filters.color.length > 0) {
-      const colorConditions = filters.color.map(
+    if (activeFilters.color.length > 0) {
+      const colorConditions = activeFilters.color.map(
         (color) =>
           `masterData(current(masterVariant(attributes(name="color" and value="${color.toLowerCase()}"))))`,
       );
       conditions.push(`(${colorConditions.join(' or ')})`);
     }
 
-    if (filters.price && filters.price.length > 0) {
-      const priceConditions = filters.price.map((range) => {
+    if (activeFilters.price.length > 0) {
+      const priceConditions = activeFilters.price.map((range) => {
         const [min, max] = range.split('-').map(Number);
         return `masterData(current(masterVariant(prices(value(centAmount >= ${
           min * 100
@@ -192,6 +247,11 @@ const CatalogPage: React.FC = () => {
 
     return conditions.length > 0 ? conditions.join(' and ') : undefined;
   };
+
+  const getSubcategoriesForActiveCategory = useMemo(() => {
+    if (activeCategory === 'all') return [];
+    return allCategories.filter((cat: Category) => cat.parent && cat.parent.id === activeCategory);
+  }, [activeCategory, allCategories]);
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setActiveFilters(newFilters);
@@ -286,9 +346,11 @@ const CatalogPage: React.FC = () => {
     setDebouncedSearchQuery('');
   };
 
-  if (tokenLoading) return <div>Loading access token...</div>;
+  const isLoading = tokenLoading || isCategoriesLoading || isProductsLoading;
+  if (isLoading) return <div>Loading...</div>;
   if (tokenError) return <div>Error: {tokenError}</div>;
   if (error) return <div>Catalog loading error: {error}</div>;
+  if (!categories.length) return <div>No categories found</div>;
 
   return (
     <div className={styles.catalog_page}>
@@ -344,6 +406,35 @@ const CatalogPage: React.FC = () => {
           <div className={styles.current_sort}>Current sorting: {getCurrentSortLabel()}</div>
         </div>
 
+        <div className={styles.category_tabs}>
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              className={`${styles.tab_button} ${activeCategory === category.id ? styles.active_tab : ''}`}
+              onClick={() => {
+                setActiveCategory(category.id);
+                setActiveSubcategory('all');
+              }}
+            >
+              {category.name.en || category.key}
+            </button>
+          ))}
+        </div>
+
+        {getSubcategoriesForActiveCategory.length > 0 && (
+          <div className={styles.subcategory_tabs}>
+            {getSubcategoriesForActiveCategory.map((subcategory) => (
+              <button
+                key={subcategory.id}
+                className={`${styles.tab_button} ${activeSubcategory === subcategory.id ? styles.active_tab : ''}`}
+                onClick={() => setActiveSubcategory(subcategory.id)}
+              >
+                {subcategory.name.en || subcategory.key}
+              </button>
+            ))}
+          </div>
+        )}
+
         {(activeFilters.size.length > 0 ||
           activeFilters.color.length > 0 ||
           activeFilters.price.length > 0) && (
@@ -372,6 +463,11 @@ const CatalogPage: React.FC = () => {
 
         {isProductsLoading ? (
           <div>Loading products...</div>
+        ) : filteredAndSortedProducts.length === 0 ? (
+          <div className={styles.no_results}>
+            <h3>No dinosaurs found</h3>
+            <p>Try adjusting your filters or search query</p>
+          </div>
         ) : (
           <ProductList products={filteredAndSortedProducts} searchQuery={debouncedSearchQuery} />
         )}
