@@ -1,6 +1,7 @@
 import React from 'react';
 import { Product } from '../../types/product/product';
 import styles from './ProductCard.module.css';
+import { Link } from 'react-router-dom';
 
 interface ProductCardProps {
   product: Product;
@@ -19,7 +20,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
   const hasDiscount = !!discountedPrice;
 
   return (
-    <div className={`${styles.product_card} ${className || ''}`}>
+    <Link to={`/product/${product.id}`} className={`${styles.product_card} ${className || ''}`}>
       <div className={styles.image_container}>
         <img src={image} alt={name} className={styles.image} />
         {hasDiscount && <div className={styles.discount_badge}>-15%</div>}
@@ -40,12 +41,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
               <span className={styles.price}>${originalPrice.toFixed(2)}</span>
             )}
           </div>
-          <button className={styles.plus_button}>
+          <button
+            className={styles.plus_button}
+            onClick={(e) => {
+              e.preventDefault();
+            }}
+          >
             <span className={styles.plus_icon}></span>
           </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
