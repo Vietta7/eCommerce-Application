@@ -156,17 +156,17 @@
   .sorting_container {
     padding: 12px;
   }
-  
+
   .sorting_controls label {
     font-size: 14px;
   }
-  
+
   .sort_select {
     padding: 8px 12px;
     font-size: 14px;
     background-position: right 8px center;
   }
-  
+
   .current_sort {
     font-size: 13px;
     padding: 6px 12px;
