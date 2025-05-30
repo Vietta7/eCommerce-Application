@@ -5,6 +5,7 @@ import useAccessToken from '../../hooks/useAccessToken';
 import { Product } from '../../types/product/product';
 import { FilterValues } from '../../types/filter/filter';
 import styles from './CatalogPage.module.css';
+import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
 
 type SortOption = {
   value: string;
@@ -104,6 +105,17 @@ const CatalogPage: React.FC = () => {
 
   const [sortOption, setSortOption] = useState<string>(SORT_OPTIONS[0].value);
 
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
   useEffect(() => {
     const fetchProducts = async () => {
       if (!token) return;
@@ -114,9 +126,15 @@ const CatalogPage: React.FC = () => {
 
         const projectKey = 'dino-land';
         const where = buildWhereClause(activeFilters);
-        const url = `https://api.europe-west1.gcp.commercetools.com/${projectKey}/products${
-          where ? `?where=${encodeURIComponent(where)}` : ''
-        }`;
+        const params = new URLSearchParams();
+        if (debouncedSearchQuery.trim()) {
+          params.append('text.en', debouncedSearchQuery.trim());
+        }
+        if (where) {
+          params.append('where', where);
+        }
+
+        const url = `https://api.europe-west1.gcp.commercetools.com/${projectKey}/products?${params.toString()}`;
 
         const response = await fetch(url, {
           headers: {
@@ -141,7 +159,7 @@ const CatalogPage: React.FC = () => {
     };
 
     fetchProducts();
-  }, [token, activeFilters]);
+  }, [token, activeFilters, debouncedSearchQuery]);
 
   const buildWhereClause = (filters: FilterValues): string | undefined => {
     const conditions: string[] = [];
@@ -240,13 +258,33 @@ const CatalogPage: React.FC = () => {
       });
     }
 
+    if (debouncedSearchQuery.trim()) {
+      const query = debouncedSearchQuery.trim().toLowerCase();
+      const matched = result.filter((product) => {
+        const name = getProductName(product).toLowerCase();
+        return name.includes(query);
+      });
+
+      const exactMatch = matched.find((product) => getProductName(product).toLowerCase() === query);
+      if (exactMatch) {
+        return [exactMatch];
+      }
+
+      result = matched;
+    }
+
     const selectedSort = SORT_OPTIONS.find((option) => option.value === sortOption);
     if (selectedSort) {
       result.sort(selectedSort.sortFn);
     }
 
     return result;
-  }, [products, activeFilters, sortOption]);
+  }, [products, activeFilters, sortOption, debouncedSearchQuery]);
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setDebouncedSearchQuery('');
+  };
 
   if (tokenLoading) return <div>Loading access token...</div>;
   if (tokenError) return <div>Error: {tokenError}</div>;
@@ -261,6 +299,31 @@ const CatalogPage: React.FC = () => {
       />
 
       <div className={styles.product_list_container}>
+        <div className={styles.search_container}>
+          <div className={styles.search_input_wrapper}>
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder="Search dinosaurs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.search_input}
+            />
+            {searchQuery && (
+              <button onClick={handleClearSearch} className={styles.clear_search_button}>
+                <ClearIcon />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {debouncedSearchQuery && (
+          <div className={styles.search_results_header}>
+            <h3>Search results for: &quot;{debouncedSearchQuery}&quot;</h3>
+            <p>{filteredAndSortedProducts.length} dinosaurs found</p>
+          </div>
+        )}
+
         <div className={styles.sorting_container}>
           <div className={styles.sorting_controls}>
             <label htmlFor="sort-select">Sort by:</label>
@@ -310,7 +373,7 @@ const CatalogPage: React.FC = () => {
         {isProductsLoading ? (
           <div>Loading products...</div>
         ) : (
-          <ProductList products={filteredAndSortedProducts} />
+          <ProductList products={filteredAndSortedProducts} searchQuery={debouncedSearchQuery} />
         )}
       </div>
     </div>

@@ -5,13 +5,13 @@ import styles from './ProductCard.module.css';
 interface ProductCardProps {
   product: Product;
   className?: string;
+  highlightText?: (text: string) => React.ReactNode;
 }
 
-const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
+const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlightText }) => {
   const name = product.masterData.current.name['en-GB'];
   const description = product.masterData.current.description['en-GB'];
   const image = product.masterData.current.masterVariant.images[0]?.url || '/placeholder.png';
-
   const priceData = product.masterData.current.masterVariant.prices[0];
   const originalPrice = priceData?.value.centAmount / 100 || 0;
   const discountedValue = priceData?.discounted?.value;
@@ -25,7 +25,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className }) => {
         {hasDiscount && <div className={styles.discount_badge}>-15%</div>}
       </div>
       <div className={styles.info}>
-        <h3 className={styles.name}>{name}</h3>
+        <h3 className={styles.name}>{highlightText ? highlightText(name) : name}</h3>
         <p className={styles.description}>{description}</p>
         <div className={styles.price_container}>
           <div className={styles.price_wrapper}>
