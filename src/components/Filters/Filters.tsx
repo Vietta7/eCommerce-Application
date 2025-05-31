@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styles from './Filters.module.css';
+import { ArrowDownIcon, ArrowUpIcon } from '../../components/Icons/BackIcons';
 
 interface FilterValues {
   size: string[];
@@ -33,8 +34,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
     });
   };
 
-  const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>, size: string) => {
-    e.preventDefault();
+  const handleSizeChange = (_e: React.ChangeEvent<HTMLInputElement>, size: string) => {
     const newSizes = sizeFilter.includes(size)
       ? sizeFilter.filter((c) => c !== size)
       : [...sizeFilter, size];
@@ -42,8 +42,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
     handleFilterChange({ size: newSizes });
   };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>, color: string) => {
-    e.preventDefault();
+  const handleColorChange = (_e: React.ChangeEvent<HTMLInputElement>, color: string) => {
     const newColors = colorFilter.includes(color)
       ? colorFilter.filter((c) => c !== color)
       : [...colorFilter, color];
@@ -51,8 +50,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
     handleFilterChange({ color: newColors });
   };
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>, price: string) => {
-    e.preventDefault();
+  const handlePriceChange = (_e: React.ChangeEvent<HTMLInputElement>, price: string) => {
     const newPrices = priceFilter.includes(price)
       ? priceFilter.filter((p) => p !== price)
       : [...priceFilter, price];
@@ -83,40 +81,12 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
         {isMobileFiltersOpen ? (
           <>
             <span>Hide filters</span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M19 9L12 16L5 9"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <ArrowUpIcon />
           </>
         ) : (
           <>
             <span>Show filters</span>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 15L12 8L19 15"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
+            <ArrowDownIcon />
           </>
         )}
       </button>
