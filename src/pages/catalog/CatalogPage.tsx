@@ -2,95 +2,12 @@ import React, { useEffect, useState, useMemo } from 'react';
 import ProductList from '../../components/ProductList/ProductList';
 import Filters from '../../components/Filters/Filters';
 import useAccessToken from '../../hooks/useAccessToken';
-import { Product } from '../../types/product/product';
-import { FilterValues } from '../../types/filter/filter';
+import { Product, SortOption } from '../../types/product/product';
+import { FilterValues, Category, SORT_OPTIONS } from '../../types/product/product';
 import styles from './CatalogPage.module.css';
 import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
-
-type SortOption = {
-  value: string;
-  label: string;
-  sortFn: (a: Product, b: Product) => number;
-};
-
-type Category = {
-  id: string;
-  key: string;
-  name: { [locale: string]: string };
-  parent?: { id: string };
-};
-
-const getProductName = (product: Product): string => {
-  const nameObj = product.masterData.current.name as { [key: string]: string } | undefined;
-  if (nameObj?.en) {
-    return nameObj.en;
-  }
-
-  const nameAttribute = product.masterData.current.masterVariant.attributes?.find(
-    (attr) => attr.name === 'Name' || attr.name === 'name',
-  );
-
-  if (nameAttribute) {
-    if (typeof nameAttribute.value === 'string') {
-      return nameAttribute.value;
-    }
-    if (typeof nameAttribute.value === 'object' && nameAttribute.value !== null) {
-      const valueObj = nameAttribute.value as { [key: string]: string };
-      if (valueObj.en) {
-        return valueObj.en;
-      }
-    }
-  }
-
-  const slugObj = product.masterData.current.slug as { [key: string]: string } | undefined;
-  if (slugObj?.en) {
-    return slugObj.en
-      .split('-')
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(' ');
-  }
-
-  return product.id;
-};
-
-const SORT_OPTIONS: SortOption[] = [
-  {
-    value: 'name-asc',
-    label: 'Name (A-Z)',
-    sortFn: (a, b) => {
-      const nameA = getProductName(a) || '';
-      const nameB = getProductName(b) || '';
-      return nameA.localeCompare(nameB);
-    },
-  },
-  {
-    value: 'name-desc',
-    label: 'Name (Z-A)',
-    sortFn: (a, b) => {
-      const nameA = getProductName(a) || '';
-      const nameB = getProductName(b) || '';
-      return nameB.localeCompare(nameA);
-    },
-  },
-  {
-    value: 'price-asc',
-    label: 'Price (Low to High)',
-    sortFn: (a, b) => {
-      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      return priceA - priceB;
-    },
-  },
-  {
-    value: 'price-desc',
-    label: 'Price (High to Low)',
-    sortFn: (a, b) => {
-      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      return priceB - priceA;
-    },
-  },
-];
+import { commercetoolsApi } from '../../api/commercetoolsApi';
+import { getProductName, buildWhereClause, formatFilterValue } from '../../utils/product';
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -129,124 +46,51 @@ const CatalogPage: React.FC = () => {
   }, [searchQuery]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
+    const loadCategories = async () => {
       if (!token) return;
-
       try {
         setIsCategoriesLoading(true);
-        const projectKey = 'dino-land';
-        const url = `https://api.europe-west1.gcp.commercetools.com/${projectKey}/categories`;
-
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error(`Error ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
+        const data = await commercetoolsApi.fetchCategories(token);
         const allCats = data.results || [];
         setAllCategories(allCats);
-
-        const mainCategories = data.results.filter((cat: Category) => !cat.parent);
-
-        setCategories([{ id: 'all', key: 'all', name: { en: 'All' } }, ...mainCategories]);
+        setCategories([
+          { id: 'all', key: 'all', name: { en: 'All' } },
+          ...data.results.filter((cat: Category) => !cat.parent),
+        ]);
       } catch (err) {
-        console.error('Failed to fetch categories:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load categories.');
+        setError(err instanceof Error ? err.message : 'Failed to load categories');
       } finally {
         setIsCategoriesLoading(false);
       }
     };
-
-    fetchCategories();
+    loadCategories();
   }, [token]);
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadProducts = async () => {
       if (!token) return;
-
       try {
         setIsProductsLoading(true);
-        setError(null);
-
-        const projectKey = 'dino-land';
-        const where = buildWhereClause(activeCategory, activeSubcategory);
         const params = new URLSearchParams();
         if (debouncedSearchQuery.trim()) {
           params.append('text.en', debouncedSearchQuery.trim());
         }
+
+        const where = buildWhereClause(activeCategory, activeSubcategory, activeFilters);
         if (where) {
           params.append('where', where);
         }
 
-        const url = `https://api.europe-west1.gcp.commercetools.com/${projectKey}/products?${params.toString()}`;
-
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
+        const data = await commercetoolsApi.fetchProducts(token, params);
         setProducts(data.results || []);
       } catch (err) {
-        console.error('Failed to fetch products:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load products. Try again later.');
+        setError(err instanceof Error ? err.message : 'Failed to load products');
       } finally {
         setIsProductsLoading(false);
       }
     };
-
-    fetchProducts();
+    loadProducts();
   }, [token, activeFilters, debouncedSearchQuery, activeCategory, activeSubcategory]);
-
-  const buildWhereClause = (categoryId: string, subcategoryId: string): string | undefined => {
-    const conditions: string[] = [];
-
-    if (subcategoryId && subcategoryId !== 'all') {
-      conditions.push(`masterData(current(categories(id="${subcategoryId}")))`);
-    } else if (categoryId && categoryId !== 'all') {
-      conditions.push(`masterData(current(categories(id="${categoryId}")))`);
-    }
-
-    if (activeFilters.size.length > 0) {
-      const sizeConditions = activeFilters.size.map(
-        (size) =>
-          `masterData(current(masterVariant(attributes(name="size" and value="${size.toLowerCase()}"))))`,
-      );
-      conditions.push(`(${sizeConditions.join(' or ')})`);
-    }
-
-    if (activeFilters.color.length > 0) {
-      const colorConditions = activeFilters.color.map(
-        (color) =>
-          `masterData(current(masterVariant(attributes(name="color" and value="${color.toLowerCase()}"))))`,
-      );
-      conditions.push(`(${colorConditions.join(' or ')})`);
-    }
-
-    if (activeFilters.price.length > 0) {
-      const priceConditions = activeFilters.price.map((range) => {
-        const [min, max] = range.split('-').map(Number);
-        return `masterData(current(masterVariant(prices(value(centAmount >= ${
-          min * 100
-        } and centAmount <= ${max * 100})))))`;
-      });
-      conditions.push(`(${priceConditions.join(' or ')})`);
-    }
-
-    return conditions.length > 0 ? conditions.join(' and ') : undefined;
-  };
 
   const getSubcategoriesForActiveCategory = useMemo(() => {
     if (activeCategory === 'all') return [];
@@ -272,16 +116,8 @@ const CatalogPage: React.FC = () => {
     setSortOption(e.target.value);
   };
 
-  const formatFilterValue = (value: string): string => {
-    if (value === '120-150') return '$120 – $150';
-    if (value === '200-240') return '$200 – $240';
-    if (value === '310-430') return '$310 – $430';
-
-    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
-  };
-
   const getCurrentSortLabel = (): string => {
-    const option = SORT_OPTIONS.find((opt) => opt.value === sortOption);
+    const option = SORT_OPTIONS.find((opt: SortOption) => opt.value === sortOption);
     return option ? option.label : 'Sort by';
   };
 
@@ -333,7 +169,7 @@ const CatalogPage: React.FC = () => {
       result = matched;
     }
 
-    const selectedSort = SORT_OPTIONS.find((option) => option.value === sortOption);
+    const selectedSort = SORT_OPTIONS.find((option: SortOption) => option.value === sortOption);
     if (selectedSort) {
       result.sort(selectedSort.sortFn);
     }

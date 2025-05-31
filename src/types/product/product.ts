@@ -1,3 +1,5 @@
+import { getProductName } from '../../utils/product';
+
 export interface ProductImage {
   url: string;
   label?: string;
@@ -80,3 +82,42 @@ export type SortOption = {
   label: string;
   sortFn: (a: Product, b: Product) => number;
 };
+
+export const SORT_OPTIONS: SortOption[] = [
+  {
+    value: 'name-asc',
+    label: 'Name (A-Z)',
+    sortFn: (a, b) => {
+      const nameA = getProductName(a) || '';
+      const nameB = getProductName(b) || '';
+      return nameA.localeCompare(nameB);
+    },
+  },
+  {
+    value: 'name-desc',
+    label: 'Name (Z-A)',
+    sortFn: (a, b) => {
+      const nameA = getProductName(a) || '';
+      const nameB = getProductName(b) || '';
+      return nameB.localeCompare(nameA);
+    },
+  },
+  {
+    value: 'price-asc',
+    label: 'Price (Low to High)',
+    sortFn: (a, b) => {
+      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      return priceA - priceB;
+    },
+  },
+  {
+    value: 'price-desc',
+    label: 'Price (High to Low)',
+    sortFn: (a, b) => {
+      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      return priceB - priceA;
+    },
+  },
+];
