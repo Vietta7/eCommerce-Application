@@ -2,19 +2,19 @@ import React, { useEffect, useState, useMemo } from 'react';
 import ProductList from '../../components/ProductList/ProductList';
 import Filters from '../../components/Filters/Filters';
 import useAccessToken from '../../hooks/useAccessToken';
-import { Product, SortOption } from '../../types/product/product';
+import { Product } from '../../types/product/product';
 import { FilterValues, Category, SORT_OPTIONS } from '../../types/product/product';
 import styles from './CatalogPage.module.css';
 import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
 import { commercetoolsApi } from '../../api/commercetoolsApi';
-import { getProductName, buildWhereClause, formatFilterValue } from '../../utils/product';
+import { getProductName, formatFilterValue } from '../../utils/product';
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
-  const [isProductsLoading, setIsProductsLoading] = useState(true);
+  const [, setIsProductsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { token, loading: tokenLoading, error: tokenError } = useAccessToken();
   const [activeCategory, setActiveCategory] = useState<string>('all');
@@ -26,24 +26,9 @@ const CatalogPage: React.FC = () => {
     price: [],
   });
 
-  const [selectedFilters, setSelectedFilters] = useState<FilterValues>({
-    size: [],
-    color: [],
-    price: [],
-  });
-
   const [sortOption, setSortOption] = useState<string>(SORT_OPTIONS[0].value);
-
   const [searchQuery, setSearchQuery] = useState('');
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 300);
-
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -67,62 +52,51 @@ const CatalogPage: React.FC = () => {
   }, [token]);
 
   useEffect(() => {
-    const loadProducts = async () => {
+    const controller = new AbortController();
+
+    const loadAllProducts = async () => {
       if (!token) return;
       try {
         setIsProductsLoading(true);
-        const params = new URLSearchParams();
-        if (debouncedSearchQuery.trim()) {
-          params.append('text.en', debouncedSearchQuery.trim());
-        }
-
-        const where = buildWhereClause(activeCategory, activeSubcategory, activeFilters);
-        if (where) {
-          params.append('where', where);
-        }
-
-        const data = await commercetoolsApi.fetchProducts(token, params);
+        const data = await commercetoolsApi.fetchProducts(token, new URLSearchParams(), {
+          signal: controller.signal,
+        });
         setProducts(data.results || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load products');
+        if (!controller.signal.aborted) {
+          setError(err instanceof Error ? err.message : 'Failed to load products');
+        }
       } finally {
         setIsProductsLoading(false);
       }
     };
-    loadProducts();
-  }, [token, activeFilters, debouncedSearchQuery, activeCategory, activeSubcategory]);
 
-  const getSubcategoriesForActiveCategory = useMemo(() => {
-    if (activeCategory === 'all') return [];
-    return allCategories.filter((cat: Category) => cat.parent && cat.parent.id === activeCategory);
-  }, [activeCategory, allCategories]);
+    loadAllProducts();
 
-  const handleFilterChange = (newFilters: FilterValues) => {
-    setActiveFilters(newFilters);
-    setSelectedFilters(newFilters);
-  };
+    return () => controller.abort();
+  }, [token]);
 
-  const handleResetFilters = () => {
-    const resetFilters = {
-      size: [],
-      color: [],
-      price: [],
-    };
-    setActiveFilters(resetFilters);
-    setSelectedFilters(resetFilters);
-  };
-
-  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setSortOption(e.target.value);
-  };
-
-  const getCurrentSortLabel = (): string => {
-    const option = SORT_OPTIONS.find((opt: SortOption) => opt.value === sortOption);
-    return option ? option.label : 'Sort by';
-  };
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
 
   const filteredAndSortedProducts = useMemo(() => {
     let result = [...products];
+
+    if (activeCategory !== 'all') {
+      result = result.filter((product) =>
+        product.masterData.current.categories.some((cat) => cat.id === activeCategory),
+      );
+    }
+
+    if (activeSubcategory !== 'all') {
+      result = result.filter((product) =>
+        product.masterData.current.categories.some((cat) => cat.id === activeSubcategory),
+      );
+    }
 
     if (activeFilters.size.length > 0) {
       result = result.filter((product) =>
@@ -156,33 +130,59 @@ const CatalogPage: React.FC = () => {
 
     if (debouncedSearchQuery.trim()) {
       const query = debouncedSearchQuery.trim().toLowerCase();
-      const matched = result.filter((product) => {
+      result = result.filter((product) => {
         const name = getProductName(product).toLowerCase();
         return name.includes(query);
       });
-
-      const exactMatch = matched.find((product) => getProductName(product).toLowerCase() === query);
-      if (exactMatch) {
-        return [exactMatch];
-      }
-
-      result = matched;
     }
 
-    const selectedSort = SORT_OPTIONS.find((option: SortOption) => option.value === sortOption);
+    const selectedSort = SORT_OPTIONS.find((option) => option.value === sortOption);
     if (selectedSort) {
       result.sort(selectedSort.sortFn);
     }
 
     return result;
-  }, [products, activeFilters, sortOption, debouncedSearchQuery]);
+  }, [
+    products,
+    activeCategory,
+    activeSubcategory,
+    activeFilters,
+    debouncedSearchQuery,
+    sortOption,
+  ]);
+
+  const handleFilterChange = (newFilters: FilterValues) => {
+    setActiveFilters(newFilters);
+  };
+
+  const handleResetFilters = () => {
+    setActiveFilters({
+      size: [],
+      color: [],
+      price: [],
+    });
+  };
+
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOption(e.target.value);
+  };
 
   const handleClearSearch = () => {
     setSearchQuery('');
     setDebouncedSearchQuery('');
   };
 
-  const isLoading = tokenLoading || isCategoriesLoading || isProductsLoading;
+  const getCurrentSortLabel = (): string => {
+    const option = SORT_OPTIONS.find((opt) => opt.value === sortOption);
+    return option ? option.label : 'Sort by';
+  };
+
+  const getSubcategoriesForActiveCategory = useMemo(() => {
+    if (activeCategory === 'all') return [];
+    return allCategories.filter((cat) => cat.parent && cat.parent.id === activeCategory);
+  }, [activeCategory, allCategories]);
+
+  const isLoading = tokenLoading || isCategoriesLoading;
   if (isLoading) return <div>Loading...</div>;
   if (tokenError) return <div>Error: {tokenError}</div>;
   if (error) return <div>Catalog loading error: {error}</div>;
@@ -193,7 +193,7 @@ const CatalogPage: React.FC = () => {
       <Filters
         onFilterChange={handleFilterChange}
         onResetFilters={handleResetFilters}
-        selectedFilters={selectedFilters}
+        selectedFilters={activeFilters}
       />
 
       <div className={styles.product_list_container}>
@@ -230,7 +230,6 @@ const CatalogPage: React.FC = () => {
               value={sortOption}
               onChange={handleSortChange}
               className={styles.sort_select}
-              disabled={isProductsLoading}
             >
               {SORT_OPTIONS.map((option) => (
                 <option key={option.value} value={option.value}>
@@ -276,19 +275,16 @@ const CatalogPage: React.FC = () => {
           activeFilters.price.length > 0) && (
           <div className={styles.active_filters}>
             <h3>Active Filters:</h3>
-
             {activeFilters.size.map((size) => (
               <span key={`size-${size}`} className={styles.filter_tag}>
                 Size: {formatFilterValue(size)}
               </span>
             ))}
-
             {activeFilters.color.map((color) => (
               <span key={`color-${color}`} className={styles.filter_tag}>
                 Color: {formatFilterValue(color)}
               </span>
             ))}
-
             {activeFilters.price.map((price) => (
               <span key={`price-${price}`} className={styles.filter_tag}>
                 Price: {formatFilterValue(price)}
@@ -297,9 +293,7 @@ const CatalogPage: React.FC = () => {
           </div>
         )}
 
-        {isProductsLoading ? (
-          <div>Loading products...</div>
-        ) : filteredAndSortedProducts.length === 0 ? (
+        {filteredAndSortedProducts.length === 0 ? (
           <div className={styles.no_results}>
             <h3>No dinosaurs found</h3>
             <p>Try adjusting your filters or search query</p>
@@ -312,4 +306,4 @@ const CatalogPage: React.FC = () => {
   );
 };
 
-export default CatalogPage;
+export default React.memo(CatalogPage);

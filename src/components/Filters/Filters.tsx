@@ -34,8 +34,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
     });
   };
 
-  const handleSizeChange = (e: React.ChangeEvent<HTMLInputElement>, size: string) => {
-    e.preventDefault();
+  const handleSizeChange = (_e: React.ChangeEvent<HTMLInputElement>, size: string) => {
     const newSizes = sizeFilter.includes(size)
       ? sizeFilter.filter((c) => c !== size)
       : [...sizeFilter, size];
@@ -43,8 +42,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
     handleFilterChange({ size: newSizes });
   };
 
-  const handleColorChange = (e: React.ChangeEvent<HTMLInputElement>, color: string) => {
-    e.preventDefault();
+  const handleColorChange = (_e: React.ChangeEvent<HTMLInputElement>, color: string) => {
     const newColors = colorFilter.includes(color)
       ? colorFilter.filter((c) => c !== color)
       : [...colorFilter, color];
@@ -52,8 +50,7 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
     handleFilterChange({ color: newColors });
   };
 
-  const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>, price: string) => {
-    e.preventDefault();
+  const handlePriceChange = (_e: React.ChangeEvent<HTMLInputElement>, price: string) => {
     const newPrices = priceFilter.includes(price)
       ? priceFilter.filter((p) => p !== price)
       : [...priceFilter, price];
