@@ -1,6 +1,4 @@
-import React from 'react';
-
-export const ExitIcon = () => {
+export const CloseIcon = () => {
   return (
     <svg
       width="21.213135"
@@ -10,8 +8,6 @@ export const ExitIcon = () => {
       xmlns="http://www.w3.org/2000/svg"
       xmlnsXlink="http://www.w3.org/1999/xlink"
     >
-      <desc>Created with Pixso.</desc>
-      <defs />
       <path
         id="Vector 110"
         d="M5.3 5.3L15.9 15.91"

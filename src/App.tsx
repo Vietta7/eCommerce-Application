@@ -15,6 +15,7 @@ import RegistrationPage from './pages/registration/RegistrationPage';
 import { AuthProvider } from './context/AuthContext';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
+import { ROUTES } from './routes/routes';
 
 function App() {
   const [token, setToken] = useState('');
@@ -43,13 +44,13 @@ function App() {
         <Router>
           <Header />
           <Routes>
-            <Route path="/" element={<MainPage />} />
-            <Route path="/login" element={<AutorisationPage />} />
-            <Route path="/registration" element={<RegistrationPage />} />
-            <Route path="/about" element={<AboutPage />} />
-            <Route path="/catalog" element={<CatalogPage />} />
+            <Route path={ROUTES.HOME} element={<MainPage />} />
+            <Route path={ROUTES.LOGIN} element={<AutorisationPage />} />
+            <Route path={ROUTES.REGISTRATION} element={<RegistrationPage />} />
+            <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+            <Route path={ROUTES.CATALOG} element={<CatalogPage />} />
             <Route
-              path="/profile"
+              path={ROUTES.PROFILE}
               element={
                 <ProtectedRoute>
                   <ProfilePage />

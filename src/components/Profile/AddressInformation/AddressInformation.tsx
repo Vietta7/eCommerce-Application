@@ -8,7 +8,7 @@ import { Button } from '../../ui/Button/Button';
 import { Action, changeAddress } from '../../../api/profileAPI/changeAddress';
 import { removeAddress } from '../../../api/profileAPI/removeAddress';
 import { addAddress } from '../../../api/profileAPI/addAddress';
-import { ExitIcon } from '../../Icons/ExitIcon';
+import { Modal } from '../../Modal/Modal';
 
 interface AddressInformationProps {
   customer: Customer & AddressCustomer;
@@ -23,7 +23,7 @@ export const AddressInformation = ({
 }: AddressInformationProps) => {
   const tokenCustomer = getCookie('access_token');
 
-  const [isAddingAddress, setIsAddingAddress] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const {
     addresses,
@@ -94,7 +94,11 @@ export const AddressInformation = ({
   };
 
   const onAddAddressClick = () => {
-    setIsAddingAddress((prev) => !prev);
+    setIsModalOpen((prev) => !prev);
+  };
+
+  const onCloseModal = () => {
+    setIsModalOpen((prev) => !prev);
   };
 
   const onAddNewAddress = async (address: Address) => {
@@ -130,7 +134,7 @@ export const AddressInformation = ({
       });
 
       await refreshCustomer();
-      setIsAddingAddress(false);
+      onCloseModal();
     } catch (error) {
       console.error(error);
       throw error;
@@ -169,24 +173,23 @@ export const AddressInformation = ({
           ))
         )}
       </div>
-      {isAddingAddress ? (
-        <div className={`${styles.address} ${styles.new_address}`}>
-          <div className={styles.header_wrapper}>
-            <h4 className={styles.header_address}>Add address</h4>
-            <Button className={styles.btn_exit} onClick={onAddAddressClick}>
-              <ExitIcon />
-            </Button>
+      {isModalOpen ? (
+        <Modal isOpen={isModalOpen} onClose={onCloseModal}>
+          <div className={`${styles.address} ${styles.new_address}`}>
+            <div className={styles.header_wrapper}>
+              <h4 className={styles.header_address}>Add address</h4>
+            </div>
+            <AddressEditor
+              addressId=""
+              initialAddress={{ streetName: '', city: '', postalCode: '', country: 'RU' }}
+              onSubmit={onAddNewAddress}
+              onRemoveAddress={() => onAddAddressClick}
+              isDefaultShipping={false}
+              isDefaultBilling={false}
+              addressType={addressType}
+            />
           </div>
-          <AddressEditor
-            addressId=""
-            initialAddress={{ streetName: '', city: '', postalCode: '', country: 'RU' }}
-            onSubmit={onAddNewAddress}
-            onRemoveAddress={() => setIsAddingAddress(false)}
-            isDefaultShipping={false}
-            isDefaultBilling={false}
-            addressType={addressType}
-          />
-        </div>
+        </Modal>
       ) : (
         <Button className={styles.address_btn} onClick={onAddAddressClick}>
           Add address

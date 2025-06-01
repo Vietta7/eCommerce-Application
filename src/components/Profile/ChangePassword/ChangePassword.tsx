@@ -14,6 +14,7 @@ import { AuthContext } from '../../../context/AuthContext';
 import styles from './ChangePassword.module.css';
 import { SubmitButton } from '../../ui/SubmitButton/SubmitButton';
 import { changeUserPassword } from '../../../api/profileAPI/changeUserPassword';
+import { ROUTES } from '../../../routes/routes';
 
 interface ChangePasswordProps {
   customer: Customer;
@@ -48,7 +49,7 @@ export const ChangePassword = ({ customer, refreshCustomer }: ChangePasswordProp
       reset();
       logout();
       if (isAuthenticated) setAuthenticated(false);
-      navigate('/login');
+      navigate(ROUTES.LOGIN);
     } catch (error) {
       console.error(error);
       throw error;

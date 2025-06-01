@@ -36,6 +36,8 @@
 .new_address {
   padding: 30px;
   max-width: 509px;
+  margin-right: 0;
+  margin-bottom: 0;
 }
 
 .empty_adresses {
@@ -47,17 +49,6 @@
   display: flex;
   justify-content: space-between;
   width: 100%;
-}
-
-.btn_exit {
-  height: auto;
-  background: transparent;
-  padding: 0;
-  border: none;
-}
-
-button.btn_exit:hover {
-  background-color: transparent;
 }
 
 @media (max-width: 1160px) {
