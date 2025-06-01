@@ -42,6 +42,7 @@ function App() {
         <Router>
           <Header />
           <Routes>
+            {/* TODO: update paths into ROUTES object */}
             <Route path="/" element={<MainPage />} />
             <Route path="/login" element={<AutorisationPage />} />
             <Route path="/registration" element={<RegistrationPage />} />
