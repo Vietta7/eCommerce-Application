@@ -6,7 +6,6 @@ import {
 } from '../../../schemas/changePasswordSchema';
 import { Input } from '../../ui/Input/Input';
 import { Button } from '../../ui/Button/Button';
-import { changeUserPassword } from '../../../api/changeUserPassword';
 import { Customer } from '../../../types/user/customer';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../../api/api';
@@ -14,6 +13,7 @@ import { useContext } from 'react';
 import { AuthContext } from '../../../context/AuthContext';
 import styles from './ChangePassword.module.css';
 import { SubmitButton } from '../../ui/SubmitButton/SubmitButton';
+import { changeUserPassword } from '../../../api/profileAPI/changeUserPassword';
 
 interface ChangePasswordProps {
   customer: Customer;

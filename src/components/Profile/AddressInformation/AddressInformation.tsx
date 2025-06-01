@@ -2,12 +2,12 @@ import { getCookie } from '../../../utils/getCookie';
 import { AddressCustomer, Customer } from '../../../types/user/customer';
 import { AddressEditor } from '../../AddressEditor/AddressEditor';
 import { Address } from '../../../types/user/formData';
-import { Action, changeAddress } from '../../../api/changeAddress';
 import styles from './AddressInformation.module.css';
-import { removeAddress } from '../../../api/removeAddress';
 import { useState } from 'react';
-import { addAddress } from '../../../api/addAddress';
 import { Button } from '../../ui/Button/Button';
+import { Action, changeAddress } from '../../../api/profileAPI/changeAddress';
+import { removeAddress } from '../../../api/profileAPI/removeAddress';
+import { addAddress } from '../../../api/profileAPI/addAddress';
 
 interface AddressInformationProps {
   customer: Customer & AddressCustomer;
