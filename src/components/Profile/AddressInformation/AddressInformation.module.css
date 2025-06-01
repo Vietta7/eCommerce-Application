@@ -38,6 +38,28 @@
   max-width: 509px;
 }
 
+.empty_adresses {
+  margin-bottom: 30px;
+  margin-left: 12px;
+}
+
+.header_wrapper {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.btn_exit {
+  height: auto;
+  background: transparent;
+  padding: 0;
+  border: none;
+}
+
+button.btn_exit:hover {
+  background-color: transparent;
+}
+
 @media (max-width: 1160px) {
   .address_content {
     justify-content: start;

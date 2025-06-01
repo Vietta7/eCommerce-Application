@@ -8,6 +8,7 @@ import { Button } from '../../ui/Button/Button';
 import { Action, changeAddress } from '../../../api/profileAPI/changeAddress';
 import { removeAddress } from '../../../api/profileAPI/removeAddress';
 import { addAddress } from '../../../api/profileAPI/addAddress';
+import { ExitIcon } from '../../Icons/ExitIcon';
 
 interface AddressInformationProps {
   customer: Customer & AddressCustomer;
@@ -93,7 +94,7 @@ export const AddressInformation = ({
   };
 
   const onAddAddressClick = () => {
-    setIsAddingAddress(true);
+    setIsAddingAddress((prev) => !prev);
   };
 
   const onAddNewAddress = async (address: Address) => {
@@ -139,31 +140,43 @@ export const AddressInformation = ({
   return (
     <>
       <div className={styles.address_content}>
-        {addressesByType.map((address, i) => (
-          <div className={styles.address} key={address.id}>
-            <h4 className={styles.header_address}>
-              Addrees #{i + 1}
-              {(address.id === defaultShippingAddressId &&
-                addressType === 'shipping' &&
-                ' - Default Address') ||
-                (address.id === defaultBillingAddressId &&
-                  addressType === 'billing' &&
-                  ' - Default Address')}
-            </h4>
-            <AddressEditor
-              addressId={address.id!}
-              initialAddress={address}
-              onSubmit={(data) => onSubmitAddress(data, address.id!)}
-              onRemoveAddress={() => onRemoveAddress(address.id!)}
-              isDefaultShipping={address.id === defaultShippingAddressId}
-              isDefaultBilling={address.id === defaultBillingAddressId}
-              addressType={addressType}
-            />
-          </div>
-        ))}
+        {addressesByType.length === 0 ? (
+          <p className={styles.empty_adresses}>
+            You have not created any addresses yet. Please click button Add address.
+          </p>
+        ) : (
+          addressesByType.map((address, i) => (
+            <div className={styles.address} key={address.id}>
+              <h4 className={styles.header_address}>
+                Addrees #{i + 1}
+                {(address.id === defaultShippingAddressId &&
+                  addressType === 'shipping' &&
+                  ' - Default Address') ||
+                  (address.id === defaultBillingAddressId &&
+                    addressType === 'billing' &&
+                    ' - Default Address')}
+              </h4>
+              <AddressEditor
+                addressId={address.id!}
+                initialAddress={address}
+                onSubmit={(data) => onSubmitAddress(data, address.id!)}
+                onRemoveAddress={() => onRemoveAddress(address.id!)}
+                isDefaultShipping={address.id === defaultShippingAddressId}
+                isDefaultBilling={address.id === defaultBillingAddressId}
+                addressType={addressType}
+              />
+            </div>
+          ))
+        )}
       </div>
       {isAddingAddress ? (
         <div className={`${styles.address} ${styles.new_address}`}>
+          <div className={styles.header_wrapper}>
+            <h4 className={styles.header_address}>Add address</h4>
+            <Button className={styles.btn_exit} onClick={onAddAddressClick}>
+              <ExitIcon />
+            </Button>
+          </div>
           <AddressEditor
             addressId=""
             initialAddress={{ streetName: '', city: '', postalCode: '', country: 'RU' }}
