@@ -40,16 +40,18 @@ export const ChangePassword = ({ customer, refreshCustomer }: ChangePasswordProp
 
   const onSubmit = async (data: ChangePasswordFormData) => {
     try {
-      await changeUserPassword({
+      const response = await changeUserPassword({
         currentPassword: data.currentPassword,
         newPassword: data.newPassword,
         version,
       });
-      await refreshCustomer();
-      reset();
-      logout();
-      if (isAuthenticated) setAuthenticated(false);
-      navigate(ROUTES.LOGIN);
+      if (response === undefined) {
+        await refreshCustomer();
+        reset();
+        logout();
+        if (isAuthenticated) setAuthenticated(false);
+        navigate(ROUTES.LOGIN);
+      }
     } catch (error) {
       console.error(error);
       throw error;

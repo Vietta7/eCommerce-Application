@@ -18,7 +18,6 @@ import { ProfilePage } from './pages/profile/ProfilePage';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { ROUTES } from './routes/routes';
 
-
 function App() {
   const [token, setToken] = useState('');
 
@@ -46,7 +45,6 @@ function App() {
         <Router>
           <Header />
           <Routes>
-
             {/* TODO: update paths into ROUTES object */}
             <Route path="/product/:productId" element={<ProductPage />} />
             <Route path={ROUTES.HOME} element={<MainPage />} />

@@ -306,12 +306,12 @@
     padding: 12px;
     gap: 6px;
   }
-  
+
   .tab_button {
     padding: 6px 12px;
     font-size: 13px;
   }
-  
+
   .subcategory_tabs {
     padding: 10px;
   }
@@ -325,24 +325,24 @@
     scrollbar-width: thin;
     scrollbar-color: #00523b #f1f3f5;
   }
-  
+
   .category_tabs::-webkit-scrollbar {
     height: 4px;
   }
-  
+
   .category_tabs::-webkit-scrollbar-track {
     background: #f1f3f5;
   }
-  
+
   .category_tabs::-webkit-scrollbar-thumb {
     background-color: #00523b;
     border-radius: 4px;
   }
-  
+
   .tab_button {
     flex-shrink: 0;
   }
-  
+
   .subcategory_tabs {
     overflow-x: auto;
     flex-wrap: nowrap;
