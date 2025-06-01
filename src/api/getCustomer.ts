@@ -14,13 +14,12 @@ export const getCustomer = async ({ userToken }: getCustomerProps) => {
       },
     });
 
-    const customer = response.json();
+    const customer = await response.json();
 
     if (!response.ok) {
-      const errorData = await response.json();
-      if (errorData.message) {
-        toast.error(errorData.message);
-        throw new Error(errorData.message);
+      if (customer.message) {
+        toast.error(customer.message);
+        throw new Error(customer.message);
       }
       throw new Error('Error add addresses');
     }
