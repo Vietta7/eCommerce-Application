@@ -145,6 +145,8 @@
     border-radius: 12px;
     max-width: 205px;
     max-height: 153px;
+    min-width: 1px;
+    min-height: 1px;
     background-position: center;
     background-size: cover;
 
@@ -188,6 +190,7 @@
 .product__thumb {
   overflow-x: auto;
   padding-bottom: 10px;
+  max-width: 100%;
 
   @media (max-width: 920px) {
     padding-bottom: 5px;

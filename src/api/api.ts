@@ -76,10 +76,8 @@ export async function getProducts(): Promise<ProductPagedQueryResponse> {
   }
 }
 
-export async function getProduct(id: string): Promise<ProductProjection> {
+export async function getProduct(token: string, id: string): Promise<ProductProjection> {
   try {
-    const token = getToken();
-
     const res = await fetch(
       `https://api.europe-west1.gcp.commercetools.com/dino-land/product-projections/${id}`,
       {
