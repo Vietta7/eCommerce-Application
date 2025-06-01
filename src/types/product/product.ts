@@ -1,3 +1,5 @@
+import { getProductName } from '../../utils/product';
+
 export interface ProductImage {
   url: string;
   label?: string;
@@ -35,6 +37,7 @@ export interface ProductVariant {
 }
 
 export interface ProductCategory {
+  key: string;
   typeId: string;
   id: string;
 }
@@ -60,3 +63,61 @@ export interface Product {
   };
   published: boolean;
 }
+
+export type FilterValues = {
+  size: string[];
+  color: string[];
+  price: string[];
+};
+
+export type Category = {
+  id: string;
+  key: string;
+  name: { [locale: string]: string };
+  parent?: { id: string };
+};
+
+export type SortOption = {
+  value: string;
+  label: string;
+  sortFn: (a: Product, b: Product) => number;
+};
+
+export const SORT_OPTIONS: SortOption[] = [
+  {
+    value: 'name-asc',
+    label: 'Name (A-Z)',
+    sortFn: (a, b) => {
+      const nameA = getProductName(a) || '';
+      const nameB = getProductName(b) || '';
+      return nameA.localeCompare(nameB);
+    },
+  },
+  {
+    value: 'name-desc',
+    label: 'Name (Z-A)',
+    sortFn: (a, b) => {
+      const nameA = getProductName(a) || '';
+      const nameB = getProductName(b) || '';
+      return nameB.localeCompare(nameA);
+    },
+  },
+  {
+    value: 'price-asc',
+    label: 'Price (Low to High)',
+    sortFn: (a, b) => {
+      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      return priceA - priceB;
+    },
+  },
+  {
+    value: 'price-desc',
+    label: 'Price (High to Low)',
+    sortFn: (a, b) => {
+      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+      return priceB - priceA;
+    },
+  },
+];
