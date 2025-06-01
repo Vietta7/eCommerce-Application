@@ -13,9 +13,11 @@ import Header from './components/Header/Header';
 import Footer from './components/Footer/Footer';
 import RegistrationPage from './pages/registration/RegistrationPage';
 import { AuthProvider } from './context/AuthContext';
+import ProductPage from './pages/ProductPage/ProductPage';
 import { ProfilePage } from './pages/profile/ProfilePage';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { ROUTES } from './routes/routes';
+
 
 function App() {
   const [token, setToken] = useState('');
@@ -44,6 +46,9 @@ function App() {
         <Router>
           <Header />
           <Routes>
+
+            {/* TODO: update paths into ROUTES object */}
+            <Route path="/product/:productId" element={<ProductPage />} />
             <Route path={ROUTES.HOME} element={<MainPage />} />
             <Route path={ROUTES.LOGIN} element={<AutorisationPage />} />
             <Route path={ROUTES.REGISTRATION} element={<RegistrationPage />} />
