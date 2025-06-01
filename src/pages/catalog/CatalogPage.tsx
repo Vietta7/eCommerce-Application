@@ -1,16 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import ProductList from '../../components/ProductList/ProductList';
 import Filters from '../../components/Filters/Filters';
 import useAccessToken from '../../hooks/useAccessToken';
 import { Product } from '../../types/product/product';
-import { FilterValues } from '../../types/filter/filter';
+import { FilterValues, Category, SORT_OPTIONS } from '../../types/product/product';
 import styles from './CatalogPage.module.css';
+import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
+import { commercetoolsApi } from '../../api/commercetoolsApi';
+import { getProductName, formatFilterValue } from '../../utils/product';
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [isProductsLoading, setIsProductsLoading] = useState(true);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [allCategories, setAllCategories] = useState<Category[]>([]);
+  const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
+  const [, setIsProductsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { token, loading: tokenLoading, error: tokenError } = useAccessToken();
+  const [activeCategory, setActiveCategory] = useState<string>('all');
+  const [activeSubcategory, setActiveSubcategory] = useState<string>('all');
 
   const [activeFilters, setActiveFilters] = useState<FilterValues>({
     size: [],
@@ -18,136 +26,265 @@ const CatalogPage: React.FC = () => {
     price: [],
   });
 
-  const [selectedFilters, setSelectedFilters] = useState<FilterValues>({
-    size: [],
-    color: [],
-    price: [],
-  });
+  const [sortOption, setSortOption] = useState<string>(SORT_OPTIONS[0].value);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const loadCategories = async () => {
       if (!token) return;
+      try {
+        setIsCategoriesLoading(true);
+        const data = await commercetoolsApi.fetchCategories(token);
+        const allCats = data.results || [];
+        setAllCategories(allCats);
+        setCategories([
+          { id: 'all', key: 'all', name: { en: 'All' } },
+          ...data.results.filter((cat: Category) => !cat.parent),
+        ]);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to load categories');
+      } finally {
+        setIsCategoriesLoading(false);
+      }
+    };
+    loadCategories();
+  }, [token]);
 
+  useEffect(() => {
+    const controller = new AbortController();
+
+    const loadAllProducts = async () => {
+      if (!token) return;
       try {
         setIsProductsLoading(true);
-        setError(null);
-
-        const projectKey = 'dino-land';
-        const where = buildWhereClause(activeFilters);
-        const url = `https://api.europe-west1.gcp.commercetools.com/${projectKey}/products${where ? `?where=${encodeURIComponent(where)}` : ''}`;
-
-        const response = await fetch(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-          },
+        const data = await commercetoolsApi.fetchProducts(token, new URLSearchParams(), {
+          signal: controller.signal,
         });
-
-        if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.message || `Error ${response.status}: ${response.statusText}`);
-        }
-
-        const data = await response.json();
         setProducts(data.results || []);
       } catch (err) {
-        console.error('Failed to fetch products:', err);
-        setError(err instanceof Error ? err.message : 'Failed to load products. Try again later.');
+        if (!controller.signal.aborted) {
+          setError(err instanceof Error ? err.message : 'Failed to load products');
+        }
       } finally {
         setIsProductsLoading(false);
       }
     };
 
-    fetchProducts();
-  }, [token, activeFilters]);
+    loadAllProducts();
 
-  const buildWhereClause = (filters: FilterValues): string | undefined => {
-    const conditions: string[] = [];
+    return () => controller.abort();
+  }, [token]);
 
-    if (filters.size && filters.size.length > 0) {
-      const sizeConditions = filters.size.map(
-        (size) =>
-          `masterData(current(masterVariant(attributes(name="size" and value="${size.toLowerCase()}"))))`,
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 300);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  const filteredAndSortedProducts = useMemo(() => {
+    let result = [...products];
+
+    if (activeCategory !== 'all') {
+      result = result.filter((product) =>
+        product.masterData.current.categories.some((cat) => cat.id === activeCategory),
       );
-      conditions.push(`(${sizeConditions.join(' or ')})`);
     }
 
-    if (filters.color && filters.color.length > 0) {
-      const colorConditions = filters.color.map(
-        (color) =>
-          `masterData(current(masterVariant(attributes(name="color" and value="${color.toLowerCase()}"))))`,
+    if (activeSubcategory !== 'all') {
+      result = result.filter((product) =>
+        product.masterData.current.categories.some((cat) => cat.id === activeSubcategory),
       );
-      conditions.push(`(${colorConditions.join(' or ')})`);
     }
 
-    if (filters.price && filters.price.length > 0) {
-      const priceConditions = filters.price.map((range) => {
-        const [min, max] = range.split('-').map(Number);
-        return `masterData(current(masterVariant(prices(value(centAmount >= ${
-          min * 100
-        } and centAmount <= ${max * 100})))))`;
+    if (activeFilters.size.length > 0) {
+      result = result.filter((product) =>
+        activeFilters.size.some((size) =>
+          product.masterData.current.masterVariant.attributes?.some(
+            (attr) => attr.name === 'size' && attr.value === size.toLowerCase(),
+          ),
+        ),
+      );
+    }
+
+    if (activeFilters.color.length > 0) {
+      result = result.filter((product) =>
+        activeFilters.color.some((color) =>
+          product.masterData.current.masterVariant.attributes?.some(
+            (attr) => attr.name === 'color' && attr.value === color.toLowerCase(),
+          ),
+        ),
+      );
+    }
+
+    if (activeFilters.price.length > 0) {
+      result = result.filter((product) => {
+        const price = product.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
+        return activeFilters.price.some((range) => {
+          const [min, max] = range.split('-').map(Number);
+          return price >= min * 100 && price <= max * 100;
+        });
       });
-      conditions.push(`(${priceConditions.join(' or ')})`);
     }
 
-    return conditions.length > 0 ? conditions.join(' and ') : undefined;
-  };
+    if (debouncedSearchQuery.trim()) {
+      const query = debouncedSearchQuery.trim().toLowerCase();
+      result = result.filter((product) => {
+        const name = getProductName(product).toLowerCase();
+        return name.includes(query);
+      });
+    }
+
+    const selectedSort = SORT_OPTIONS.find((option) => option.value === sortOption);
+    if (selectedSort) {
+      result.sort(selectedSort.sortFn);
+    }
+
+    return result;
+  }, [
+    products,
+    activeCategory,
+    activeSubcategory,
+    activeFilters,
+    debouncedSearchQuery,
+    sortOption,
+  ]);
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setActiveFilters(newFilters);
-    setSelectedFilters(newFilters);
   };
 
   const handleResetFilters = () => {
-    const resetFilters = {
+    setActiveFilters({
       size: [],
       color: [],
       price: [],
-    };
-    setActiveFilters(resetFilters);
-    setSelectedFilters(resetFilters);
+    });
   };
 
-  const formatFilterValue = (value: string): string => {
-    if (value === '120-150') return '$120 – $150';
-    if (value === '200-240') return '$200 – $240';
-    if (value === '310-430') return '$310 – $430';
-
-    return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
+  const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSortOption(e.target.value);
   };
 
-  if (tokenLoading) return <div>Loading access token...</div>;
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setDebouncedSearchQuery('');
+  };
+
+  const getCurrentSortLabel = (): string => {
+    const option = SORT_OPTIONS.find((opt) => opt.value === sortOption);
+    return option ? option.label : 'Sort by';
+  };
+
+  const getSubcategoriesForActiveCategory = useMemo(() => {
+    if (activeCategory === 'all') return [];
+    return allCategories.filter((cat) => cat.parent && cat.parent.id === activeCategory);
+  }, [activeCategory, allCategories]);
+
+  const isLoading = tokenLoading || isCategoriesLoading;
+  if (isLoading) return <div>Loading...</div>;
   if (tokenError) return <div>Error: {tokenError}</div>;
   if (error) return <div>Catalog loading error: {error}</div>;
-  if (isProductsLoading) return <div>Loading products...</div>;
+  if (!categories.length) return <div>No categories found</div>;
 
   return (
     <div className={styles.catalog_page}>
       <Filters
         onFilterChange={handleFilterChange}
         onResetFilters={handleResetFilters}
-        selectedFilters={selectedFilters}
+        selectedFilters={activeFilters}
       />
 
       <div className={styles.product_list_container}>
+        <div className={styles.search_container}>
+          <div className={styles.search_input_wrapper}>
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder="Search dinosaurs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.search_input}
+            />
+            {searchQuery && (
+              <button onClick={handleClearSearch} className={styles.clear_search_button}>
+                <ClearIcon />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {debouncedSearchQuery && (
+          <div className={styles.search_results_header}>
+            <h3>Search results for: &quot;{debouncedSearchQuery}&quot;</h3>
+            <p>{filteredAndSortedProducts.length} dinosaurs found</p>
+          </div>
+        )}
+
+        <div className={styles.sorting_container}>
+          <div className={styles.sorting_controls}>
+            <label htmlFor="sort-select">Sort by:</label>
+            <select
+              id="sort-select"
+              value={sortOption}
+              onChange={handleSortChange}
+              className={styles.sort_select}
+            >
+              {SORT_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className={styles.current_sort}>Current sorting: {getCurrentSortLabel()}</div>
+        </div>
+
+        <div className={styles.category_tabs}>
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              className={`${styles.tab_button} ${activeCategory === category.id ? styles.active_tab : ''}`}
+              onClick={() => {
+                setActiveCategory(category.id);
+                setActiveSubcategory('all');
+              }}
+            >
+              {category.name.en || category.key}
+            </button>
+          ))}
+        </div>
+
+        {getSubcategoriesForActiveCategory.length > 0 && (
+          <div className={styles.subcategory_tabs}>
+            {getSubcategoriesForActiveCategory.map((subcategory) => (
+              <button
+                key={subcategory.id}
+                className={`${styles.tab_button} ${activeSubcategory === subcategory.id ? styles.active_tab : ''}`}
+                onClick={() => setActiveSubcategory(subcategory.id)}
+              >
+                {subcategory.name.en || subcategory.key}
+              </button>
+            ))}
+          </div>
+        )}
+
         {(activeFilters.size.length > 0 ||
           activeFilters.color.length > 0 ||
           activeFilters.price.length > 0) && (
           <div className={styles.active_filters}>
             <h3>Active Filters:</h3>
-
             {activeFilters.size.map((size) => (
               <span key={`size-${size}`} className={styles.filter_tag}>
                 Size: {formatFilterValue(size)}
               </span>
             ))}
-
             {activeFilters.color.map((color) => (
               <span key={`color-${color}`} className={styles.filter_tag}>
                 Color: {formatFilterValue(color)}
               </span>
             ))}
-
             {activeFilters.price.map((price) => (
               <span key={`price-${price}`} className={styles.filter_tag}>
                 Price: {formatFilterValue(price)}
@@ -156,10 +293,17 @@ const CatalogPage: React.FC = () => {
           </div>
         )}
 
-        <ProductList products={products} />
+        {filteredAndSortedProducts.length === 0 ? (
+          <div className={styles.no_results}>
+            <h3>No dinosaurs found</h3>
+            <p>Try adjusting your filters or search query</p>
+          </div>
+        ) : (
+          <ProductList products={filteredAndSortedProducts} searchQuery={debouncedSearchQuery} />
+        )}
       </div>
     </div>
   );
 };
 
-export default CatalogPage;
+export default React.memo(CatalogPage);
