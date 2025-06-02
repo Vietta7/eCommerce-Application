@@ -30,10 +30,6 @@ export default function AutorisationPage() {
     resolver: zodResolver(autorisationFormSchema),
     mode: 'all',
     reValidateMode: 'onChange',
-    defaultValues: {
-      email: 'Damalsd@asd.rt',
-      password: 'Q1w2e3r4t5ZXc',
-    },
   });
 
   const navigate = useNavigate();

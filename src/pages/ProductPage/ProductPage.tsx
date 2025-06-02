@@ -6,16 +6,19 @@ import styles from './ProductPage.module.css';
 import Slider from '../../components/Slider/Slider';
 import { getProduct } from '../../api/api';
 import { useParams } from 'react-router';
+import useAccessToken from '../../hooks/useAccessToken';
 
 const ProductPage: React.FC = () => {
   const [product, setProduct] = useState<ProductProjection>();
   const { productId } = useParams<{ productId: string }>();
+  const { token } = useAccessToken();
 
   useEffect(() => {
     const getProd = async () => {
       try {
         if (!productId) return;
-        const res = await getProduct(productId);
+        if (!token) return;
+        const res = await getProduct(token, productId);
 
         setProduct(res);
       } catch (error) {
@@ -26,7 +29,7 @@ const ProductPage: React.FC = () => {
     };
 
     getProd();
-  }, []);
+  }, [token]);
 
   const language = 'en-GB' as string;
 
@@ -38,7 +41,7 @@ const ProductPage: React.FC = () => {
   const salePrice = product?.masterVariant.prices![0].discounted?.value.centAmount as number;
 
   const currentPrice = (price / 100).toFixed(2);
-  const salePriceOutput = ((salePrice || +currentPrice) / 100)?.toFixed(2);
+  const salePriceOutput = salePrice ? ((salePrice || +currentPrice) / 100)?.toFixed(2) : null;
 
   return (
     <>
@@ -54,11 +57,13 @@ const ProductPage: React.FC = () => {
 
                 <div className={styles.product__price}>
                   <div className={styles.product__price_current}>
-                    {salePriceOutput ? `${salePriceOutput} €` : ''}
+                    {salePriceOutput ? `${salePriceOutput} $` : ''}
                   </div>
 
-                  <div className={styles.product__price_old}>
-                    {currentPrice ? `${currentPrice} €` : ''}
+                  <div
+                    className={`${salePriceOutput ? styles.product__price_old : styles.product__price_current}`}
+                  >
+                    {currentPrice ? `${currentPrice} $` : ''}
                   </div>
                 </div>
 

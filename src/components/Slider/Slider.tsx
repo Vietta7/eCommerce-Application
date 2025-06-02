@@ -56,7 +56,7 @@ const Slider: React.FC<SliderProd> = ({ images }) => {
           className="product__slider"
           modules={[FreeMode, Navigation, Thumbs]}
           freeMode={true}
-          loop={true}
+          loop={images.length > 2}
           thumbs={{
             swiper: thumbsSwiper && !thumbsSwiper.destroyed ? thumbsSwiper : null,
           }}
@@ -85,7 +85,7 @@ const Slider: React.FC<SliderProd> = ({ images }) => {
         className="product__thumb"
         onSwiper={setThumbSwiper}
         scrollbar={{
-          hide: false,
+          hide: true,
           draggable: true,
           enabled: true,
           el: '.product__scrollbar',
