@@ -74,7 +74,10 @@ const MainPage = () => {
                   Tyrannosaurus <br />
                   Rex
                 </h3>
-                <Link to="/tyrannosaurus" className={styles.card_button}>
+                <Link
+                  to="/product/72d4b2a8-fb6d-490a-86d5-e2f187acdea2"
+                  className={styles.card_button}
+                >
                   View Details
                 </Link>
               </div>
@@ -86,7 +89,10 @@ const MainPage = () => {
               </div>
               <div className={styles.card_content}>
                 <h3>Triceratops</h3>
-                <Link to="/triceratops" className={styles.card_button}>
+                <Link
+                  to="/product/795840b6-707a-497e-8fa5-89cb5207c38f"
+                  className={styles.card_button}
+                >
                   View Details
                 </Link>
               </div>

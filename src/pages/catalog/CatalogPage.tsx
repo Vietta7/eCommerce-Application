@@ -58,9 +58,7 @@ const CatalogPage: React.FC = () => {
       if (!token) return;
       try {
         setIsProductsLoading(true);
-        const data = await commercetoolsApi.fetchProducts(token, new URLSearchParams(), {
-          signal: controller.signal,
-        });
+        const data = await commercetoolsApi.fetchProducts(token, new URLSearchParams());
         setProducts(data.results || []);
       } catch (err) {
         if (!controller.signal.aborted) {
