@@ -1,0 +1,15 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 90px;
+  padding-bottom: 90px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.product_list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}

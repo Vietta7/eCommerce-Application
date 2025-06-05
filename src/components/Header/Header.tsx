@@ -55,6 +55,13 @@ const Header: React.FC = () => {
           <li>
             <Link to="/about">About</Link>
           </li>
+          {isAuthenticated && (
+            <li>
+              <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                Profile
+              </Link>
+            </li>
+          )}
         </ul>
       </nav>
 
@@ -122,6 +129,13 @@ const Header: React.FC = () => {
                 About
               </Link>
             </li>
+            {isAuthenticated && (
+              <li>
+                <Link to="/profile" onClick={() => setMenuOpen(false)}>
+                  Profile
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 

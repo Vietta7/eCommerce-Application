@@ -9,9 +9,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FormAddress } from '../FormAddress/FormAddress';
 import { CheckBox } from '../ui/CheckBox/CheckBox';
 import { createCustomer } from '../../api/createCustomer';
-import { loginCustomer } from '../../api/loginCustomer';
 import { addAddresses } from '../../api/addAddresses';
 import { RegisterFormData, registerSchema } from '../../schemas/register.schema';
+import { logIn } from '../../api/api';
+import { AuthContext } from '../../context/AuthContext';
 
 export function FormRegistration() {
   const {
@@ -37,6 +38,7 @@ export function FormRegistration() {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const setAuthenticated = useContext(AuthContext).setAuthenticated;
 
   const copyShippingToBilling = () => {
     const shipping = watch('shippingAddress');
@@ -80,8 +82,9 @@ export function FormRegistration() {
     try {
       setIsLoading(true);
       const newCustomer = await createCustomer(userData, token);
-      const tokenCustomer = await loginCustomer(userData);
+      const tokenCustomer = await logIn({ email: data.email, password: data.password });
       await addAddresses({ data: userData, customer: newCustomer, userToken: tokenCustomer });
+      setAuthenticated(true);
       setIsLoading(false);
       reset();
       navigate('/');
