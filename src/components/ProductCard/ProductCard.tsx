@@ -10,11 +10,11 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlightText }) => {
-  const name = product.masterData.current.name['en-GB'];
-  const description = product.masterData.current.description['en-GB'];
-  const image = product.masterData.current.masterVariant.images[0]?.url || '/placeholder.png';
-  const priceData = product.masterData.current.masterVariant.prices[0];
-  const originalPrice = priceData?.value.centAmount / 100 || 0;
+  const name = product?.name?.['en-GB'] ?? 'Unnamed';
+  const description = product?.description?.['en-GB'] ?? '';
+  const image = product?.masterVariant?.images?.[0]?.url || '/placeholder.png';
+  const priceData = product?.masterVariant?.prices?.[0];
+  const originalPrice = priceData?.value?.centAmount ? priceData.value.centAmount / 100 : 0;
   const discountedValue = priceData?.discounted?.value;
   const discountedPrice = discountedValue ? discountedValue.centAmount / 100 : undefined;
   const hasDiscount = !!discountedPrice;

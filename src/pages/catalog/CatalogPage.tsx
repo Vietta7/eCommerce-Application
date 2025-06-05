@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProductList from '../../components/ProductList/ProductList';
 import Filters from '../../components/Filters/Filters';
 import useAccessToken from '../../hooks/useAccessToken';
@@ -7,16 +7,18 @@ import { FilterValues, Category, SORT_OPTIONS } from '../../types/product/produc
 import styles from './CatalogPage.module.css';
 import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
 import { commercetoolsApi } from '../../api/commercetoolsApi';
-import { getProductName, formatFilterValue } from '../../utils/product';
+import { formatFilterValue } from '../../utils/product';
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [allCategories, setAllCategories] = useState<Category[]>([]);
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
-  const [, setIsProductsLoading] = useState(true);
+  const [isProductsLoading, setIsProductsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
   const { token, loading: tokenLoading, error: tokenError } = useAccessToken();
+
   const [activeCategory, setActiveCategory] = useState<string>('all');
   const [activeSubcategory, setActiveSubcategory] = useState<string>('all');
 
@@ -31,16 +33,18 @@ const CatalogPage: React.FC = () => {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState('');
 
   useEffect(() => {
+    if (!token) return;
+
     const loadCategories = async () => {
-      if (!token) return;
       try {
         setIsCategoriesLoading(true);
         const data = await commercetoolsApi.fetchCategories(token);
         const allCats = data.results || [];
+
         setAllCategories(allCats);
         setCategories([
           { id: 'all', key: 'all', name: { en: 'All' } },
-          ...data.results.filter((cat: Category) => !cat.parent),
+          ...allCats.filter((cat: Category) => !cat.parent),
         ]);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Failed to load categories');
@@ -48,17 +52,67 @@ const CatalogPage: React.FC = () => {
         setIsCategoriesLoading(false);
       }
     };
+
     loadCategories();
   }, [token]);
 
   useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+    }, 1000);
+    return () => clearTimeout(handler);
+  }, [searchQuery]);
+
+  useEffect(() => {
+    if (!token) return;
+
     const controller = new AbortController();
 
-    const loadAllProducts = async () => {
-      if (!token) return;
+    const loadFilteredProducts = async () => {
       try {
         setIsProductsLoading(true);
-        const data = await commercetoolsApi.fetchProducts(token, new URLSearchParams());
+        const params = new URLSearchParams();
+
+        params.set('staged', 'true');
+        params.set('limit', '100');
+
+        if (debouncedSearchQuery.trim()) {
+          params.set('text.en-GB', debouncedSearchQuery.trim());
+        }
+
+        if (sortOption) {
+          params.set('sort', sortOption);
+        }
+
+        const categoryId =
+          activeSubcategory !== 'all'
+            ? activeSubcategory
+            : activeCategory !== 'all'
+              ? activeCategory
+              : null;
+        if (categoryId) {
+          params.append('filter.query', `categories.id:"${categoryId}"`);
+        }
+
+        if (activeFilters.size.length > 0) {
+          const sizes = activeFilters.size.map((s) => `"${s.toLowerCase()}"`).join(',');
+          params.append('filter.query', `variants.attributes.size:${sizes}`);
+        }
+
+        if (activeFilters.color.length > 0) {
+          const colors = activeFilters.color.map((c) => `"${c.toLowerCase()}"`).join(',');
+          params.append('filter.query', `variants.attributes.color:${colors}`);
+        }
+        let parts = [];
+        if (activeFilters.price.length > 0) {
+          parts = activeFilters.price.map((range) => {
+            const [min, max] = range.split('-').map(Number);
+            return `(${min * 100} to ${max * 100})`;
+          });
+          params.append('filter.query', `variants.price.centAmount:range ${parts.join(',')}`);
+        }
+
+        const data = await commercetoolsApi.fetchProducts(token, params);
         setProducts(data.results || []);
       } catch (err) {
         if (!controller.signal.aborted) {
@@ -69,96 +123,16 @@ const CatalogPage: React.FC = () => {
       }
     };
 
-    loadAllProducts();
-
+    loadFilteredProducts();
     return () => controller.abort();
-  }, [token]);
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-    }, 300);
-    return () => clearTimeout(handler);
-  }, [searchQuery]);
-
-  const filteredAndSortedProducts = useMemo(() => {
-    let result = [...products];
-
-    if (activeCategory !== 'all') {
-      result = result.filter((product) =>
-        product.masterData.current.categories.some((cat) => cat.id === activeCategory),
-      );
-    }
-
-    if (activeSubcategory !== 'all') {
-      result = result.filter((product) =>
-        product.masterData.current.categories.some((cat) => cat.id === activeSubcategory),
-      );
-    }
-
-    if (activeFilters.size.length > 0) {
-      result = result.filter((product) =>
-        activeFilters.size.some((size) =>
-          product.masterData.current.masterVariant.attributes?.some(
-            (attr) => attr.name === 'size' && attr.value === size.toLowerCase(),
-          ),
-        ),
-      );
-    }
-
-    if (activeFilters.color.length > 0) {
-      result = result.filter((product) =>
-        activeFilters.color.some((color) =>
-          product.masterData.current.masterVariant.attributes?.some(
-            (attr) => attr.name === 'color' && attr.value === color.toLowerCase(),
-          ),
-        ),
-      );
-    }
-
-    if (activeFilters.price.length > 0) {
-      result = result.filter((product) => {
-        const price = product.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-        return activeFilters.price.some((range) => {
-          const [min, max] = range.split('-').map(Number);
-          return price >= min * 100 && price <= max * 100;
-        });
-      });
-    }
-
-    if (debouncedSearchQuery.trim()) {
-      const query = debouncedSearchQuery.trim().toLowerCase();
-      result = result.filter((product) => {
-        const name = getProductName(product).toLowerCase();
-        return name.includes(query);
-      });
-    }
-
-    const selectedSort = SORT_OPTIONS.find((option) => option.value === sortOption);
-    if (selectedSort) {
-      result.sort(selectedSort.sortFn);
-    }
-
-    return result;
-  }, [
-    products,
-    activeCategory,
-    activeSubcategory,
-    activeFilters,
-    debouncedSearchQuery,
-    sortOption,
-  ]);
+  }, [token, activeCategory, activeSubcategory, activeFilters, debouncedSearchQuery, sortOption]);
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setActiveFilters(newFilters);
   };
 
   const handleResetFilters = () => {
-    setActiveFilters({
-      size: [],
-      color: [],
-      price: [],
-    });
+    setActiveFilters({ size: [], color: [], price: [] });
   };
 
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -175,12 +149,12 @@ const CatalogPage: React.FC = () => {
     return option ? option.label : 'Sort by';
   };
 
-  const getSubcategoriesForActiveCategory = useMemo(() => {
-    if (activeCategory === 'all') return [];
-    return allCategories.filter((cat) => cat.parent && cat.parent.id === activeCategory);
-  }, [activeCategory, allCategories]);
+  const getSubcategoriesForActiveCategory = allCategories.filter(
+    (cat) => cat.parent && cat.parent.id === activeCategory,
+  );
 
-  const isLoading = tokenLoading || isCategoriesLoading;
+  const isLoading = tokenLoading || isCategoriesLoading || isProductsLoading;
+
   if (isLoading) return <div>Loading...</div>;
   if (tokenError) return <div>Error: {tokenError}</div>;
   if (error) return <div>Catalog loading error: {error}</div>;
@@ -216,7 +190,7 @@ const CatalogPage: React.FC = () => {
         {debouncedSearchQuery && (
           <div className={styles.search_results_header}>
             <h3>Search results for: &quot;{debouncedSearchQuery}&quot;</h3>
-            <p>{filteredAndSortedProducts.length} dinosaurs found</p>
+            <p>{products.length} dinosaurs found</p>
           </div>
         )}
 
@@ -291,13 +265,13 @@ const CatalogPage: React.FC = () => {
           </div>
         )}
 
-        {filteredAndSortedProducts.length === 0 ? (
+        {products.length === 0 ? (
           <div className={styles.no_results}>
             <h3>No dinosaurs found</h3>
             <p>Try adjusting your filters or search query</p>
           </div>
         ) : (
-          <ProductList products={filteredAndSortedProducts} searchQuery={debouncedSearchQuery} />
+          <ProductList products={products} searchQuery={debouncedSearchQuery} />
         )}
       </div>
     </div>

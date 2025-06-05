@@ -1,5 +1,3 @@
-import { getProductName } from '../../utils/product';
-
 export interface ProductImage {
   url: string;
   label?: string;
@@ -24,7 +22,7 @@ export interface ProductPrice {
 
 export interface ProductAttribute {
   name: string;
-  value: string | number;
+  value: string | number | Record<string, unknown>;
 }
 
 export interface ProductVariant {
@@ -37,17 +35,9 @@ export interface ProductVariant {
 }
 
 export interface ProductCategory {
-  key: string;
+  key?: string;
   typeId: string;
   id: string;
-}
-
-export interface ProductMasterDataCurrent {
-  name: Record<string, string>;
-  description: Record<string, string>;
-  slug: Record<string, string>;
-  masterVariant: ProductVariant;
-  categories: ProductCategory[];
 }
 
 export interface Product {
@@ -61,7 +51,20 @@ export interface Product {
   masterData: {
     current: ProductMasterDataCurrent;
   };
+  name: Record<string, string>;
+  description?: Record<string, string>;
+  slug: Record<string, string>;
+  categories: ProductCategory[];
+  masterVariant: ProductVariant;
+  variants?: ProductVariant[];
   published: boolean;
+}
+export interface ProductMasterDataCurrent {
+  name: Record<string, string>;
+  description: Record<string, string>;
+  slug: Record<string, string>;
+  masterVariant: ProductVariant;
+  categories: ProductCategory[];
 }
 
 export type FilterValues = {
@@ -83,41 +86,9 @@ export type SortOption = {
   sortFn: (a: Product, b: Product) => number;
 };
 
-export const SORT_OPTIONS: SortOption[] = [
-  {
-    value: 'name-asc',
-    label: 'Name (A-Z)',
-    sortFn: (a, b) => {
-      const nameA = getProductName(a) || '';
-      const nameB = getProductName(b) || '';
-      return nameA.localeCompare(nameB);
-    },
-  },
-  {
-    value: 'name-desc',
-    label: 'Name (Z-A)',
-    sortFn: (a, b) => {
-      const nameA = getProductName(a) || '';
-      const nameB = getProductName(b) || '';
-      return nameB.localeCompare(nameA);
-    },
-  },
-  {
-    value: 'price-asc',
-    label: 'Price (Low to High)',
-    sortFn: (a, b) => {
-      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      return priceA - priceB;
-    },
-  },
-  {
-    value: 'price-desc',
-    label: 'Price (High to Low)',
-    sortFn: (a, b) => {
-      const priceA = a.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      const priceB = b.masterData.current.masterVariant.prices?.[0]?.value?.centAmount || 0;
-      return priceB - priceA;
-    },
-  },
+export const SORT_OPTIONS = [
+  { label: 'Name (A-Z)', value: 'name.en-GB asc' },
+  { label: 'Name (Z-A)', value: 'name.en-GB desc' },
+  { label: 'Price (Low to High)', value: 'price asc' },
+  { label: 'Price (High to Low)', value: 'price desc' },
 ];

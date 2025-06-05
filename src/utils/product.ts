@@ -1,13 +1,16 @@
 import { FilterValues, Product } from '../types/product/product';
 
 export const getProductName = (product: Product): string => {
-  const nameObj = product.masterData.current.name as { [key: string]: string } | undefined;
-  if (nameObj?.en) {
-    return nameObj.en;
+  const nameObj = product.name;
+  if (nameObj?.['en-GB']) {
+    return nameObj['en-GB'];
+  }
+  if (nameObj?.['en']) {
+    return nameObj['en'];
   }
 
-  const nameAttribute = product.masterData.current.masterVariant.attributes?.find(
-    (attr) => attr.name === 'Name' || attr.name === 'name',
+  const nameAttribute = product.masterVariant?.attributes?.find(
+    (attr) => attr.name === 'name' || attr.name === 'Name',
   );
 
   if (nameAttribute) {
@@ -16,15 +19,14 @@ export const getProductName = (product: Product): string => {
     }
     if (typeof nameAttribute.value === 'object' && nameAttribute.value !== null) {
       const valueObj = nameAttribute.value as { [key: string]: string };
-      if (valueObj.en) {
-        return valueObj.en;
-      }
+      if (valueObj['en-GB']) return valueObj['en-GB'];
+      if (valueObj['en']) return valueObj['en'];
     }
   }
 
-  const slugObj = product.masterData.current.slug as { [key: string]: string } | undefined;
-  if (slugObj?.en) {
-    return slugObj.en
+  const slugObj = product.slug;
+  if (slugObj?.['en-GB']) {
+    return slugObj['en-GB']
       .split('-')
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(' ');
@@ -41,23 +43,21 @@ export const buildWhereClause = (
   const conditions: string[] = [];
 
   if (subcategoryId && subcategoryId !== 'all') {
-    conditions.push(`masterData(current(categories(id="${subcategoryId}")))`);
+    conditions.push(`categories(id="${subcategoryId}")`);
   } else if (categoryId && categoryId !== 'all') {
-    conditions.push(`masterData(current(categories(id="${categoryId}")))`);
+    conditions.push(`categories(id="${categoryId}")`);
   }
 
   if (activeFilters.size.length > 0) {
     const sizeConditions = activeFilters.size.map(
-      (size) =>
-        `masterData(current(masterVariant(attributes(name="size" and value="${size.toLowerCase()}"))))`,
+      (size) => `masterVariant(attributes(name="size" and value="${size.toLowerCase()}"))`,
     );
     conditions.push(`(${sizeConditions.join(' or ')})`);
   }
 
   if (activeFilters.color.length > 0) {
     const colorConditions = activeFilters.color.map(
-      (color) =>
-        `masterData(current(masterVariant(attributes(name="color" and value="${color.toLowerCase()}"))))`,
+      (color) => `masterVariant(attributes(name="color" and value="${color.toLowerCase()}"))`,
     );
     conditions.push(`(${colorConditions.join(' or ')})`);
   }
@@ -65,9 +65,7 @@ export const buildWhereClause = (
   if (activeFilters.price.length > 0) {
     const priceConditions = activeFilters.price.map((range) => {
       const [min, max] = range.split('-').map(Number);
-      return `masterData(current(masterVariant(prices(value(centAmount >= ${
-        min * 100
-      } and centAmount <= ${max * 100})))))`;
+      return `masterVariant(prices(value(centAmount >= ${min * 100} and centAmount <= ${max * 100})))`;
     });
     conditions.push(`(${priceConditions.join(' or ')})`);
   }
@@ -76,9 +74,9 @@ export const buildWhereClause = (
 };
 
 export const formatFilterValue = (value: string): string => {
-  if (value === '120-150') return '$120 – $150';
-  if (value === '200-240') return '$200 – $240';
-  if (value === '310-430') return '$310 – $430';
+  if (value === '100-150') return '$100 – $150';
+  if (value === '150-250') return '$150 – $250';
+  if (value === '250-500') return '$250 – $500';
 
   return value.charAt(0).toUpperCase() + value.slice(1).toLowerCase();
 };

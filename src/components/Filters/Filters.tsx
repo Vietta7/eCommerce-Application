@@ -171,26 +171,26 @@ const Filters: React.FC<FiltersProps> = ({ onFilterChange, onResetFilters, selec
             <label>
               <input
                 type="checkbox"
-                checked={priceFilter.includes('120-150')}
-                onChange={(e) => handlePriceChange(e, '120-150')}
+                checked={priceFilter.includes('100-150')}
+                onChange={(e) => handlePriceChange(e, '100-150')}
               />
-              $120 – $150
+              $100 –$150
             </label>
             <label>
               <input
                 type="checkbox"
-                checked={priceFilter.includes('200-240')}
-                onChange={(e) => handlePriceChange(e, '200-240')}
+                checked={priceFilter.includes('150-250')}
+                onChange={(e) => handlePriceChange(e, '150-250')}
               />
-              $200 – $240
+              $150 – $250
             </label>
             <label>
               <input
                 type="checkbox"
-                checked={priceFilter.includes('310-430')}
-                onChange={(e) => handlePriceChange(e, '310-430')}
+                checked={priceFilter.includes('250-500')}
+                onChange={(e) => handlePriceChange(e, '250-500')}
               />
-              $310 – $430
+              $250 – $500
             </label>
           </div>
         </div>
