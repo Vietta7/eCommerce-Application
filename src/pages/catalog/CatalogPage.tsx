@@ -8,6 +8,7 @@ import styles from './CatalogPage.module.css';
 import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
 import { commercetoolsApi } from '../../api/commercetoolsApi';
 import { formatFilterValue } from '../../utils/product';
+import { LoaderPage } from '../../components/ui/LoaderPage/LoaderPage';
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -155,7 +156,7 @@ const CatalogPage: React.FC = () => {
 
   const isLoading = tokenLoading || isCategoriesLoading || isProductsLoading;
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoaderPage />;
   if (tokenError) return <div>Error: {tokenError}</div>;
   if (error) return <div>Catalog loading error: {error}</div>;
   if (!categories.length) return <div>No categories found</div>;
