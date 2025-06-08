@@ -7,29 +7,37 @@ import Slider from '../../components/Slider/Slider';
 import { getProduct } from '../../api/api';
 import { useParams } from 'react-router';
 import useAccessToken from '../../hooks/useAccessToken';
+import { LoaderPage } from '../../components/ui/LoaderPage/LoaderPage';
 
 const ProductPage: React.FC = () => {
   const [product, setProduct] = useState<ProductProjection>();
+  const [loading, setLoading] = useState(true);
   const { productId } = useParams<{ productId: string }>();
-  const { token } = useAccessToken();
+  const { token, loading: tokenLoading } = useAccessToken();
 
   useEffect(() => {
     const getProd = async () => {
       try {
         if (!productId) return;
         if (!token) return;
+
         const res = await getProduct(token, productId);
+        console.log(res);
 
         setProduct(res);
       } catch (error) {
         if (error instanceof Error) {
           throw new Error(error.message);
         }
+      } finally {
+        setLoading(false);
       }
     };
 
     getProd();
   }, [token]);
+
+  if (tokenLoading || loading) return <LoaderPage />;
 
   const language = 'en-GB' as string;
 
@@ -40,7 +48,7 @@ const ProductPage: React.FC = () => {
   const price = product?.masterVariant.prices![0].value.centAmount as number;
   const salePrice = product?.masterVariant.prices![0].discounted?.value.centAmount as number;
 
-  const currentPrice = (price / 100).toFixed(2);
+  const currentPrice = +(price / 100).toFixed(2);
   const salePriceOutput = salePrice ? ((salePrice || +currentPrice) / 100)?.toFixed(2) : null;
 
   return (
