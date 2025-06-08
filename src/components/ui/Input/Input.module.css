@@ -19,6 +19,11 @@ input:focus {
   border-radius: 12px;
 }
 
+input:disabled {
+  border: none;
+  background-color: #f9f9f9;
+}
+
 .label {
   color: #242424;
   font-family: Poppins;
@@ -52,4 +57,19 @@ input:focus {
 .success_input {
   border-color: #00523b;
   outline-color: #00523b;
+}
+
+.input_wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.toggle_button {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
 }

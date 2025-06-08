@@ -1,7 +1,50 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './MainPage.module.css';
+import ProductCard from '../../components/ProductCard/ProductCard';
+import useAccessToken from '../../hooks/useAccessToken';
+import { Product } from '../../types/product/product';
 
 const MainPage = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const { token, loading: tokenLoading, error: tokenError } = useAccessToken();
+
+  useEffect(() => {
+    const fetchFeaturedProducts = async () => {
+      if (!token) return;
+
+      try {
+        const projectKey = 'dino-land';
+        const response = await fetch(
+          `https://api.europe-west1.gcp.commercetools.com/${projectKey}/products`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'application/json',
+            },
+          },
+        );
+
+        if (!response.ok) throw new Error('Не удалось загрузить продукты');
+
+        const data = await response.json();
+        setProducts(data.results);
+      } catch (err) {
+        console.error(err);
+        setError('Ошибка загрузки товаров');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeaturedProducts();
+  }, [token]);
+
+  if (tokenLoading || loading) return <div>Загрузка...</div>;
+  if (tokenError || error) return <div>Ошибка: {tokenError || error}</div>;
+
   return (
     <>
       <main className={styles.main}>
@@ -15,6 +58,7 @@ const MainPage = () => {
             </Link>
           </div>
         </section>
+
         <div className={styles.cards_wrapper}>
           <div className={styles.cards_container}>
             <div className={styles.card}>
@@ -30,7 +74,10 @@ const MainPage = () => {
                   Tyrannosaurus <br />
                   Rex
                 </h3>
-                <Link to="/tyrannosaurus" className={styles.card_button}>
+                <Link
+                  to="/product/72d4b2a8-fb6d-490a-86d5-e2f187acdea2"
+                  className={styles.card_button}
+                >
                   View Details
                 </Link>
               </div>
@@ -42,7 +89,10 @@ const MainPage = () => {
               </div>
               <div className={styles.card_content}>
                 <h3>Triceratops</h3>
-                <Link to="/triceratops" className={styles.card_button}>
+                <Link
+                  to="/product/795840b6-707a-497e-8fa5-89cb5207c38f"
+                  className={styles.card_button}
+                >
                   View Details
                 </Link>
               </div>
@@ -55,107 +105,24 @@ const MainPage = () => {
             <div className={`${styles.grid_card} ${styles.special_card}`}>
               <div className={styles.special_content}>
                 <h3>Special offer</h3>
-                <p>Get 20% off your first order</p>
+                <p>Get 15% on some dinos!</p>
                 <Link to="/catalog" className={styles.grid_button}>
                   View All
                 </Link>
               </div>
             </div>
 
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Pachycephalosaurus.png"
-                  alt="Pachycephalosaurus"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Pachycephalosaurus</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/pachycephalosaurus" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img src="/img/Microraptor.png" alt="Microraptor" className={styles.grid_image} />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Microraptor</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Compsognathus.png"
-                  alt="Compsognathus"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Compsognathus</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Archaeopteryx.png"
-                  alt="Archaeopteryx"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Archaeopteryx</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
-            <div className={styles.grid_card}>
-              <div className={styles.grid_image_container}>
-                <img
-                  src="/img/Brachiosaurus.png"
-                  alt="Brachiosaurus"
-                  className={styles.grid_image}
-                />
-              </div>
-              <div className={styles.grid_content}>
-                <h3>Brachiosaurus</h3>
-                <div className={styles.price_container}>
-                  <div className={styles.price_wrapper}>
-                    <p>216,27 $</p>
-                    <span>500,27 $</span>
-                  </div>
-                  <Link to="/Microraptor" className={styles.plus_button} />
-                </div>
-              </div>
-            </div>
+            {products.slice(0, 3).map((product) => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                className={`${styles.grid_card} ${styles.product_card}`}
+              />
+            ))}
+
             <div className={`${styles.grid_card} ${styles.special_card}`}>
               <div className={styles.special_content}>
-                <h3>Exlusive dinosaurs</h3>
+                <h3>Exclusive dinosaurs</h3>
                 <p>Make a little friend</p>
                 <Link to="/catalog" className={styles.grid_button}>
                   View Detail
@@ -164,6 +131,7 @@ const MainPage = () => {
             </div>
           </div>
         </section>
+
         <section className={styles.cta_banner}>
           <div className={styles.cta_container}>
             <h2 className={styles.cta_title}>Create your own prehistoric world right now!</h2>
