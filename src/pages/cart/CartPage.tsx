@@ -1,8 +1,14 @@
 import { Link } from 'react-router-dom';
 import styles from './CartPage.module.css';
 import { ROUTES } from '../../routes/routes';
+import { useEffect } from 'react';
+import { getCart } from '../../api/cartAPI/getCart';
 
 export const CartPage = () => {
+  useEffect(() => {
+    getCart();
+  }, []);
+
   return (
     <div className={styles.cart_page}>
       <div className={styles.page_bg}>

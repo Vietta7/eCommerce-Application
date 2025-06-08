@@ -13,6 +13,7 @@ import { addAddresses } from '../../api/addAddresses';
 import { RegisterFormData, registerSchema } from '../../schemas/register.schema';
 import { logIn } from '../../api/api';
 import { AuthContext } from '../../context/AuthContext';
+import { createCart } from '../../api/cartAPI/createCart';
 
 export function FormRegistration() {
   const {
@@ -84,6 +85,7 @@ export function FormRegistration() {
       const newCustomer = await createCustomer(userData, token);
       const tokenCustomer = await logIn({ email: data.email, password: data.password });
       await addAddresses({ data: userData, customer: newCustomer, userToken: tokenCustomer });
+      await createCart({ customerId: newCustomer.customerId });
       setAuthenticated(true);
       setIsLoading(false);
       reset();
