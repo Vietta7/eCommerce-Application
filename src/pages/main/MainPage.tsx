@@ -18,7 +18,7 @@ const MainPage = () => {
       try {
         const projectKey = 'dino-land';
         const response = await fetch(
-          `https://api.europe-west1.gcp.commercetools.com/${projectKey}/products`,
+          `https://api.europe-west1.gcp.commercetools.com/${projectKey}/product-projections/search?staged=true&limit=3`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
