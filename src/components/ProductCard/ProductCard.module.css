@@ -171,3 +171,22 @@
 .image_container {
   position: relative;
 }
+
+.check_button {
+  background: #00523b;
+  color: #fff;
+  font-size: 20px;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.check_button:hover {
+  background-color: #003825;
+}

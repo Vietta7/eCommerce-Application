@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product } from '../../types/product/product';
 import styles from './ProductCard.module.css';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +19,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
   const discountedValue = priceData?.discounted?.value;
   const discountedPrice = discountedValue ? discountedValue.centAmount / 100 : undefined;
   const hasDiscount = !!discountedPrice;
+
+  const [isInCart, setIsInCart] = useState(false);
+
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    setIsInCart(storedCart.some((item: Product) => item.id === product.id));
+  }, [product.id]);
+
+  const handleToggleCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]') as Product[];
+
+    if (isInCart) {
+      const updatedCart = storedCart.filter((item) => item.id !== product.id);
+      localStorage.setItem('cart', JSON.stringify(updatedCart)); // TODO: временное решение localStorage (заменить ):
+      setIsInCart(false);
+      toast.success('Product deleted from cart');
+    } else {
+      const updatedCart = [...storedCart, product];
+      localStorage.setItem('cart', JSON.stringify(updatedCart)); // TODO: временное решение localStorage (заменить):
+      setIsInCart(true);
+      toast.success('Product added to cart');
+    }
+  };
 
   return (
     <Link to={`/product/${product.id}`} className={`${styles.product_card} ${className || ''}`}>
@@ -42,12 +67,11 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
             )}
           </div>
           <button
-            className={styles.plus_button}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
+            className={isInCart ? styles.check_button : styles.plus_button}
+            onClick={handleToggleCart}
+            title={isInCart ? 'Remove from cart' : 'Add to cart'}
           >
-            <span className={styles.plus_icon}></span>
+            {isInCart ? '✓' : <span className={styles.plus_icon}></span>}
           </button>
         </div>
       </div>
