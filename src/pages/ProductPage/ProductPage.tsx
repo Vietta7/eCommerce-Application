@@ -7,6 +7,7 @@ import Slider from '../../components/Slider/Slider';
 import { getProduct } from '../../api/api';
 import { useParams } from 'react-router';
 import useAccessToken from '../../hooks/useAccessToken';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const ProductPage: React.FC = () => {
   const [product, setProduct] = useState<ProductProjection>();
@@ -76,6 +77,7 @@ const ProductPage: React.FC = () => {
             </div>
           </div>
         </section>
+        <ScrollToTopButton />
       </main>
     </>
   );

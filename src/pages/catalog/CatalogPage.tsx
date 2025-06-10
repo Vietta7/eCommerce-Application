@@ -8,6 +8,7 @@ import styles from './CatalogPage.module.css';
 import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
 import { commercetoolsApi } from '../../api/commercetoolsApi';
 import { formatFilterValue } from '../../utils/product';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -184,7 +185,6 @@ const CatalogPage: React.FC = () => {
         onResetFilters={handleResetFilters}
         selectedFilters={activeFilters}
       />
-
       <div className={styles.product_list_container}>
         <div className={styles.search_container}>
           <div className={styles.search_input_wrapper}>
@@ -305,6 +305,7 @@ const CatalogPage: React.FC = () => {
           </>
         )}
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };
