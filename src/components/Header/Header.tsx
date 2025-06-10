@@ -7,9 +7,11 @@ import closeIcon from '../../assets/img/close.svg';
 import cartIcon from '../../assets/img/cart.svg';
 import { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
+import { useCart } from '../../hooks/useCart';
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { totalCount } = useCart();
 
   useEffect(() => {
     const handleResize = () => {
@@ -98,7 +100,7 @@ const Header: React.FC = () => {
         <div className={styles.cart_icon}>
           <Link to="/cart">
             <img src={cartIcon} alt="Cart" className={isMainPage ? styles.cart_white : ''} />
-            <span className={styles.badge}>0</span>
+            <span className={styles.badge}>{totalCount}</span>
           </Link>
         </div>
       </div>
@@ -180,7 +182,7 @@ const Header: React.FC = () => {
           <div className={styles.mobile_cart}>
             <Link to="/cart">
               <img src={cartIcon} alt="Cart" className={isMainPage ? styles.cart_white : ''} />
-              <span className={styles.badge}>0</span>
+              <span className={styles.badge}>{totalCount}</span>
             </Link>
           </div>
         </div>
