@@ -8,12 +8,26 @@ import { getProduct } from '../../api/api';
 import { useParams } from 'react-router';
 import useAccessToken from '../../hooks/useAccessToken';
 import { LoaderPage } from '../../components/ui/LoaderPage/LoaderPage';
+import { useCart } from '../../hooks/useCart';
+import toast from 'react-hot-toast';
 
 const ProductPage: React.FC = () => {
   const [product, setProduct] = useState<ProductProjection>();
   const [loading, setLoading] = useState(true);
   const { productId } = useParams<{ productId: string }>();
   const { token, loading: tokenLoading } = useAccessToken();
+
+  const { addToCart } = useCart();
+
+  const onAddProductToCart = async (productId: string, variantId: number) => {
+    try {
+      await addToCart({ productId, variantId, quantity: 1 });
+    } catch (error) {
+      console.error(error);
+      toast.error('Error. Product do not add to cart');
+      throw error;
+    }
+  };
 
   useEffect(() => {
     const getProd = async () => {
@@ -79,7 +93,14 @@ const ProductPage: React.FC = () => {
               </div>
 
               <div className={styles.product__info_card}>
-                <button className={styles.button}>Add To Shopping Cart</button>
+                <button
+                  className={styles.button}
+                  onClick={() => {
+                    if (productId) onAddProductToCart(productId, 1);
+                  }}
+                >
+                  Add To Shopping Cart
+                </button>
               </div>
             </div>
           </div>
