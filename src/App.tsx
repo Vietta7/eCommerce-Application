@@ -18,6 +18,7 @@ import { ProfilePage } from './pages/profile/ProfilePage';
 import { ProtectedRoute } from './components/ProtectedRoute/ProtectedRoute';
 import { ROUTES } from './routes/routes';
 import { CartPage } from './pages/cart/CartPage';
+import { CartProvider } from './providers/cartProvider';
 
 function App() {
   const [token, setToken] = useState('');
@@ -42,33 +43,35 @@ function App() {
 
   return (
     <AccessTokenContext.Provider value={token}>
-      <AuthProvider>
-        <Router>
-          <Header />
-          <div className="main">
-            <Routes>
-              <Route path={ROUTES.PRODUCTID} element={<ProductPage />} />
-              <Route path={ROUTES.HOME} element={<MainPage />} />
-              <Route path={ROUTES.LOGIN} element={<AutorisationPage />} />
-              <Route path={ROUTES.REGISTRATION} element={<RegistrationPage />} />
-              <Route path={ROUTES.ABOUT} element={<AboutPage />} />
-              <Route path={ROUTES.CATALOG} element={<CatalogPage />} />
-              <Route
-                path={ROUTES.PROFILE}
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path={ROUTES.CART} element={<CartPage />} />
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </div>
-          <Footer />
-        </Router>
-        <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-      </AuthProvider>
+      <CartProvider>
+        <AuthProvider>
+          <Router>
+            <Header />
+            <div className="main">
+              <Routes>
+                <Route path={ROUTES.PRODUCTID} element={<ProductPage />} />
+                <Route path={ROUTES.HOME} element={<MainPage />} />
+                <Route path={ROUTES.LOGIN} element={<AutorisationPage />} />
+                <Route path={ROUTES.REGISTRATION} element={<RegistrationPage />} />
+                <Route path={ROUTES.ABOUT} element={<AboutPage />} />
+                <Route path={ROUTES.CATALOG} element={<CatalogPage />} />
+                <Route
+                  path={ROUTES.PROFILE}
+                  element={
+                    <ProtectedRoute>
+                      <ProfilePage />
+                    </ProtectedRoute>
+                  }
+                />
+                <Route path={ROUTES.CART} element={<CartPage />} />
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </div>
+            <Footer />
+          </Router>
+          <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
+        </AuthProvider>
+      </CartProvider>
     </AccessTokenContext.Provider>
   );
 }
