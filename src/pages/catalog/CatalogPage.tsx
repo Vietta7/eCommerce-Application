@@ -156,7 +156,6 @@ const CatalogPage: React.FC = () => {
 
   const isLoading = tokenLoading || isCategoriesLoading || isProductsLoading;
 
-  if (isLoading) return <LoaderPage />;
   if (tokenError) return <div>Error: {tokenError}</div>;
   if (error) return <div>Catalog loading error: {error}</div>;
   if (!categories.length) return <div>No categories found</div>;
@@ -270,6 +269,10 @@ const CatalogPage: React.FC = () => {
           <div className={styles.no_results}>
             <h3>No dinosaurs found</h3>
             <p>Try adjusting your filters or search query</p>
+          </div>
+        ) : isLoading ? (
+          <div className={styles.loader_wraper}>
+            <LoaderPage className={styles.loader_catalog} />
           </div>
         ) : (
           <ProductList products={products} searchQuery={debouncedSearchQuery} />
