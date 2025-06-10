@@ -1,0 +1,43 @@
+.cart {
+  border-radius: 12px;
+  background: #fff;
+  padding: 30px;
+}
+
+.cart_list {
+  list-style: none;
+}
+
+.cart_footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 30px;
+  border-top: 1px solid #758963;
+}
+
+.total_price {
+  color: #323334;
+  font-family: Montserrat;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-transform: capitalize;
+  margin: 0;
+}
+
+.total_price span {
+  color: #00523b;
+  font-family: Montserrat;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 36px;
+  letter-spacing: 0px;
+  text-align: left;
+  text-transform: capitalize;
+  margin-left: 20px;
+}
+
+.btn_delete {
+  height: 45px;
+}
