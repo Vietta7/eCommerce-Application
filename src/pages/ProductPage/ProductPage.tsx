@@ -36,7 +36,6 @@ const ProductPage: React.FC = () => {
         if (!token) return;
 
         const res = await getProduct(token, productId);
-        console.log(res);
 
         setProduct(res);
       } catch (error) {

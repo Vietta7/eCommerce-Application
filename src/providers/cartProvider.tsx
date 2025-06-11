@@ -29,12 +29,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
   const [cartId, setCardId] = useState('');
   const { isAuthenticated } = useContext(AuthContext);
-  console.log(isAuthenticated);
 
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
-
-  console.log(items);
 
   useEffect(() => {
     if (!isAuthenticated) {

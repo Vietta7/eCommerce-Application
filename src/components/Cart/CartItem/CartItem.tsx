@@ -5,8 +5,9 @@ import { Button } from '../../ui/Button/Button';
 import styles from './CartItem.module.css';
 import { TrashIcon } from '../../Icons/TrashIcon';
 import useAccessToken from '../../../hooks/useAccessToken';
-import { getImageProduct } from '../../../api/cartAPI/getImageProduct';
 import { useCart } from '../../../hooks/useCart';
+import { ProductProjection } from '@commercetools/platform-sdk';
+import { getProduct } from '../../../api/api';
 
 interface CartItemProps {
   name: string;
@@ -18,35 +19,44 @@ interface CartItemProps {
 
 export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartItemProps) => {
   const [quantityEdit, setQuantityEdit] = useState<number>(quantity);
-  const [image, setImage] = useState<string>('/placeholder.png');
   const { token } = useAccessToken();
   const { removeProductFromCart, updateQuantityFromCart } = useCart();
+  const [product, setProduct] = useState<ProductProjection>();
 
   useEffect(() => {
-    const getImage = async () => {
-      if (!token) return;
+    const getProd = async () => {
       try {
-        const productImage = await getImageProduct({ productId, userToken: token });
-        setImage(productImage);
+        if (!productId) return;
+        if (!token) return;
+
+        const res = await getProduct(token, productId);
+        console.log(res);
+        setProduct(res);
       } catch (error) {
-        console.log(error);
+        if (error instanceof Error) {
+          throw new Error(error.message);
+        }
       }
     };
 
-    getImage();
+    getProd();
   }, [token]);
+
+  const productPrice = product?.masterVariant.prices![0].value.centAmount as number;
+  const salePrice = product?.masterVariant.prices![0].discounted?.value.centAmount as number;
+  const currentPrice = +(productPrice / 100).toFixed(2);
+  const salePriceOutput = salePrice ? ((salePrice || +currentPrice) / 100)?.toFixed(2) : null;
+  const image = product?.masterVariant?.images?.[0]?.url || '/placeholder.jpg';
 
   const onClickMinusQuantity = async () => {
     if (quantityEdit <= 1) return;
-    setQuantityEdit((prev) => (prev -= 1));
-    console.log('quantity', quantityEdit);
-    await onUpdateQuantity(lineItemId, quantityEdit);
+    setQuantityEdit((prev) => (prev = prev - 1));
+    await onUpdateQuantity(lineItemId, quantityEdit - 1);
   };
 
   const onClickPlusQuantity = async () => {
-    setQuantityEdit((prev) => (prev += 1));
-    await onUpdateQuantity(lineItemId, quantityEdit);
-    console.log('quantity', quantityEdit);
+    setQuantityEdit((prev) => (prev = prev + 1));
+    await onUpdateQuantity(lineItemId, quantityEdit + 1);
   };
 
   const onDeleteProductFromCart = async () => {
@@ -73,7 +83,7 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
       <div>
         <h3 className={styles.product_name}>{name}</h3>
         <div className={`${styles.product_price} ${styles.price_one}`}>
-          <span>{price / quantityEdit} $</span>
+          <span>{salePriceOutput} $</span>
         </div>
       </div>
       <div className={styles.product_desc}>
