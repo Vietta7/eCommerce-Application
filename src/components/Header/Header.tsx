@@ -182,7 +182,7 @@ const Header: React.FC = () => {
           <div className={styles.mobile_cart}>
             <Link to="/cart">
               <img src={cartIcon} alt="Cart" className={isMainPage ? styles.cart_white : ''} />
-              <span className={styles.badge}>{totalCount}</span>
+              <span className={styles.badge}>{isAuthenticated ? totalCount : 0}</span>
             </Link>
           </div>
         </div>

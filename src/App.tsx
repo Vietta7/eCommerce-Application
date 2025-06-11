@@ -43,8 +43,8 @@ function App() {
 
   return (
     <AccessTokenContext.Provider value={token}>
-      <CartProvider>
-        <AuthProvider>
+      <AuthProvider>
+        <CartProvider>
           <Router>
             <Header />
             <div className="main">
@@ -70,8 +70,8 @@ function App() {
             <Footer />
           </Router>
           <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
-        </AuthProvider>
-      </CartProvider>
+        </CartProvider>
+      </AuthProvider>
     </AccessTokenContext.Provider>
   );
 }

@@ -20,6 +20,8 @@ export interface CartContextValue {
   totalPrice: number;
   addToCart: (product: AddCartItem) => Promise<void>;
   removeProductFromCart: (lineItemId: string) => Promise<void>;
+  updateQuantityFromCart: (lineItemId: string, quantity: number) => Promise<void>;
+  deleteAllItemsFromCart: () => Promise<void>;
 }
 
 export const CartContext = createContext<CartContextValue | undefined>(undefined);

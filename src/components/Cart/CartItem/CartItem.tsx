@@ -20,7 +20,7 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
   const [quantityEdit, setQuantityEdit] = useState<number>(quantity);
   const [image, setImage] = useState<string>('/placeholder.png');
   const { token } = useAccessToken();
-  const { removeProductFromCart } = useCart();
+  const { removeProductFromCart, updateQuantityFromCart } = useCart();
 
   useEffect(() => {
     const getImage = async () => {
@@ -36,19 +36,30 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
     getImage();
   }, [token]);
 
-  const onClickMinusQuantity = () => {
+  const onClickMinusQuantity = async () => {
     if (quantityEdit <= 1) return;
     setQuantityEdit((prev) => (prev -= 1));
+    console.log('quantity', quantityEdit);
+    await onUpdateQuantity(lineItemId, quantityEdit);
   };
 
-  const onClickPlusQuantity = () => {
+  const onClickPlusQuantity = async () => {
     setQuantityEdit((prev) => (prev += 1));
+    await onUpdateQuantity(lineItemId, quantityEdit);
+    console.log('quantity', quantityEdit);
   };
 
   const onDeleteProductFromCart = async () => {
     try {
-      console.log(lineItemId);
       await removeProductFromCart(lineItemId);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onUpdateQuantity = async (lineItemId: string, quantity: number) => {
+    try {
+      await updateQuantityFromCart(lineItemId, quantity);
     } catch (error) {
       console.log(error);
     }

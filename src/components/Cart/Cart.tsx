@@ -4,7 +4,7 @@ import styles from './Cart.module.css';
 import { CartItem } from './CartItem/CartItem';
 
 export const Cart = () => {
-  const { items, totalPrice } = useCart();
+  const { items, totalPrice, deleteAllItemsFromCart } = useCart();
   if (items.length === 0) return;
   return (
     <div className={styles.cart}>
@@ -21,7 +21,9 @@ export const Cart = () => {
         ))}
       </ul>
       <div className={styles.cart_footer}>
-        <Button className={styles.btn_delete}>Delete All Items</Button>
+        <Button className={styles.btn_delete} onClick={deleteAllItemsFromCart}>
+          Delete All Items
+        </Button>
         <p className={styles.total_price}>
           Total: <span>{totalPrice} $</span>
         </p>
