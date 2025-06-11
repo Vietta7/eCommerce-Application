@@ -76,7 +76,7 @@ const CatalogPage: React.FC = () => {
         setIsProductsLoading(true);
         const params = new URLSearchParams();
 
-        params.set('staged', 'true');
+        params.set('staged', 'false');
         params.set('limit', '6');
         params.set('offset', offset.toString());
 
