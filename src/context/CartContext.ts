@@ -8,7 +8,7 @@ export type AddCartItem = {
 
 export type CartItem = AddCartItem & {
   name: {
-    'en-GB': 'Velociraptor';
+    'en-GB': string;
   };
   price: number;
   lineItemId: string;

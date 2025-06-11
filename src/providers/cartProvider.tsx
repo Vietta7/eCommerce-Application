@@ -27,42 +27,43 @@ interface CartItemFromAPI {
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
-  const [cartId, setCardId] = useState('');
+  const [cartId, setCartId] = useState('');
   const { isAuthenticated } = useContext(AuthContext);
 
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
   const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      return;
+  console.log(items);
+
+  const mapItems = (lineItems: CartItemFromAPI[]): CartItem[] =>
+    lineItems.map(({ productId, variant, id, name, totalPrice, quantity }) => ({
+      productId,
+      variantId: variant.id,
+      lineItemId: id,
+      name: { 'en-GB': name },
+      quantity,
+      price: totalPrice.centAmount / 100,
+    }));
+
+  const ensureCart = async () => {
+    let cart = await getCart();
+    if (!cart) {
+      const token = getCookie('access_token');
+      if (!token) throw new Error('No auth token');
+      const customer = await getCustomer({ userToken: token });
+      cart = await createCart({ customerId: customer.id });
     }
+    setCartId(cart.id);
+    return cart;
+  };
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
 
     async function fetchInitialCart() {
       try {
-        const cart = await getCart();
-        if (cart) {
-          setCardId(cart.id);
-        } else {
-          const tokenCustomer = getCookie('access_token');
-          if (tokenCustomer) {
-            const customer = await getCustomer({ userToken: tokenCustomer });
-            const cart = await createCart({ customerId: customer.id });
-            setCardId(cart.id);
-          }
-        }
-
-        if (cart?.lineItems) {
-          const initialItems: CartItem[] = cart.lineItems.map((item: CartItemFromAPI) => ({
-            productId: item.productId,
-            variantId: item.variant.id,
-            quantity: item.quantity,
-            name: item.name,
-            price: item.totalPrice.centAmount / 100,
-            lineItemId: item.id,
-          }));
-          setItems(initialItems);
-        }
+        const cart = await ensureCart();
+        if (cart?.lineItems) setItems(mapItems(cart.lineItems));
       } catch (err) {
         console.error('Failed to fetch initial cart:', err);
       }
@@ -73,17 +74,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
 
   const addToCart = async ({ productId, variantId, quantity }: AddCartItem) => {
     try {
-      let activeCart = await getCart();
-
-      if (!activeCart) {
-        const tokenCustomer = getCookie('access_token');
-        if (!tokenCustomer) throw new Error('No token');
-        const customer = await getCustomer({ userToken: tokenCustomer });
-        activeCart = await createCart({ customerId: customer.id });
-      }
+      const activeCart = await ensureCart();
 
       const { id, version } = activeCart;
-      setCardId(id);
+      setCartId(id);
 
       const updatedCart = await addProductToCart({
         cartId: id,
@@ -93,17 +87,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         version,
       });
 
-      if (updatedCart?.lineItems) {
-        const newItems: CartItem[] = updatedCart.lineItems.map((item: CartItemFromAPI) => ({
-          productId: item.productId,
-          variantId: item.variant.id,
-          quantity: item.quantity,
-          name: item.name,
-          price: item.totalPrice.centAmount / 100,
-          lineItemId: item.id,
-        }));
-        setItems(newItems);
-      }
+      if (updatedCart?.lineItems) setItems(mapItems(updatedCart.lineItems));
     } catch (err) {
       console.error('Failed to add product to cart:', err);
       throw err;
@@ -114,17 +98,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     try {
       const { version } = await getCart();
       const updatedCart = await deleteProductFromCart({ cartId, version, lineItemId });
-      if (updatedCart?.lineItems) {
-        const newItems: CartItem[] = updatedCart.lineItems.map((item: CartItemFromAPI) => ({
-          productId: item.productId,
-          variantId: item.variant.id,
-          quantity: item.quantity,
-          name: item.name,
-          lineItemId: item.id,
-          price: item.totalPrice.centAmount / 100,
-        }));
-        setItems(newItems);
-      }
+      if (updatedCart?.lineItems) setItems(mapItems(updatedCart.lineItems));
     } catch (err) {
       console.error('Failed to add product to cart:', err);
       throw err;
@@ -135,17 +109,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     try {
       const { version } = await getCart();
       const updatedCart = await updateCartQuantity({ cartId, version, lineItemId, quantity });
-      if (updatedCart?.lineItems) {
-        const newItems: CartItem[] = updatedCart.lineItems.map((item: CartItemFromAPI) => ({
-          productId: item.productId,
-          variantId: item.variant.id,
-          quantity: item.quantity,
-          name: item.name,
-          lineItemId: item.id,
-          price: item.totalPrice.centAmount / 100,
-        }));
-        setItems(newItems);
-      }
+      if (updatedCart?.lineItems) setItems(mapItems(updatedCart.lineItems));
     } catch (err) {
       console.error('Failed update product to cart:', err);
       throw err;

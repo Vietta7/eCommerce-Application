@@ -10,7 +10,9 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import { getProduct } from '../../../api/api';
 
 interface CartItemProps {
-  name: string;
+  name: {
+    'en-GB': string;
+  };
   price: number;
   quantity: number;
   productId: string;
@@ -75,13 +77,21 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
     }
   };
 
+  console.log(name);
+
   return (
     <li className={styles.product_item}>
       <div className={styles.image_wrapper}>
-        <img className={styles.product_image} width="130" height="180" src={image} alt={name} />
+        <img
+          className={styles.product_image}
+          width="130"
+          height="180"
+          src={image}
+          alt={name['en-GB']}
+        />
       </div>
       <div>
-        <h3 className={styles.product_name}>{name}</h3>
+        <h3 className={styles.product_name}>{name['en-GB']}</h3>
         <div className={`${styles.product_price} ${styles.price_one}`}>
           <span>{salePriceOutput} $</span>
         </div>
