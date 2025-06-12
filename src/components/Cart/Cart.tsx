@@ -30,7 +30,6 @@ export const Cart = () => {
   if (items.length === 0) return;
 
   const onSumbit = async (data: PromocodeFormData) => {
-    console.log(data);
     try {
       await applyPromocodeIntoCart(data.promocode);
       reset();

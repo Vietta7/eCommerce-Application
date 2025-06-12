@@ -32,8 +32,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     0,
   );
 
-  console.log(items);
-
   const mapItems = (lineItems: ExtendedLineItem[]): CartItem[] =>
     lineItems.map(({ productId, variant, id, name, totalPrice, quantity, discountedPrice }) => ({
       productId,
@@ -71,7 +69,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     async function fetchInitialCart() {
       try {
         const cart = await ensureCart();
-        console.log(cart);
 
         if (cart?.lineItems) setItems(mapItems(cart.lineItems));
       } catch (err) {
@@ -146,7 +143,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       const updatedCart = await applyPromocode({ cartId: cart.id, version: cart.version, code });
       if (updatedCart?.lineItems) setItems(mapItems(updatedCart.lineItems));
     } catch (err) {
-      console.error('Failed delete cart:', err);
+      console.error('Failed apply promocode:', err);
       throw err;
     }
   };

@@ -72,6 +72,7 @@ export const CartItem = ({
       await removeProductFromCart(lineItemId);
     } catch (error) {
       console.log(error);
+      throw error;
     }
   };
 
@@ -80,6 +81,7 @@ export const CartItem = ({
       await updateQuantityFromCart(lineItemId, quantity);
     } catch (error) {
       console.log(error);
+      throw error;
     }
   };
 
