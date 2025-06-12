@@ -348,3 +348,8 @@
     flex-wrap: nowrap;
   }
 }
+
+.loader_wraper {
+  position: relative;
+  min-height: 200px;
+}

@@ -2,6 +2,8 @@ import React from 'react';
 import { Product } from '../../types/product/product';
 import styles from './ProductCard.module.css';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useCart } from '../../hooks/useCart';
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +20,18 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
   const discountedValue = priceData?.discounted?.value;
   const discountedPrice = discountedValue ? discountedValue.centAmount / 100 : undefined;
   const hasDiscount = !!discountedPrice;
+
+  const { addToCart } = useCart();
+
+  const onAddProductToCart = async (productId: string, variantId: number) => {
+    try {
+      await addToCart({ productId, variantId, quantity: 1 });
+    } catch (error) {
+      console.error(error);
+      toast.error('Error. Product do not add to cart');
+      throw error;
+    }
+  };
 
   return (
     <Link to={`/product/${product.id}`} className={`${styles.product_card} ${className || ''}`}>
@@ -45,6 +59,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
             className={styles.plus_button}
             onClick={(e) => {
               e.preventDefault();
+              onAddProductToCart(product.id, 1);
             }}
           >
             <span className={styles.plus_icon}></span>
