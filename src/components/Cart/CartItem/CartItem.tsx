@@ -97,55 +97,59 @@ export const CartItem = ({
         />
       </div>
       <div className={styles.product_heading}>
-        <h3 className={styles.product_name}>{name}</h3>
-        <div className={`${styles.product_price} ${styles.price_one}`}>
-          <span className={styles.current_price}>
-            {discountedPrice
-              ? `${discountedPrice} $`
-              : priceDiscountedProduct
-                ? `${priceDiscountedProduct} $`
-                : `${price} $`}
-          </span>
-          <span className={styles.old_price}>
-            {' '}
-            {discountedPrice ? `${price} $` : priceDiscountedProduct ? `${price} $` : ''}
-          </span>
+        <div className={styles.name_price}>
+          <h3 className={styles.product_name}>{name}</h3>
+          <div className={`${styles.product_price} ${styles.price_one}`}>
+            <span className={styles.current_price}>
+              {discountedPrice
+                ? `${discountedPrice} $`
+                : priceDiscountedProduct
+                  ? `${priceDiscountedProduct} $`
+                  : `${price} $`}
+            </span>
+            <span className={styles.old_price}>
+              {' '}
+              {discountedPrice ? `${price} $` : priceDiscountedProduct ? `${price} $` : ''}
+            </span>
+          </div>
         </div>
-      </div>
-      <div className={styles.product_desc}>
-        <div className={styles.quantity}>
-          <Button
-            className={styles.btn_quantity}
-            onClick={onClickMinusQuantity}
-            disabled={quantityEdit === 1}
-          >
-            <MinusIcon />
+        <div className={styles.product_desc}>
+          <div className={styles.quantity_price}>
+            <div className={styles.quantity}>
+              <Button
+                className={styles.btn_quantity}
+                onClick={onClickMinusQuantity}
+                disabled={quantityEdit === 1}
+              >
+                <MinusIcon />
+              </Button>
+              <input
+                className={styles.quantity_input}
+                type="number"
+                autoComplete="off"
+                min="1"
+                readOnly
+                value={quantityEdit}
+              />
+              <Button className={styles.btn_quantity} onClick={onClickPlusQuantity}>
+                <PlusIcon />
+              </Button>
+            </div>
+            <div className={styles.product_price}>
+              <span className={styles.current_price}>{totalPrice} $</span>
+              <span className={styles.old_price}>
+                {discountedPrice
+                  ? `${price * quantityEdit} $`
+                  : priceDiscountedProduct
+                    ? `${price * quantityEdit} $`
+                    : ''}
+              </span>
+            </div>
+          </div>
+          <Button className={styles.btn_delete} onClick={onDeleteProductFromCart}>
+            <TrashIcon />
           </Button>
-          <input
-            className={styles.quantity_input}
-            type="number"
-            autoComplete="off"
-            min="1"
-            readOnly
-            value={quantityEdit}
-          />
-          <Button className={styles.btn_quantity} onClick={onClickPlusQuantity}>
-            <PlusIcon />
-          </Button>
         </div>
-        <div className={styles.product_price}>
-          <span className={styles.current_price}>{totalPrice} $</span>
-          <span className={styles.old_price}>
-            {discountedPrice
-              ? `${price * quantityEdit} $`
-              : priceDiscountedProduct
-                ? `${price} $`
-                : ''}
-          </span>
-        </div>
-        <Button className={styles.btn_delete} onClick={onDeleteProductFromCart}>
-          <TrashIcon />
-        </Button>
       </div>
     </li>
   );

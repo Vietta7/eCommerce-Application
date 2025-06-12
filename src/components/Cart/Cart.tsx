@@ -74,7 +74,7 @@ export const Cart = () => {
       </form>
       <div className={styles.cart_footer}>
         <Button className={styles.btn_delete} onClick={deleteAllItemsFromCart}>
-          Clear Shopping Cart
+          Clear Cart
         </Button>
         <div className={styles.total_price}>
           <p>Total: </p>

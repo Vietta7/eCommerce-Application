@@ -25,7 +25,6 @@
   display: flex;
   gap: 15px;
   align-items: center;
-  justify-content: space-between;
   margin-left: auto;
 }
 
@@ -38,7 +37,7 @@
   color: rgb(0, 0, 0);
   font-family: Montserrat;
   font-size: 28px;
-  font-weight: 400;
+  font-weight: 600;
   line-height: 36px;
   letter-spacing: 0px;
   margin: 0;
@@ -128,4 +127,158 @@ input[type='number'] {
 .btn_delete:hover svg {
   fill: #333;
   transition: all 0.5s;
+}
+
+.product_heading {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
+.quantity_price {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 385px;
+}
+
+@media (max-width: 1030px) {
+  .product_price {
+    font-size: 20px;
+    line-height: normal;
+  }
+
+  .product_name {
+    font-size: 21px;
+    line-height: normal;
+  }
+
+  .btn_quantity {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+  }
+
+  .btn_quantity:disabled {
+    border-radius: 5px;
+  }
+
+  .quantity_input {
+    height: 30px;
+    width: 50px;
+  }
+
+  .quantity_price {
+    width: 305px;
+  }
+}
+
+@media (max-width: 830px) {
+  .product_heading {
+    flex-direction: column;
+    align-items: start;
+  }
+
+  .product_desc {
+    margin-left: 0;
+  }
+
+  .image_wrapper {
+    width: 90px;
+    height: 90px;
+  }
+
+  .old_price {
+    font-size: 12px;
+  }
+
+  .name_price {
+    margin-bottom: 5px;
+  }
+}
+
+@media (max-width: 600px) {
+  .product_price {
+    font-size: 14px;
+    line-height: normal;
+  }
+  .product_name {
+    font-size: 16px;
+    line-height: normal;
+  }
+
+  .product_heading {
+    flex-grow: 0;
+  }
+
+  .product_desc {
+    width: 100%;
+    gap: 5px;
+    justify-content: space-between;
+  }
+
+  .product_price {
+    min-width: 118px;
+  }
+
+  .quantity_input {
+    height: 30px;
+    width: 30px;
+    border-radius: 5px;
+  }
+
+  .btn_quantity {
+    width: 30px;
+    height: 30px;
+    border-radius: 5px;
+  }
+
+  .quantity {
+    gap: 5px;
+  }
+
+  .quantity_price {
+    width: 225px;
+  }
+
+  .name_price {
+    margin-bottom: 11px;
+  }
+}
+
+@media (max-width: 460px) {
+  .product_item {
+    flex-direction: column;
+  }
+
+  .image_wrapper {
+    width: 100%;
+    height: 250px;
+    margin-bottom: 20px;
+    margin-right: 0;
+  }
+
+  .product_heading {
+    width: 100%;
+  }
+
+  .quantity_price {
+    width: 100%;
+    margin-left: auto;
+  }
+  .btn_delete {
+    margin-left: auto;
+  }
+
+  .name_price {
+    margin-bottom: 20px;
+  }
+
+  .product_name {
+    font-size: 24px;
+  }
+
+  .product_price {
+    font-size: 20px;
+  }
 }
