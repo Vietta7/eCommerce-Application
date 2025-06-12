@@ -6,22 +6,27 @@ export type AddCartItem = {
   quantity: number;
 };
 
+type LocalizedString = Record<string, string>;
+
 export type CartItem = AddCartItem & {
-  name: {
-    'en-GB': string;
-  };
+  name: LocalizedString;
+  totalPrice: number;
   price: number;
   lineItemId: string;
+  discountedPrice: number;
+  priceDiscountedProduct: number;
 };
 
 export interface CartContextValue {
   items: CartItem[];
   totalCount: number;
-  totalPrice: number;
+  totalPriceCart: number;
+  totalPriceCartWithoutPromocode: number;
   addToCart: (product: AddCartItem) => Promise<void>;
   removeProductFromCart: (lineItemId: string) => Promise<void>;
   updateQuantityFromCart: (lineItemId: string, quantity: number) => Promise<void>;
   deleteAllItemsFromCart: () => Promise<void>;
+  applyPromocodeIntoCart: (code: string) => Promise<void>;
 }
 
 export const CartContext = createContext<CartContextValue | undefined>(undefined);

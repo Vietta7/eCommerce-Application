@@ -9,21 +9,16 @@ import { getCookie } from '../utils/getCookie';
 import { createCart } from '../api/cartAPI/createCart';
 import { deleteCart } from '../api/cartAPI/deleteCart';
 import { AuthContext } from '../context/AuthContext';
+import { applyPromocode } from '../api/cartAPI/applyPromocode';
+import { Cart, DiscountedLineItemPrice } from '@commercetools/platform-sdk';
 
 interface CartProviderProps {
   children: ReactNode;
 }
 
-interface CartItemFromAPI {
-  productId: string;
-  variant: { id: number };
-  quantity: number;
-  name: string;
-  totalPrice: {
-    centAmount: number;
-  };
-  id: string;
-}
+type ExtendedLineItem = Cart['lineItems'][number] & {
+  discountedPrice?: DiscountedLineItemPrice;
+};
 
 export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const [items, setItems] = useState<CartItem[]>([]);
@@ -31,22 +26,34 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   const { isAuthenticated } = useContext(AuthContext);
 
   const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
-  const totalPrice = items.reduce((sum, item) => sum + item.price, 0);
+  const totalPriceCart = items.reduce((sum, item) => sum + item.totalPrice, 0);
+  const totalPriceCartWithoutPromocode = items.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0,
+  );
 
   console.log(items);
 
-  const mapItems = (lineItems: CartItemFromAPI[]): CartItem[] =>
-    lineItems.map(({ productId, variant, id, name, totalPrice, quantity }) => ({
+  const mapItems = (lineItems: ExtendedLineItem[]): CartItem[] =>
+    lineItems.map(({ productId, variant, id, name, totalPrice, quantity, discountedPrice }) => ({
       productId,
       variantId: variant.id,
       lineItemId: id,
-      name: { 'en-GB': name },
+      name,
       quantity,
-      price: totalPrice.centAmount / 100,
+      price: variant.prices ? variant.prices[0].value.centAmount / 100 : 0,
+      priceDiscountedProduct: variant.prices
+        ? variant.prices[0].discounted
+          ? variant.prices[0].discounted.value.centAmount / 100
+          : 0
+        : 0,
+      totalPrice: totalPrice.centAmount / 100,
+      discountedPrice: discountedPrice ? discountedPrice.value.centAmount / 100 : 0,
     }));
 
   const ensureCart = async () => {
     let cart = await getCart();
+
     if (!cart) {
       const token = getCookie('access_token');
       if (!token) throw new Error('No auth token');
@@ -54,6 +61,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
       cart = await createCart({ customerId: customer.id });
     }
     setCartId(cart.id);
+
     return cart;
   };
 
@@ -63,6 +71,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     async function fetchInitialCart() {
       try {
         const cart = await ensureCart();
+        console.log(cart);
+
         if (cart?.lineItems) setItems(mapItems(cart.lineItems));
       } catch (err) {
         console.error('Failed to fetch initial cart:', err);
@@ -130,16 +140,29 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     }
   };
 
+  const applyPromocodeIntoCart = async (code: string) => {
+    try {
+      const cart = await getCart();
+      const updatedCart = await applyPromocode({ cartId: cart.id, version: cart.version, code });
+      if (updatedCart?.lineItems) setItems(mapItems(updatedCart.lineItems));
+    } catch (err) {
+      console.error('Failed delete cart:', err);
+      throw err;
+    }
+  };
+
   return (
     <CartContext.Provider
       value={{
         items,
         totalCount,
-        totalPrice,
+        totalPriceCart,
+        totalPriceCartWithoutPromocode,
         addToCart,
         removeProductFromCart,
         updateQuantityFromCart,
         deleteAllItemsFromCart,
+        applyPromocodeIntoCart,
       }}
     >
       {children}

@@ -88,13 +88,28 @@ input[type='number'] {
   letter-spacing: 0px;
   text-align: left;
   text-transform: capitalize;
-  width: 150px;
+  min-width: 150px;
   display: flex;
   justify-content: center;
 }
 
 .price_one {
   justify-content: start;
+}
+
+.current_price {
+  margin-right: 10px;
+}
+.old_price {
+  color: rgb(152, 153, 152);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+  text-transform: capitalize;
+  text-decoration: line-through;
 }
 
 .btn_delete {

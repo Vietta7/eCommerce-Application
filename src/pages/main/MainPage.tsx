@@ -105,7 +105,10 @@ const MainPage = () => {
           <div className={`${styles.grid_card} ${styles.special_card}`}>
             <div className={styles.special_content}>
               <h3>Special offer</h3>
-              <p>Get 15% on some dinos!</p>
+              <p>
+                The promo code: <strong className={styles.promocode}>dino-land-2025</strong> gives a
+                50% discount for one week only. Apply in cart.
+              </p>
               <Link to="/catalog" className={styles.grid_button}>
                 View All
               </Link>

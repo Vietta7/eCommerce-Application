@@ -10,16 +10,26 @@ import { ProductProjection } from '@commercetools/platform-sdk';
 import { getProduct } from '../../../api/api';
 
 interface CartItemProps {
-  name: {
-    'en-GB': string;
-  };
+  name: string;
+  totalPrice: number;
   price: number;
   quantity: number;
   productId: string;
   lineItemId: string;
+  discountedPrice: number;
+  priceDiscountedProduct: number;
 }
 
-export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartItemProps) => {
+export const CartItem = ({
+  name,
+  price,
+  totalPrice,
+  quantity,
+  productId,
+  lineItemId,
+  discountedPrice,
+  priceDiscountedProduct,
+}: CartItemProps) => {
   const [quantityEdit, setQuantityEdit] = useState<number>(quantity);
   const { token } = useAccessToken();
   const { removeProductFromCart, updateQuantityFromCart } = useCart();
@@ -32,7 +42,7 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
         if (!token) return;
 
         const res = await getProduct(token, productId);
-        console.log(res);
+
         setProduct(res);
       } catch (error) {
         if (error instanceof Error) {
@@ -44,10 +54,6 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
     getProd();
   }, [token]);
 
-  const productPrice = product?.masterVariant.prices![0].value.centAmount as number;
-  const salePrice = product?.masterVariant.prices![0].discounted?.value.centAmount as number;
-  const currentPrice = +(productPrice / 100).toFixed(2);
-  const salePriceOutput = salePrice ? ((salePrice || +currentPrice) / 100)?.toFixed(2) : null;
   const image = product?.masterVariant?.images?.[0]?.url || '/placeholder.jpg';
 
   const onClickMinusQuantity = async () => {
@@ -77,8 +83,6 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
     }
   };
 
-  console.log(name);
-
   return (
     <li className={styles.product_item}>
       <div className={styles.image_wrapper}>
@@ -86,14 +90,24 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
           className={styles.product_image}
           width="130"
           height="180"
-          src={image}
-          alt={name['en-GB']}
+          src={image || '/placeholder.jpg'}
+          alt={name}
         />
       </div>
-      <div>
-        <h3 className={styles.product_name}>{name['en-GB']}</h3>
+      <div className={styles.product_heading}>
+        <h3 className={styles.product_name}>{name}</h3>
         <div className={`${styles.product_price} ${styles.price_one}`}>
-          <span>{salePriceOutput} $</span>
+          <span className={styles.current_price}>
+            {discountedPrice
+              ? `${discountedPrice} $`
+              : priceDiscountedProduct
+                ? `${priceDiscountedProduct} $`
+                : `${price} $`}
+          </span>
+          <span className={styles.old_price}>
+            {' '}
+            {discountedPrice ? `${price} $` : priceDiscountedProduct ? `${price} $` : ''}
+          </span>
         </div>
       </div>
       <div className={styles.product_desc}>
@@ -118,7 +132,14 @@ export const CartItem = ({ name, price, quantity, productId, lineItemId }: CartI
           </Button>
         </div>
         <div className={styles.product_price}>
-          <span>{price} $</span>
+          <span className={styles.current_price}>{totalPrice} $</span>
+          <span className={styles.old_price}>
+            {discountedPrice
+              ? `${price * quantityEdit} $`
+              : priceDiscountedProduct
+                ? `${price} $`
+                : ''}
+          </span>
         </div>
         <Button className={styles.btn_delete} onClick={onDeleteProductFromCart}>
           <TrashIcon />

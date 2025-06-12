@@ -24,9 +24,36 @@
   letter-spacing: 0px;
   text-transform: capitalize;
   margin: 0;
+  display: flex;
+  align-items: center;
 }
 
-.total_price span {
+.total_price p {
+  margin: 0;
+  margin-right: 20px;
+}
+
+.btn_delete {
+  height: 45px;
+}
+
+.cart_promocode {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 30px;
+}
+
+.promocode_input {
+  margin-right: 20px;
+}
+
+.promocode_btn {
+  width: 180px;
+  height: 40px;
+}
+
+.product_price {
   color: #00523b;
   font-family: Montserrat;
   font-size: 28px;
@@ -35,9 +62,23 @@
   letter-spacing: 0px;
   text-align: left;
   text-transform: capitalize;
-  margin-left: 20px;
+  min-width: 150px;
+  display: flex;
+  justify-content: center;
 }
 
-.btn_delete {
-  height: 45px;
+.current_price {
+  margin-right: 10px;
+}
+
+.old_price {
+  color: rgb(152, 153, 152);
+  font-family: Montserrat;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 24px;
+  letter-spacing: 0px;
+  text-align: left;
+  text-transform: capitalize;
+  text-decoration: line-through;
 }
