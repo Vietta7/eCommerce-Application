@@ -4,6 +4,7 @@ import styles from './MainPage.module.css';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import useAccessToken from '../../hooks/useAccessToken';
 import { Product } from '../../types/product/product';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const MainPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -145,6 +146,7 @@ const MainPage = () => {
             </div>
           </div>
         </section>
+        <ScrollToTopButton />
       </main>
     </>
   );
