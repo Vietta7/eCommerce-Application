@@ -1,0 +1,13 @@
+.loader_home {
+  border-top-color: #00523b;
+  border-right-color: #00523b;
+  border-left-color: #00523b;
+  border-bottom-color: transparent;
+}
+
+.loader_wrapper {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

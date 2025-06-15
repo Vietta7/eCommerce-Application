@@ -43,7 +43,7 @@ img {
 body {
   font-family: 'Montserrat', sans-serif;
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
   width: 100%;
   background-color: #f9f9f9;
 }
@@ -75,4 +75,15 @@ button {
     background-color: #000;
     color: #fff;
   } */
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.main {
+  flex: 1 1 auto;
+  position: relative;
 }

@@ -348,3 +348,29 @@
     flex-wrap: nowrap;
   }
 }
+
+.loader_wraper {
+  position: relative;
+  min-height: 200px;
+}
+
+.load_more_container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.load_more_button {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  background-color: #00523b;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.load_more_button:disabled {
+  background-color: #aaa;
+  cursor: not-allowed;
+}
