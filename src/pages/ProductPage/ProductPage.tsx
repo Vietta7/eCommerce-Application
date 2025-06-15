@@ -10,6 +10,7 @@ import useAccessToken from '../../hooks/useAccessToken';
 import { LoaderPage } from '../../components/ui/LoaderPage/LoaderPage';
 import { useCart } from '../../hooks/useCart';
 import toast from 'react-hot-toast';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const ProductPage: React.FC = () => {
   const [product, setProduct] = useState<ProductProjection>();
@@ -104,6 +105,7 @@ const ProductPage: React.FC = () => {
             </div>
           </div>
         </section>
+        <ScrollToTopButton />
       </main>
     </>
   );

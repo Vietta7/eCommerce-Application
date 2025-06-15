@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product } from '../../types/product/product';
 import styles from './ProductCard.module.css';
 import { Link } from 'react-router-dom';
@@ -26,10 +26,33 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
   const onAddProductToCart = async (productId: string, variantId: number) => {
     try {
       await addToCart({ productId, variantId, quantity: 1 });
+      handleToggleCart();
     } catch (error) {
       console.error(error);
       toast.error('Error. Product do not add to cart');
       throw error;
+
+  const [isInCart, setIsInCart] = useState(false);
+
+  useEffect(() => {
+    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
+    setIsInCart(storedCart.some((item: Product) => item.id === product.id));
+  }, [product.id]);
+
+  const handleToggleCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]') as Product[];
+
+    if (isInCart) {
+      const updatedCart = storedCart.filter((item) => item.id !== product.id);
+      localStorage.setItem('cart', JSON.stringify(updatedCart)); // TODO: временное решение localStorage (заменить ):
+      setIsInCart(false);
+      toast.success('Product deleted from cart');
+    } else {
+      const updatedCart = [...storedCart, product];
+      localStorage.setItem('cart', JSON.stringify(updatedCart)); // TODO: временное решение localStorage (заменить):
+      setIsInCart(true);
+      toast.success('Product added to cart');
     }
   };
 
@@ -61,8 +84,10 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
               e.preventDefault();
               onAddProductToCart(product.id, 1);
             }}
+            className={isInCart ? styles.check_button : styles.plus_button}
+            title={isInCart ? 'Remove from cart' : 'Add to cart'}
           >
-            <span className={styles.plus_icon}></span>
+            {isInCart ? '✓' : <span className={styles.plus_icon}></span>}
           </button>
         </div>
       </div>

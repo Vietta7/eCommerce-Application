@@ -9,6 +9,7 @@ import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
 import { commercetoolsApi } from '../../api/commercetoolsApi';
 import { formatFilterValue } from '../../utils/product';
 import { LoaderPage } from '../../components/ui/LoaderPage/LoaderPage';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const CatalogPage: React.FC = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -17,6 +18,8 @@ const CatalogPage: React.FC = () => {
   const [isCategoriesLoading, setIsCategoriesLoading] = useState(true);
   const [isProductsLoading, setIsProductsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   const { token, loading: tokenLoading, error: tokenError } = useAccessToken();
 
@@ -74,8 +77,9 @@ const CatalogPage: React.FC = () => {
         setIsProductsLoading(true);
         const params = new URLSearchParams();
 
-        params.set('staged', 'true');
-        params.set('limit', '100');
+        params.set('staged', 'false');
+        params.set('limit', '6');
+        params.set('offset', offset.toString());
 
         if (debouncedSearchQuery.trim()) {
           params.set('text.en-GB', debouncedSearchQuery.trim());
@@ -114,7 +118,13 @@ const CatalogPage: React.FC = () => {
         }
 
         const data = await commercetoolsApi.fetchProducts(token, params);
-        setProducts(data.results || []);
+        if (offset === 0) {
+          setProducts(data.results || []);
+        } else {
+          setProducts((prev) => [...prev, ...(data.results || [])]);
+        }
+
+        setHasMore((data.results?.length ?? 0) === 6);
       } catch (err) {
         if (!controller.signal.aborted) {
           setError(err instanceof Error ? err.message : 'Failed to load products');
@@ -126,7 +136,15 @@ const CatalogPage: React.FC = () => {
 
     loadFilteredProducts();
     return () => controller.abort();
-  }, [token, activeCategory, activeSubcategory, activeFilters, debouncedSearchQuery, sortOption]);
+  }, [
+    token,
+    activeCategory,
+    activeSubcategory,
+    activeFilters,
+    debouncedSearchQuery,
+    sortOption,
+    offset,
+  ]);
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setActiveFilters(newFilters);
@@ -167,7 +185,6 @@ const CatalogPage: React.FC = () => {
         onResetFilters={handleResetFilters}
         selectedFilters={activeFilters}
       />
-
       <div className={styles.product_list_container}>
         <div className={styles.search_container}>
           <div className={styles.search_input_wrapper}>
@@ -275,9 +292,24 @@ const CatalogPage: React.FC = () => {
             <LoaderPage className={styles.loader_catalog} />
           </div>
         ) : (
-          <ProductList products={products} searchQuery={debouncedSearchQuery} />
+          <>
+            <ProductList products={products} searchQuery={debouncedSearchQuery} />
+            {hasMore && (
+              <div className={styles.load_more_container}>
+                <button
+                  type="button"
+                  onClick={() => setOffset((prev) => prev + 6)}
+                  disabled={isProductsLoading}
+                  className={styles.load_more_button}
+                >
+                  {isProductsLoading ? 'Loading...' : 'Load more'}
+                </button>
+              </div>
+            )}
+          </>
         )}
       </div>
+      <ScrollToTopButton />
     </div>
   );
 };
