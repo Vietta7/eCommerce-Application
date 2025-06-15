@@ -349,12 +349,11 @@
   }
 }
 
-
 .loader_wraper {
   position: relative;
   min-height: 200px;
 }
-  
+
 .load_more_container {
   display: flex;
   justify-content: center;
