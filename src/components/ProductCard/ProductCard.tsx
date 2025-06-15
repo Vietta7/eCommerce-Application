@@ -21,23 +21,21 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
   const discountedPrice = discountedValue ? discountedValue.centAmount / 100 : undefined;
   const hasDiscount = !!discountedPrice;
 
-  const { addToCart } = useCart();
-
-  const onAddProductToCart = async (productId: string, variantId: number) => {
-    try {
-      await addToCart({ productId, variantId, quantity: 1 });
-      handleToggleCart();
-    } catch (error) {
-      console.error(error);
-      toast.error('Error. Product do not add to cart');
-      throw error;
+  const { addToCart, items, removeProductFromCart } = useCart();
 
   const [isInCart, setIsInCart] = useState(false);
+  const [lineItem, setLineItem] = useState('');
 
   useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    setIsInCart(storedCart.some((item: Product) => item.id === product.id));
-  }, [product.id]);
+    const storedCart = items;
+    if (storedCart.length === 0) {
+      setLineItem('');
+    } else {
+      const itemId = items.filter((item) => item.productId === product.id)[0];
+      if (itemId) setLineItem(itemId.lineItemId);
+    }
+    setIsInCart(storedCart.some((item) => item.productId === product.id));
+  }, [product.id, items]);
 
   const handleToggleCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -45,14 +43,19 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
 
     if (isInCart) {
       const updatedCart = storedCart.filter((item) => item.id !== product.id);
-      localStorage.setItem('cart', JSON.stringify(updatedCart)); // TODO: временное решение localStorage (заменить ):
-      setIsInCart(false);
-      toast.success('Product deleted from cart');
+      setIsInCart(!!updatedCart);
     } else {
       const updatedCart = [...storedCart, product];
-      localStorage.setItem('cart', JSON.stringify(updatedCart)); // TODO: временное решение localStorage (заменить):
-      setIsInCart(true);
-      toast.success('Product added to cart');
+      setIsInCart(!!updatedCart);
+    }
+  };
+  const onAddProductToCart = async (productId: string, variantId: number) => {
+    try {
+      await addToCart({ productId, variantId, quantity: 1 });
+    } catch (error) {
+      console.error(error);
+      toast.error('Error. Product do not add to cart');
+      throw error;
     }
   };
 
@@ -78,17 +81,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
               <span className={styles.price}>${originalPrice.toFixed(2)}</span>
             )}
           </div>
-          <button
-            className={styles.plus_button}
-            onClick={(e) => {
-              e.preventDefault();
-              onAddProductToCart(product.id, 1);
-            }}
-            className={isInCart ? styles.check_button : styles.plus_button}
-            title={isInCart ? 'Remove from cart' : 'Add to cart'}
-          >
-            {isInCart ? '✓' : <span className={styles.plus_icon}></span>}
-          </button>
+
+          {isInCart ? (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                removeProductFromCart(lineItem);
+              }}
+              className={isInCart ? styles.check_button : styles.plus_button}
+            >
+              ✓
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onAddProductToCart(product.id, 1);
+                handleToggleCart(e);
+              }}
+              className={isInCart ? styles.check_button : styles.plus_button}
+              title={isInCart ? 'Remove from cart' : 'Add to cart'}
+            >
+              <span className={styles.plus_icon}></span>
+            </button>
+          )}
         </div>
       </div>
     </Link>

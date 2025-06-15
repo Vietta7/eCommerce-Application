@@ -8,7 +8,6 @@ import styles from './CatalogPage.module.css';
 import { SearchIcon, ClearIcon } from '../../components/Icons/BackIcons';
 import { commercetoolsApi } from '../../api/commercetoolsApi';
 import { formatFilterValue } from '../../utils/product';
-import { LoaderPage } from '../../components/ui/LoaderPage/LoaderPage';
 import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const CatalogPage: React.FC = () => {
@@ -287,13 +286,13 @@ const CatalogPage: React.FC = () => {
             <h3>No dinosaurs found</h3>
             <p>Try adjusting your filters or search query</p>
           </div>
-        ) : isLoading ? (
-          <div className={styles.loader_wraper}>
-            <LoaderPage className={styles.loader_catalog} />
-          </div>
         ) : (
           <>
-            <ProductList products={products} searchQuery={debouncedSearchQuery} />
+            <ProductList
+              products={products}
+              searchQuery={debouncedSearchQuery}
+              isLoading={isLoading}
+            />
             {hasMore && (
               <div className={styles.load_more_container}>
                 <button

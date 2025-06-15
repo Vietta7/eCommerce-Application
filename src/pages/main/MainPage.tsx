@@ -5,6 +5,7 @@ import ProductCard from '../../components/ProductCard/ProductCard';
 import useAccessToken from '../../hooks/useAccessToken';
 import { Product } from '../../types/product/product';
 import { LoaderPage } from '../../components/ui/LoaderPage/LoaderPage';
+import ScrollToTopButton from '../../components/ScrollToTopButton/ScrollToTopButton';
 
 const MainPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
@@ -148,9 +149,7 @@ const MainPage = () => {
           </div>
         </div>
       </section>
-        </section>
-        <ScrollToTopButton />
-      </main>
+      <ScrollToTopButton />
     </>
   );
 };
