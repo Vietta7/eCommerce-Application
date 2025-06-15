@@ -8,9 +8,7 @@ const Footer = () => {
         <div className={styles.columns}>
           <div className={styles.column}>
             <h3 className={styles.title}>Dinosaur Shop</h3>
-            <p className={styles.description}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.
-            </p>
+            <p className={styles.description}>Store for smaller replicas of real dinosaurs</p>
           </div>
           <div className={styles.column}>
             <h3 className={styles.title}>Shopping</h3>
@@ -19,13 +17,13 @@ const Footer = () => {
                 <Link to="/cart">Your cart</Link>
               </li>
               <li>
-                <Link to="/orders">Your orders</Link>
+                <Link to="/catalog">Catalog</Link>
               </li>
               <li>
                 <Link to="/catalog">Compared items</Link>
               </li>
               <li>
-                <Link to="/wishlist">Wishlist items</Link>
+                <Link to="/catalog">New Arrivals</Link>
               </li>
             </ul>
           </div>
@@ -34,19 +32,10 @@ const Footer = () => {
             <h3 className={styles.title}>More Links</h3>
             <ul className={styles.list}>
               <li>
-                <Link to="/blog">Blog</Link>
-              </li>
-              <li>
-                <Link to="/gift-center">Gift Center</Link>
-              </li>
-              <li>
-                <Link to="/guides">Buying Guides</Link>
+                <Link to="/about">About Developers</Link>
               </li>
               <li>
                 <Link to="/catalog">New Arrivals</Link>
-              </li>
-              <li>
-                <Link to="/clearance">Clearance</Link>
               </li>
             </ul>
           </div>
