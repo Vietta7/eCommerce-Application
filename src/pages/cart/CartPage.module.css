@@ -5,7 +5,7 @@
 }
 
 .page_bg {
-  background: url('img/cart-empty.png');
+  background: url('/img/cart-empty.png');
   background-repeat: no-repeat;
   min-height: 560px;
   background-position: 100% 0%;
