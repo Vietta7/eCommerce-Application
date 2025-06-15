@@ -108,7 +108,7 @@ const MainPage = () => {
               <h3>Special offer</h3>
               <p>
                 The promo code: <strong className={styles.promocode}>dino-land-2025</strong> gives a
-                50% discount for one week only. Apply in cart.
+                50% discount <br /> for one week only. Apply in cart.
               </p>
               <Link to="/catalog" className={styles.grid_button}>
                 View All
