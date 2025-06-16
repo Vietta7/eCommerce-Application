@@ -6,15 +6,12 @@
   width: 100%;
   max-width: 1440px;
   margin: 0 auto;
-  position: relative;
   z-index: 1000;
 }
 
 .header.main_header {
-  position: absolute;
   top: 0;
   left: 50%;
-  transform: translateX(-50%);
   background: transparent;
 }
 

@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Product } from '../../types/product/product';
 import styles from './ProductCard.module.css';
 import { Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useCart } from '../../hooks/useCart';
 
 interface ProductCardProps {
   product: Product;
@@ -18,6 +20,44 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
   const discountedValue = priceData?.discounted?.value;
   const discountedPrice = discountedValue ? discountedValue.centAmount / 100 : undefined;
   const hasDiscount = !!discountedPrice;
+
+  const { addToCart, items, removeProductFromCart } = useCart();
+
+  const [isInCart, setIsInCart] = useState(false);
+  const [lineItem, setLineItem] = useState('');
+
+  useEffect(() => {
+    const storedCart = items;
+    if (storedCart.length === 0) {
+      setLineItem('');
+    } else {
+      const itemId = items.filter((item) => item.productId === product.id)[0];
+      if (itemId) setLineItem(itemId.lineItemId);
+    }
+    setIsInCart(storedCart.some((item) => item.productId === product.id));
+  }, [product.id, items]);
+
+  const handleToggleCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const storedCart = JSON.parse(localStorage.getItem('cart') || '[]') as Product[];
+
+    if (isInCart) {
+      const updatedCart = storedCart.filter((item) => item.id !== product.id);
+      setIsInCart(!!updatedCart);
+    } else {
+      const updatedCart = [...storedCart, product];
+      setIsInCart(!!updatedCart);
+    }
+  };
+  const onAddProductToCart = async (productId: string, variantId: number) => {
+    try {
+      await addToCart({ productId, variantId, quantity: 1 });
+    } catch (error) {
+      console.error(error);
+      toast.error('Please login to add the item to your cart!');
+      throw error;
+    }
+  };
 
   return (
     <Link to={`/product/${product.id}`} className={`${styles.product_card} ${className || ''}`}>
@@ -41,14 +81,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product, className, highlight
               <span className={styles.price}>${originalPrice.toFixed(2)}</span>
             )}
           </div>
-          <button
-            className={styles.plus_button}
-            onClick={(e) => {
-              e.preventDefault();
-            }}
-          >
-            <span className={styles.plus_icon}></span>
-          </button>
+
+          {isInCart ? (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                removeProductFromCart(lineItem);
+              }}
+              className={isInCart ? styles.check_button : styles.plus_button}
+            >
+              ✓
+            </button>
+          ) : (
+            <button
+              onClick={(e) => {
+                e.preventDefault();
+                onAddProductToCart(product.id, 1);
+                handleToggleCart(e);
+              }}
+              className={isInCart ? styles.check_button : styles.plus_button}
+              title={isInCart ? 'Remove from cart' : 'Add to cart'}
+            >
+              <span className={styles.plus_icon}></span>
+            </button>
+          )}
         </div>
       </div>
     </Link>

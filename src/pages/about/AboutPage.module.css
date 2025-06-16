@@ -1,0 +1,110 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+
+  margin-bottom: 40px;
+}
+
+.description_wrapper {
+  display: flex;
+  gap: 12px;
+
+  .description {
+    margin: 0;
+    max-width: 900px;
+    text-align: center;
+  }
+
+  .rss {
+    width: 100px;
+    height: 100px;
+
+    img {
+      min-width: 100px;
+      min-height: 100px;
+    }
+  }
+}
+
+.title {
+  max-width: 1163px;
+  letter-spacing: -2px;
+  text-align: center;
+  margin: 0;
+  font-size: 72px;
+  line-height: 96px;
+  color: #00523b;
+}
+
+.list {
+  display: flex;
+  gap: 20px;
+}
+
+.subtitle {
+  font-size: 32px;
+  color: #00523b;
+}
+
+.icon_wrapper {
+  display: flex;
+  gap: 24px;
+}
+
+.icon {
+  max-width: 200px;
+  max-height: 200px;
+  height: 100%;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 36px;
+    line-height: 48px;
+    padding: 0 16px;
+  }
+
+  .description_wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .description_wrapper .description {
+    max-width: 90%;
+    font-size: 16px;
+  }
+
+  .description_wrapper .rss {
+    width: 80px;
+    height: 80px;
+  }
+
+  .description_wrapper .rss img {
+    min-width: 80px;
+    min-height: 80px;
+  }
+
+  .list {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .subtitle {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .icon_wrapper {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .icon {
+    max-width: 120px;
+    max-height: 120px;
+  }
+}
