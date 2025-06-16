@@ -64,7 +64,10 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
   };
 
   useEffect(() => {
-    if (!isAuthenticated) return;
+    if (!isAuthenticated) {
+      setItems([]);
+      return;
+    }
 
     async function fetchInitialCart() {
       try {

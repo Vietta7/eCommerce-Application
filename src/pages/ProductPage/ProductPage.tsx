@@ -23,7 +23,7 @@ const ProductPage: React.FC = () => {
       await addToCart({ productId, variantId, quantity: 1 });
     } catch (error) {
       console.error(error);
-      toast.error('Error. Product do not add to cart');
+      toast.error('Please login to add the item to your cart!');
     }
   };
 
